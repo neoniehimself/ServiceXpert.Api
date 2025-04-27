@@ -18,7 +18,7 @@ public class IssueController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<(IEnumerable<IssueDataObject>, Pagination)>> GetPagedAllByStatusAsync(
+    public async Task<ActionResult<(IEnumerable<IssueDataObject>, Pagination)>> GetPagedIssuesByStatusAsync(
         string statusCategory = "All", int pageNumber = 1, int pageSize = 10)
     {
         var (issues, pagination) = await this.issueService.GetPagedAllByStatusAsync(statusCategory, pageNumber, pageSize);
