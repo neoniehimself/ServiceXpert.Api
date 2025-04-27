@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Shared.Enums;
 using ServiceXpert.Domain.ValueObjects;
 
@@ -46,5 +47,17 @@ public class IssueController : ControllerBase
 
         var issueId = await this.issueService.CreateAsync(dataObject);
         return string.Concat(nameof(IssuePreFix.SXP), '-', issueId);
+    }
+
+    [HttpPut("{issueKey}")]
+    public async Task<ActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate dataObject)
+    {
+        if (!this.ModelState.IsValid)
+        {
+            return BadRequest(this.ModelState);
+        }
+
+        await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), dataObject);
+        return NoContent();
     }
 }

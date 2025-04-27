@@ -3,6 +3,7 @@ using Mapster;
 using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories.Contracts;
 using ServiceXpert.Domain.ValueObjects;
@@ -18,26 +19,9 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
         this.issueRepository = issueRepository;
     }
 
-    private static int GetIdFromKey(string issueKey)
-    {
-        try
-        {
-            if (int.TryParse(issueKey.Split('-')[1], out int issueId))
-            {
-                return issueId;
-            }
-        }
-        catch (IndexOutOfRangeException e)
-        {
-            throw new IndexOutOfRangeException("Failed to extract Id from Key", e);
-        }
-
-        return 0;
-    }
-
     public async Task<IssueDataObject?> GetByIssueKeyAsync(string issueKey)
     {
-        var issue = await this.issueRepository.GetByIdAsync(GetIdFromKey(issueKey));
+        var issue = await this.issueRepository.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
         return issue?.Adapt<IssueDataObject>();
     }
 

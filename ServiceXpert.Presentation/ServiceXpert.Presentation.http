@@ -21,3 +21,16 @@ Content-Type: application/json
 }  
 
 ###
+
+PUT {{Presentation_HostAddress}}/issues/SXP-1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Request timed out - Updated",
+  "description": "Time out error on page load.",
+  "issuePriorityId": 3,
+  "issueStatusId": 1
+}
+
+###
