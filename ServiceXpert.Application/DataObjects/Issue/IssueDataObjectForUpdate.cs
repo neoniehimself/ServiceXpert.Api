@@ -15,8 +15,4 @@ public class IssueDataObjectForUpdate : DataObjectBase
 
     [Required]
     public required int IssuePriorityId { get; set; }
-
-    public IssueDataObjectForUpdate() : base(true)
-    {
-    }
 }
