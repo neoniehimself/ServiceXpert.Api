@@ -11,6 +11,7 @@ public static class ServiceContainer
     {
         services.AddDbContext<SxpDbContext>();
         services.TryAddScoped<IIssueRepository, IssueRepository>();
+        services.TryAddScoped<ICommentRepository, CommentRepository>();
 
         return services;
     }

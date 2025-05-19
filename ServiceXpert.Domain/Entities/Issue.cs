@@ -14,4 +14,11 @@ public class Issue : EntityBase
     public int IssuePriorityId { get; set; }
 
     public IssuePriority? IssuePriority { get; set; }
+
+    public List<Comment> Comments { get; set; }
+
+    public Issue()
+    {
+        this.Comments = [];
+    }
 }

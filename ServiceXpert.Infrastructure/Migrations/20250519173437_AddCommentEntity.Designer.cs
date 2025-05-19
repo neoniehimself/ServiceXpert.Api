@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceXpert.ServiceXpert.Infrastructure.DbContexts;
 
@@ -11,9 +12,11 @@ using ServiceXpert.ServiceXpert.Infrastructure.DbContexts;
 namespace ServiceXpert.Infrastructure.Migrations
 {
     [DbContext(typeof(SxpDbContext))]
-    partial class SxpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519173437_AddCommentEntity")]
+    partial class AddCommentEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("CommentId"), false);
 
-                    b.ToTable("Comment", (string)null);
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("ServiceXpert.Domain.Entities.Issue", b =>
@@ -79,7 +82,7 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("IssueId"));
 
-                    b.ToTable("Issue", (string)null);
+                    b.ToTable("Issue");
                 });
 
             modelBuilder.Entity("ServiceXpert.Domain.Entities.IssuePriority", b =>
@@ -104,7 +107,7 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("IssuePriorityId"));
 
-                    b.ToTable("IssuePriority", (string)null);
+                    b.ToTable("IssuePriority");
 
                     b.HasData(
                         new
@@ -166,7 +169,7 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("IssueStatusId"));
 
-                    b.ToTable("IssueStatus", (string)null);
+                    b.ToTable("IssueStatus");
 
                     b.HasData(
                         new

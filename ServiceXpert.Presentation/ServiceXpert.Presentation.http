@@ -1,36 +1,46 @@
 @Presentation_HostAddress = https://localhost:7090/api
 
+###
 GET {{Presentation_HostAddress}}/issues
 Accept: application/json
 
 ###
-
 GET {{Presentation_HostAddress}}/issues/SXP-1
 Accept: application/json
 
 ###
-
 POST {{Presentation_HostAddress}}/issues
 Accept: application/json
 Content-Type: application/json
-
 {
  "name": "Request timed out",
  "description": "Time out error on page load.",
  "issuePriorityId": 3
-}  
+}
 
 ###
-
 PUT {{Presentation_HostAddress}}/issues/SXP-1
 Accept: application/json
 Content-Type: application/json
-
 {
   "name": "Request timed out - Updated",
   "description": "Time out error on page load.",
   "issuePriorityId": 3,
   "issueStatusId": 1
+}
+
+### Assuming there is an issue with 1 as its Id
+GET {{Presentation_HostAddress}}/issues/1/comments
+Accept: application/json
+
+###
+POST {{Presentation_HostAddress}}/issues/1/comments
+Accept: application/json
+Content-Type: application/json
+
+{
+  "content": "Lorem ipsum dolor sit amet",
+  "issueId": 1
 }
 
 ###

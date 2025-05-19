@@ -21,9 +21,9 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         this.mapper = mapper;
     }
 
-    public async Task<TDataObject?> GetByIdAsync(TId entityId)
+    public async Task<TDataObject?> GetByIdAsync(TId entityId, IncludeOptions<TEntity>? includeOptions = null)
     {
-        TEntity? entity = await this.repositoryBase.GetByIdAsync(entityId);
+        TEntity? entity = await this.repositoryBase.GetByIdAsync(entityId, includeOptions);
         return entity?.Adapt<TDataObject>();
     }
 
@@ -81,5 +81,12 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return propIdValue != null && propId.GetValue(entity) != null
             ? (TId)propId.GetValue(entity)!
             : throw new NullReferenceException($"{typeof(TEntity).Name}Id is null.");
+    }
+
+    public async Task<IEnumerable<TDataObject>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+        IncludeOptions<TEntity>? includeOptions = null)
+    {
+        IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(condition, includeOptions);
+        return entities.Adapt<ICollection<TDataObject>>();
     }
 }

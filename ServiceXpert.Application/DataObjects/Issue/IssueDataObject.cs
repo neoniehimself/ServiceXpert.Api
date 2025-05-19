@@ -16,4 +16,11 @@ public class IssueDataObject : DataObjectBase
     public int IssuePriorityId { get; set; }
 
     public IssuePriorityDataObject? IssuePriority { get; set; }
+
+    public List<CommentDataObject> Comments { get; set; }
+
+    public IssueDataObject()
+    {
+        this.Comments = [];
+    }
 }

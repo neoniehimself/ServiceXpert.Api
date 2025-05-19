@@ -15,6 +15,9 @@ public interface IRepositoryBase<TEntityId, TEntity> where TEntity : EntityBase
     Task<(IEnumerable<TEntity>, Pagination)> GetPagedAllAsync(int pageNumber, int pageSize,
         Expression<Func<TEntity, bool>>? condition = null, IncludeOptions<TEntity>? includeOptions = null);
 
+    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+        IncludeOptions<TEntity>? includeOptions = null);
+
     Task CreateAsync(TEntity entity);
 
     Task DeleteByIdAsync(TEntityId entityId);

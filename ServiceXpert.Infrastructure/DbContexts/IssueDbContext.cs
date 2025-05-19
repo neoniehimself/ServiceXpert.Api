@@ -13,6 +13,7 @@ internal class IssueDbContext : DbContextBase, IEntityTypeConfiguration<Issue>
 
         issue.HasOne(i => i.IssueStatus).WithOne().HasForeignKey<Issue>(i => i.IssueStatusId);
         issue.HasOne(i => i.IssuePriority).WithOne().HasForeignKey<Issue>(i => i.IssuePriorityId);
+        issue.HasMany(i => i.Comments).WithOne().HasForeignKey(c => c.IssueId);
 
         issue.Navigation(i => i.IssueStatus).AutoInclude();
         issue.Navigation(i => i.IssuePriority).AutoInclude();

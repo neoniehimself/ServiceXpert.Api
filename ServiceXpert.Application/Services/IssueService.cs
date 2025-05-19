@@ -19,9 +19,9 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
         this.issueRepository = issueRepository;
     }
 
-    public async Task<IssueDataObject?> GetByIssueKeyAsync(string issueKey)
+    public async Task<IssueDataObject?> GetByIssueKeyAsync(string issueKey, IncludeOptions<Issue>? includeOptions = null)
     {
-        var issue = await this.issueRepository.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+        var issue = await this.issueRepository.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), includeOptions);
         return issue?.Adapt<IssueDataObject>();
     }
 

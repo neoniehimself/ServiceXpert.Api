@@ -15,6 +15,7 @@ public static class ServiceContainer
         services.AddMapster();
 
         services.TryAddScoped<IIssueService, IssueService>();
+        services.TryAddScoped<ICommentService, CommentService>();
 
         return services;
     }

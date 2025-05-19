@@ -75,4 +75,17 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
     {
         return await this.dbContext.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+        IncludeOptions<TEntity>? includeOptions = null)
+    {
+        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
+
+        if (condition != null)
+        {
+            query = query.Where(condition);
+        }
+
+        return await query.ToListAsync();
+    }
 }

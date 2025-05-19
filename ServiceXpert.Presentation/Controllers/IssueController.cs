@@ -3,7 +3,6 @@ using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Shared.Enums;
-using ServiceXpert.Domain.ValueObjects;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("api/issues")]
@@ -18,7 +17,7 @@ public class IssueController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<(IEnumerable<IssueDataObject>, Pagination)>> GetPagedIssuesByStatusAsync(
+    public async Task<IActionResult> GetPagedIssuesByStatusAsync(
         string statusCategory = "All", int pageNumber = 1, int pageSize = 10)
     {
         var (issues, pagination) = await this.issueService.GetPagedAllByStatusAsync(statusCategory, pageNumber, pageSize);
@@ -31,14 +30,14 @@ public class IssueController : ControllerBase
     }
 
     [HttpGet("{issueKey}")]
-    public async Task<ActionResult<IssueDataObject>> GetByIssueKeyAsync(string issueKey)
+    public async Task<IActionResult> GetByIssueKeyAsync(string issueKey)
     {
         var issue = await this.issueService.GetByIssueKeyAsync(issueKey);
-        return issue != null ? issue : NotFound($"{issueKey} not found.");
+        return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
     }
 
     [HttpPost]
-    public async Task<ActionResult<string>> CreateAsync(IssueDataObjectForCreate dataObject)
+    public async Task<IActionResult> CreateAsync(IssueDataObjectForCreate dataObject)
     {
         if (!this.ModelState.IsValid)
         {
@@ -46,11 +45,11 @@ public class IssueController : ControllerBase
         }
 
         var issueId = await this.issueService.CreateAsync(dataObject);
-        return string.Concat(nameof(IssuePreFix.SXP), '-', issueId);
+        return Ok(string.Concat(nameof(IssuePreFix.SXP), '-', issueId));
     }
 
     [HttpPut("{issueKey}")]
-    public async Task<ActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate dataObject)
+    public async Task<IActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate dataObject)
     {
         if (!this.ModelState.IsValid)
         {
