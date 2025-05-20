@@ -14,6 +14,8 @@ public interface IServiceBase<TId, TEntity, TDataObject>
 
     Task DeleteByIdAsync(TId id);
 
+    Task<TDataObject?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null);
+
     Task<TDataObject?> GetByIdAsync(TId entityId, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<(IEnumerable<TDataObject>, Pagination)> GetPagedAllAsync(int pageNumber = 1, int pageSize = 10,

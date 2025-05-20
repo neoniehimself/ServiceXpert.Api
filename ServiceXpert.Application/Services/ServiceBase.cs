@@ -89,4 +89,10 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(condition, includeOptions);
         return entities.Adapt<ICollection<TDataObject>>();
     }
+
+    public async Task<TDataObject?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null)
+    {
+        TEntity? entity = await this.repositoryBase.GetAsync(condition, includeOptions);
+        return entity?.Adapt<TDataObject>();
+    }
 }

@@ -10,6 +10,8 @@ public interface IRepositoryBase<TEntityId, TEntity> where TEntity : EntityBase
 
     void Attach(TEntity entity);
 
+    Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null);
+
     Task<TEntity?> GetByIdAsync(TEntityId entityId, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<(IEnumerable<TEntity>, Pagination)> GetPagedAllAsync(int pageNumber, int pageSize,

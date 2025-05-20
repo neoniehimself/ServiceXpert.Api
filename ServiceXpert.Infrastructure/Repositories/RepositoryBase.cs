@@ -88,4 +88,10 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
 
         return await query.ToListAsync();
     }
+
+    public Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null)
+    {
+        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
+        return query.Where(condition).SingleOrDefaultAsync();
+    }
 }

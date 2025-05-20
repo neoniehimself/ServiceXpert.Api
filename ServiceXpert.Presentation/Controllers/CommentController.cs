@@ -23,6 +23,7 @@ public class CommentController : ControllerBase
     public async Task<IActionResult> GetAllAsync(string issueKey)
     {
         var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
+
         if (!await this.issueService.IsExistsByIdAsync(issueId))
         {
             return NotFound($"No such issue exists. IssueKey: {issueKey}");
@@ -33,23 +34,28 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet("{commentId}")]
-    public async Task<IActionResult> GetByIdAsync(string issueKey, Guid commentId)
+    public async Task<IActionResult> GetAsync(string issueKey, Guid commentId)
     {
         var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
+
         if (!await this.issueService.IsExistsByIdAsync(issueId))
         {
             return NotFound($"No such issue exists. IssueKey: {issueKey}");
         }
 
-        var comment = await this.commentService.GetByIdAsync(commentId);
+        var comment = await this.commentService.GetAsync(c => c.IssueId == issueId && c.CommentId == commentId);
         return comment != null ? Ok(comment) : NotFound(commentId);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate dataObject)
     {
-        var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
-        if (!await this.issueService.IsExistsByIdAsync(issueId))
+        if (!string.Equals(issueKey, dataObject.IssueKey))
+        {
+            return BadRequest("URL.IssueKey and Comment.IssueKey does not match");
+        }
+
+        if (!await this.issueService.IsExistsByIssueKeyAsync(issueKey))
         {
             return NotFound($"No such issue exists. IssueKey: {issueKey}");
         }
@@ -62,6 +68,6 @@ public class CommentController : ControllerBase
         var commentId = await this.commentService.CreateAsync(dataObject);
         var comment = await this.commentService.GetByIdAsync(commentId);
 
-        return Created(string.Format(this.CommentControllerFullUriFormat, issueId, commentId), comment);
+        return Created(string.Format(this.CommentControllerFullUriFormat, comment!.IssueKey, commentId), comment);
     }
 }

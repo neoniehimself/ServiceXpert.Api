@@ -10,4 +10,6 @@ public interface IIssueService : IServiceBase<int, Issue, IssueDataObject>
 
     Task<(IEnumerable<IssueDataObject>, Pagination)> GetPagedAllByStatusAsync(string statusCategory,
         int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null);
+
+    Task<bool> IsExistsByIssueKeyAsync(string issueKey);
 }

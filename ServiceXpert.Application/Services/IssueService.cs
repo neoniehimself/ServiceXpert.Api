@@ -60,4 +60,9 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
 
         throw new InvalidCastException($"Cannot cast string into enum. Value: {statusCategory}");
     }
+
+    public async Task<bool> IsExistsByIssueKeyAsync(string issueKey)
+    {
+        return await this.issueRepository.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+    }
 }
