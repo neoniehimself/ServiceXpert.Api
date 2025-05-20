@@ -1,5 +1,5 @@
 ﻿using MapsterMapper;
-using ServiceXpert.Application.DataObjects;
+using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories.Contracts;

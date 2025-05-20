@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects;
+using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
 
 namespace ServiceXpert.Presentation.Controllers;

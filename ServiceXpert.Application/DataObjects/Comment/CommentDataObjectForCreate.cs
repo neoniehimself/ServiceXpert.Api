@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ServiceXpert.Application.DataObjects;
+namespace ServiceXpert.Application.DataObjects.Comment;
 public class CommentDataObjectForCreate : DataObjectBase
 {
     [Required]

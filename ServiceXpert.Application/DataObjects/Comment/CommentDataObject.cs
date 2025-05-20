@@ -1,4 +1,4 @@
-﻿namespace ServiceXpert.Application.DataObjects;
+﻿namespace ServiceXpert.Application.DataObjects.Comment;
 public class CommentDataObject : DataObjectBase
 {
     public Guid CommentId { get; set; }

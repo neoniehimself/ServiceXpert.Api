@@ -1,4 +1,6 @@
-﻿namespace ServiceXpert.Application.DataObjects.Issue;
+﻿using ServiceXpert.Application.DataObjects.Comment;
+
+namespace ServiceXpert.Application.DataObjects.Issue;
 public class IssueDataObject : DataObjectBase
 {
     public int IssueId { get; set; }
