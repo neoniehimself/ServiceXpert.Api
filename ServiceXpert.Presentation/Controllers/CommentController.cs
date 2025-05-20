@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Utils;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Route("api/issues/{issueId}/comments")]
+[Route("api/issues/{issueKey}/comments")]
 [ApiController]
 public class CommentController : ControllerBase
 {
@@ -19,11 +20,12 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllAsync(int issueId)
+    public async Task<IActionResult> GetAllAsync(string issueKey)
     {
+        var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
         if (!await this.issueService.IsExistsByIdAsync(issueId))
         {
-            return NotFound($"No such issue exists. IssueId: {issueId}");
+            return NotFound($"No such issue exists. IssueKey: {issueKey}");
         }
 
         var comments = await this.commentService.GetAllAsync(c => c.IssueId == issueId);
@@ -31,11 +33,12 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet("{commentId}")]
-    public async Task<IActionResult> GetByIdAsync(int issueId, Guid commentId)
+    public async Task<IActionResult> GetByIdAsync(string issueKey, Guid commentId)
     {
+        var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
         if (!await this.issueService.IsExistsByIdAsync(issueId))
         {
-            return NotFound($"No such issue exists. IssueId: {issueId}");
+            return NotFound($"No such issue exists. IssueKey: {issueKey}");
         }
 
         var comment = await this.commentService.GetByIdAsync(commentId);
@@ -43,11 +46,12 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(int issueId, CommentDataObjectForCreate dataObject)
+    public async Task<IActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate dataObject)
     {
+        var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
         if (!await this.issueService.IsExistsByIdAsync(issueId))
         {
-            return NotFound($"No such issue exists. IssueId: {issueId}");
+            return NotFound($"No such issue exists. IssueKey: {issueKey}");
         }
 
         if (!this.ModelState.IsValid)

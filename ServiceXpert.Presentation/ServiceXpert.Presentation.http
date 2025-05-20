@@ -30,11 +30,11 @@ Content-Type: application/json
 }
 
 ### Assuming there is an issue with 1 as its Id
-GET {{Presentation_HostAddress}}/issues/1/comments
+GET {{Presentation_HostAddress}}/issues/SXP-1/comments
 Accept: application/json
 
 ###
-POST {{Presentation_HostAddress}}/issues/1/comments
+POST {{Presentation_HostAddress}}/issues/SXP-1/comments
 Accept: application/json
 Content-Type: application/json
 
