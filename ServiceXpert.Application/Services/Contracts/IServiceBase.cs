@@ -14,15 +14,15 @@ public interface IServiceBase<TId, TEntity, TDataObject>
 
     Task DeleteByIdAsync(TId id);
 
+    Task<IEnumerable<TDataObject>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+        IncludeOptions<TEntity>? includeOptions = null);
+
     Task<TDataObject?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<TDataObject?> GetByIdAsync(TId entityId, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<(IEnumerable<TDataObject>, Pagination)> GetPagedAllAsync(int pageNumber = 1, int pageSize = 10,
         Expression<Func<TEntity, bool>>? condition = null, IncludeOptions<TEntity>? includeOptions = null);
-
-    Task<IEnumerable<TDataObject>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
-        IncludeOptions<TEntity>? includeOptions = null);
 
     Task<bool> IsExistsByIdAsync(TId id);
 

@@ -10,7 +10,8 @@ using System.Linq.Expressions;
 
 namespace ServiceXpert.Application.Services;
 public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId, TEntity, TDataObject>
-    where TEntity : EntityBase where TDataObject : DataObjectBase
+    where TEntity : EntityBase
+    where TDataObject : DataObjectBase
 {
     private readonly IRepositoryBase<TId, TEntity> repositoryBase;
     private readonly IMapper mapper;
@@ -19,6 +20,37 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
     {
         this.repositoryBase = repositoryBase;
         this.mapper = mapper;
+    }
+
+    public async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject)
+        where TDataObjectForCreate : DataObjectBase
+    {
+        TEntity entity = dataObject.Adapt<TEntity>();
+
+        await this.repositoryBase.CreateAsync(entity);
+        await this.repositoryBase.SaveChangesAsync();
+
+        return GetId(entity);
+    }
+
+    public async Task DeleteByIdAsync(TId id)
+    {
+        await this.repositoryBase.DeleteByIdAsync(id);
+        await this.repositoryBase.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<TDataObject>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+        IncludeOptions<TEntity>? includeOptions = null)
+    {
+        IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(condition, includeOptions);
+        return entities.Adapt<ICollection<TDataObject>>();
+    }
+
+    public async Task<TDataObject?> GetAsync(Expression<Func<TEntity, bool>> condition,
+        IncludeOptions<TEntity>? includeOptions = null)
+    {
+        TEntity? entity = await this.repositoryBase.GetAsync(condition, includeOptions);
+        return entity?.Adapt<TDataObject>();
     }
 
     public async Task<TDataObject?> GetByIdAsync(TId entityId, IncludeOptions<TEntity>? includeOptions = null)
@@ -37,15 +69,9 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return (entities.Adapt<ICollection<TDataObject>>(), pagination);
     }
 
-    public async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject)
-        where TDataObjectForCreate : DataObjectBase
+    public async Task<bool> IsExistsByIdAsync(TId id)
     {
-        TEntity entity = dataObject.Adapt<TEntity>();
-
-        await this.repositoryBase.CreateAsync(entity);
-        await this.repositoryBase.SaveChangesAsync();
-
-        return GetId(entity);
+        return await this.repositoryBase.IsExistsByIdAsync(id);
     }
 
     public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject)
@@ -61,18 +87,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         }
     }
 
-    public async Task DeleteByIdAsync(TId id)
-    {
-        await this.repositoryBase.DeleteByIdAsync(id);
-        await this.repositoryBase.SaveChangesAsync();
-    }
-
-    public async Task<bool> IsExistsByIdAsync(TId id)
-    {
-        return await this.repositoryBase.IsExistsByIdAsync(id);
-    }
-
-    private static TId GetId(TEntity entity)
+    protected static TId GetId(TEntity entity)
     {
         var propId = typeof(TEntity).GetProperty($"{typeof(TEntity).Name}Id");
 
@@ -81,18 +96,5 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return propIdValue != null && propId.GetValue(entity) != null
             ? (TId)propId.GetValue(entity)!
             : throw new NullReferenceException($"{typeof(TEntity).Name}Id is null.");
-    }
-
-    public async Task<IEnumerable<TDataObject>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
-        IncludeOptions<TEntity>? includeOptions = null)
-    {
-        IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(condition, includeOptions);
-        return entities.Adapt<ICollection<TDataObject>>();
-    }
-
-    public async Task<TDataObject?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null)
-    {
-        TEntity? entity = await this.repositoryBase.GetAsync(condition, includeOptions);
-        return entity?.Adapt<TDataObject>();
     }
 }
