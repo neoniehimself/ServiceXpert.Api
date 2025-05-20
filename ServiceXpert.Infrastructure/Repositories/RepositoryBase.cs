@@ -8,8 +8,7 @@ using ServiceXpert.ServiceXpert.Infrastructure.DbContexts;
 using System.Linq.Expressions;
 
 namespace ServiceXpert.Infrastructure.Repositories;
-public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEntityId, TEntity>
-    where TEntity : EntityBase
+public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEntityId, TEntity> where TEntity : EntityBase
 {
     private readonly SxpDbContext dbContext;
 
@@ -34,6 +33,25 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
     {
         await this.dbContext.Set<TEntity>()
             .Where(e => EF.Property<TEntityId>(e, this.EntityId)!.Equals(entityId)).ExecuteDeleteAsync();
+    }
+
+    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+        IncludeOptions<TEntity>? includeOptions = null)
+    {
+        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
+
+        if (condition != null)
+        {
+            query = query.Where(condition);
+        }
+
+        return await query.ToListAsync();
+    }
+
+    public Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null)
+    {
+        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
+        return query.Where(condition).SingleOrDefaultAsync();
     }
 
     public async Task<TEntity?> GetByIdAsync(TEntityId entityId, IncludeOptions<TEntity>? includeOptions = null)
@@ -74,24 +92,5 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
     public async Task<int> SaveChangesAsync()
     {
         return await this.dbContext.SaveChangesAsync();
-    }
-
-    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
-        IncludeOptions<TEntity>? includeOptions = null)
-    {
-        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
-
-        if (condition != null)
-        {
-            query = query.Where(condition);
-        }
-
-        return await query.ToListAsync();
-    }
-
-    public Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null)
-    {
-        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
-        return query.Where(condition).SingleOrDefaultAsync();
     }
 }
