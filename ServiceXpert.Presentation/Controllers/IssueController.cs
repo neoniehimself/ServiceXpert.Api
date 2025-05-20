@@ -21,12 +21,7 @@ public class IssueController : ControllerBase
         string statusCategory = "All", int pageNumber = 1, int pageSize = 10)
     {
         var (issues, pagination) = await this.issueService.GetPagedAllByStatusAsync(statusCategory, pageNumber, pageSize);
-
-        return Ok(new
-        {
-            issues,
-            pagination
-        });
+        return Ok(new { issues, pagination });
     }
 
     [HttpGet("{issueKey}")]
@@ -51,6 +46,11 @@ public class IssueController : ControllerBase
     [HttpPut("{issueKey}")]
     public async Task<IActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate dataObject)
     {
+        if (!await this.issueService.IsExistsByIssueKeyAsync(issueKey))
+        {
+            return NotFound($"{issueKey} not found.");
+        }
+
         if (!this.ModelState.IsValid)
         {
             return BadRequest(this.ModelState);
