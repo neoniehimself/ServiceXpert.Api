@@ -3,7 +3,6 @@ using Mapster;
 using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories.Contracts;
 using ServiceXpert.Domain.ValueObjects;
@@ -19,13 +18,7 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
         this.issueRepository = issueRepository;
     }
 
-    public async Task<IssueDataObject?> GetByIssueKeyAsync(string issueKey, IncludeOptions<Issue>? includeOptions = null)
-    {
-        var issue = await this.issueRepository.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), includeOptions);
-        return issue?.Adapt<IssueDataObject>();
-    }
-
-    public async Task<(IEnumerable<IssueDataObject>, Pagination)> GetPagedAllByStatusAsync(
+    public async Task<(IEnumerable<IssueDataObject>, Pagination)> GetPagedIssuesByStatusAsync(
         string statusCategory, int pageNumber, int pageSize,
         IncludeOptions<Issue>? includeOptions = null)
     {
@@ -59,10 +52,5 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
         }
 
         throw new InvalidCastException($"Cannot cast string into enum. Value: {statusCategory}");
-    }
-
-    public async Task<bool> IsExistsByIssueKeyAsync(string issueKey)
-    {
-        return await this.issueRepository.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
     }
 }

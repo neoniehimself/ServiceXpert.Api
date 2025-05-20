@@ -16,21 +16,6 @@ public class IssueController : ControllerBase
         this.issueService = issueService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetPagedIssuesByStatusAsync(
-        string statusCategory = "All", int pageNumber = 1, int pageSize = 10)
-    {
-        var (issues, pagination) = await this.issueService.GetPagedAllByStatusAsync(statusCategory, pageNumber, pageSize);
-        return Ok(new { issues, pagination });
-    }
-
-    [HttpGet("{issueKey}")]
-    public async Task<IActionResult> GetByIssueKeyAsync(string issueKey)
-    {
-        var issue = await this.issueService.GetByIssueKeyAsync(issueKey);
-        return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
-    }
-
     [HttpPost]
     public async Task<IActionResult> CreateAsync(IssueDataObjectForCreate dataObject)
     {
@@ -43,10 +28,25 @@ public class IssueController : ControllerBase
         return Ok(string.Concat(nameof(IssuePreFix.SXP), '-', issueId));
     }
 
+    [HttpGet("{issueKey}")]
+    public async Task<IActionResult> GetByIssueKeyAsync(string issueKey)
+    {
+        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+        return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPagedIssuesByStatusAsync(
+        string statusCategory = "All", int pageNumber = 1, int pageSize = 10)
+    {
+        var (issues, pagination) = await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize);
+        return Ok(new { issues, pagination });
+    }
+
     [HttpPut("{issueKey}")]
     public async Task<IActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate dataObject)
     {
-        if (!await this.issueService.IsExistsByIssueKeyAsync(issueKey))
+        if (!await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey)))
         {
             return NotFound($"{issueKey} not found.");
         }
