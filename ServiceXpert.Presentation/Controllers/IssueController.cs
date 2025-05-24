@@ -5,7 +5,7 @@ using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Route("api/issues")]
+[Route("Api/Issues")]
 [ApiController]
 public class IssueController : ControllerBase
 {

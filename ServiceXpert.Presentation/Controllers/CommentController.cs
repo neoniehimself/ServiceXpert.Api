@@ -4,7 +4,7 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Utils;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Route("api/issues/{issueKey}/comments")]
+[Route("Api/Issues/{issueKey}/Comments")]
 [ApiController]
 public class CommentController : ControllerBase
 {
