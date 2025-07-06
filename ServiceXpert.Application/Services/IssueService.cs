@@ -18,37 +18,40 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
         this.issueRepository = issueRepository;
     }
 
-    public async Task<(IEnumerable<IssueDataObject>, Pagination)> GetPagedIssuesByStatusAsync(
+    public async Task<PagedResult<IssueDataObject>> GetPagedIssuesByStatusAsync(
         string statusCategory, int pageNumber, int pageSize,
         IncludeOptions<Issue>? includeOptions = null)
     {
-        var (issues, paginationMetadata) = (Enumerable.Empty<Issue>(), new Pagination());
+        var pagedResult = new PagedResult<Issue>();
 
         if (Enum.TryParse(statusCategory, ignoreCase: true, out IssueStatusCategory statusCategoryEnum))
         {
             switch (statusCategoryEnum)
             {
                 case IssueStatusCategory.All:
-                    (issues, paginationMetadata) = await this.issueRepository.GetPagedAllAsync(
+                    pagedResult = await this.issueRepository.GetPagedAllAsync(
                         pageNumber, pageSize, includeOptions: includeOptions);
                     break;
                 case IssueStatusCategory.Open:
-                    (issues, paginationMetadata) = await this.issueRepository.GetPagedAllAsync(
+                    pagedResult = await this.issueRepository.GetPagedAllAsync(
                         pageNumber, pageSize, i => i.IssueStatusId != (int)DomainEnums.IssueStatus.Resolved
                             && i.IssueStatusId != (int)DomainEnums.IssueStatus.Closed, includeOptions);
                     break;
                 case IssueStatusCategory.Resolved:
-                    (issues, paginationMetadata) = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
+                    pagedResult = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
                         i => i.IssueStatusId == (int)DomainEnums.IssueStatus.Resolved, includeOptions);
                     break;
                 case IssueStatusCategory.Closed:
-                    (issues, paginationMetadata) = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
+                    pagedResult = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
                         i => i.IssueStatusId == (int)DomainEnums.IssueStatus.Closed, includeOptions);
                     break;
             }
 
             // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
-            return (issues.Adapt<ICollection<IssueDataObject>>(), paginationMetadata);
+            return new PagedResult<IssueDataObject>(
+                pagedResult.Items.Adapt<ICollection<IssueDataObject>>(),
+                pagedResult.Pagination
+            );
         }
 
         throw new InvalidCastException($"Cannot cast string into enum. Value: {statusCategory}");

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentBuilder.Core;
+using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Utils;
+using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Domain.ValueObjects;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Api/Issues")]
@@ -17,7 +20,7 @@ public class IssueController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(IssueDataObjectForCreate dataObject)
+    public async Task<ActionResult<string>> CreateAsync(IssueDataObjectForCreate dataObject)
     {
         if (!this.ModelState.IsValid)
         {
@@ -29,22 +32,27 @@ public class IssueController : ControllerBase
     }
 
     [HttpGet("{issueKey}")]
-    public async Task<IActionResult> GetByIssueKeyAsync(string issueKey)
+    public async Task<ActionResult> GetByIssueKeyAsync(string issueKey, bool includeComments = false)
     {
-        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+        var issue = await this.issueService.GetByIdAsync(
+            IssueUtil.GetIdFromIssueKey(issueKey),
+            new IncludeOptions<Issue>(i => i.Comments));
+
         return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPagedIssuesByStatusAsync(
+    public async Task<ActionResult<PagedResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(
         string statusCategory = "All", int pageNumber = 1, int pageSize = 10)
     {
-        var (issues, pagination) = await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize);
-        return Ok(new { issues, pagination });
+        var pagedResult = await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize);
+        pagedResult.Pagination.CurrentPage = pagedResult.Pagination.TotalCount > 0 ? pagedResult.Pagination.CurrentPage : 0;
+        pagedResult.Pagination.PageSize = pagedResult.Pagination.TotalCount > 0 ? pagedResult.Pagination.PageSize : 0;
+        return Ok(pagedResult);
     }
 
     [HttpPut("{issueKey}")]
-    public async Task<IActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate dataObject)
+    public async Task<ActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate dataObject)
     {
         if (!await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey)))
         {

@@ -60,7 +60,7 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
         return await query.SingleOrDefaultAsync(e => EF.Property<TEntityId>(e, this.EntityId)!.Equals(entityId));
     }
 
-    public async Task<(IEnumerable<TEntity>, Pagination)> GetPagedAllAsync(int pageNumber, int pageSize,
+    public async Task<PagedResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize,
         Expression<Func<TEntity, bool>>? condition = null, IncludeOptions<TEntity>? includeOptions = null)
     {
         IQueryable<TEntity> selectQuery = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
@@ -78,9 +78,7 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
             .Take(pageSize)
             .ToListAsync();
 
-        var metadata = new Pagination(await totalCountQuery.CountAsync(), pageSize, pageNumber);
-
-        return (entities, metadata);
+        return new PagedResult<TEntity>(entities, new Pagination(await totalCountQuery.CountAsync(), pageSize, pageNumber));
     }
 
     public async Task<bool> IsExistsByIdAsync(TEntityId entityId)
