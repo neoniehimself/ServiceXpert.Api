@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Domain.Utils;
 using ServiceXpert.Domain.ValueObjects;
 
 namespace ServiceXpert.Presentation.Controllers;
@@ -34,20 +34,34 @@ public class IssueController : ControllerBase
     [HttpGet("{issueKey}")]
     public async Task<ActionResult> GetByIssueKeyAsync(string issueKey, bool includeComments = false)
     {
-        var issue = await this.issueService.GetByIdAsync(
-            IssueUtil.GetIdFromIssueKey(issueKey),
-            new IncludeOptions<Issue>(i => i.Comments));
+        var propList = new PropertyList<Issue>();
+
+        if (includeComments)
+        {
+            propList.Add(i => i.Comments);
+        }
+
+        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey),
+            propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
 
         return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
     }
 
     [HttpGet]
     public async Task<ActionResult<PagedResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(
-        string statusCategory = "All", int pageNumber = 1, int pageSize = 10)
+        string statusCategory = "All", int pageNumber = 1, int pageSize = 10, bool includeComments = false)
     {
-        var pagedResult = await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize);
-        pagedResult.Pagination.CurrentPage = pagedResult.Pagination.TotalCount > 0 ? pagedResult.Pagination.CurrentPage : 0;
-        pagedResult.Pagination.PageSize = pagedResult.Pagination.TotalCount > 0 ? pagedResult.Pagination.PageSize : 0;
+        var propList = new PropertyList<Issue>();
+
+        if (includeComments)
+        {
+            propList.Add(i => i.Comments);
+        }
+
+        var pagedResult =
+            await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize,
+                propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
+
         return Ok(pagedResult);
     }
 

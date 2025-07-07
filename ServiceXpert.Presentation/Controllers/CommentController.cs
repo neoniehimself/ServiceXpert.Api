@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Application.Utils;
+using ServiceXpert.Domain.Utils;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Api/Issues/{issueKey}/Comments")]
@@ -20,7 +20,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate dataObject)
+    public async Task<ActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate dataObject)
     {
         if (!string.Equals(issueKey, dataObject.IssueKey))
         {
@@ -44,7 +44,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllAsync(string issueKey)
+    public async Task<ActionResult<IEnumerable<CommentDataObject>>> GetAllByIssueKeyAsync(string issueKey)
     {
         var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
 
@@ -53,12 +53,12 @@ public class CommentController : ControllerBase
             return NotFound($"No such issue exists. IssueKey: {issueKey}");
         }
 
-        var comments = await this.commentService.GetAllAsync(c => c.IssueId == issueId);
+        var comments = await this.commentService.GetAllByIssueKeyAsync(issueId);
         return Ok(comments);
     }
 
     [HttpGet("{commentId}")]
-    public async Task<IActionResult> GetAsync(string issueKey, Guid commentId)
+    public async Task<ActionResult> GetByIdAsync(string issueKey, Guid commentId)
     {
         var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
 
@@ -67,7 +67,7 @@ public class CommentController : ControllerBase
             return NotFound($"No such issue exists. IssueKey: {issueKey}");
         }
 
-        var comment = await this.commentService.GetAsync(c => c.IssueId == issueId && c.CommentId == commentId);
+        var comment = await this.commentService.GetByIdAsync(commentId);
         return comment != null ? Ok(comment) : NotFound(commentId);
     }
 }

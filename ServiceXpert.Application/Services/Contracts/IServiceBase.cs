@@ -2,7 +2,6 @@
 using ServiceXpert.Application.DataObjects;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.ValueObjects;
-using System.Linq.Expressions;
 
 namespace ServiceXpert.Application.Services.Contracts;
 public interface IServiceBase<TId, TEntity, TDataObject>
@@ -14,15 +13,12 @@ public interface IServiceBase<TId, TEntity, TDataObject>
 
     Task DeleteByIdAsync(TId id);
 
-    Task<IEnumerable<TDataObject>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+    Task<IEnumerable<TDataObject>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null);
+
+    Task<TDataObject?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null);
+
+    Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber, int pageSize,
         IncludeOptions<TEntity>? includeOptions = null);
-
-    Task<TDataObject?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null);
-
-    Task<TDataObject?> GetByIdAsync(TId entityId, IncludeOptions<TEntity>? includeOptions = null);
-
-    Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber = 1, int pageSize = 10,
-        Expression<Func<TEntity, bool>>? condition = null, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<bool> IsExistsByIdAsync(TId id);
 

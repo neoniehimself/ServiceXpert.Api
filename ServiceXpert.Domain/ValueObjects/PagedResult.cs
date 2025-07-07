@@ -1,9 +1,9 @@
 ﻿namespace ServiceXpert.Domain.ValueObjects;
 public class PagedResult<T>
 {
-    public IEnumerable<T> Items { get; set; }
+    public IEnumerable<T> Items { get; }
 
-    public Pagination Pagination { get; set; }
+    public Pagination Pagination { get; }
 
     public PagedResult()
     {

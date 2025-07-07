@@ -1,4 +1,4 @@
-﻿using ServiceXpert.Application.Utils;
+﻿using ServiceXpert.Domain.Utils;
 using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Application.DataObjects.Comment;

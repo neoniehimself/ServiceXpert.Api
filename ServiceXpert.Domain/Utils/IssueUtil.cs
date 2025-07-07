@@ -1,4 +1,4 @@
-﻿namespace ServiceXpert.Application.Utils;
+﻿namespace ServiceXpert.Domain.Utils;
 public static class IssueUtil
 {
     public static int GetIdFromIssueKey(string issueKey)

@@ -35,23 +35,26 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
             .Where(e => EF.Property<TEntityId>(e, this.EntityId)!.Equals(entityId)).ExecuteDeleteAsync();
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+    public async Task<IEnumerable<TEntity>> GetAllAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
         IncludeOptions<TEntity>? includeOptions = null)
     {
         IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
 
-        if (condition != null)
+        if (filter != null)
         {
-            query = query.Where(condition);
+            query = query.Where(filter);
         }
 
         return await query.ToListAsync();
     }
 
-    public Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null)
+    public Task<TEntity?> GetAsync(
+        Expression<Func<TEntity, bool>> filter,
+        IncludeOptions<TEntity>? includeOptions = null)
     {
         IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
-        return query.Where(condition).SingleOrDefaultAsync();
+        return query.Where(filter).SingleOrDefaultAsync();
     }
 
     public async Task<TEntity?> GetByIdAsync(TEntityId entityId, IncludeOptions<TEntity>? includeOptions = null)
@@ -61,15 +64,15 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
     }
 
     public async Task<PagedResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize,
-        Expression<Func<TEntity, bool>>? condition = null, IncludeOptions<TEntity>? includeOptions = null)
+        Expression<Func<TEntity, bool>>? filter = null, IncludeOptions<TEntity>? includeOptions = null)
     {
         IQueryable<TEntity> selectQuery = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
         IQueryable<TEntity> totalCountQuery = this.dbContext.Set<TEntity>();
 
-        if (condition != null)
+        if (filter != null)
         {
-            selectQuery = selectQuery.Where(condition);
-            totalCountQuery = totalCountQuery.Where(condition);
+            selectQuery = selectQuery.Where(filter);
+            totalCountQuery = totalCountQuery.Where(filter);
         }
 
         var entities = await selectQuery

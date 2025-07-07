@@ -17,6 +17,8 @@ public class SxpDbContext : DbContext
 
     public DbSet<Issue> Issue { get; set; }
 
+    public DbSet<Comment> Comment { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder

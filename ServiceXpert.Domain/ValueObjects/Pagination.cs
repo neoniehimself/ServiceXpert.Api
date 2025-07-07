@@ -1,13 +1,13 @@
 ﻿namespace ServiceXpert.Domain.ValueObjects;
 public class Pagination
 {
-    public int TotalCount { get; set; }
+    public int TotalCount { get; }
 
-    public int TotalPageCount { get; set; }
+    public int TotalPageCount { get; }
 
-    public int PageSize { get; set; }
+    public int PageSize { get; }
 
-    public int CurrentPage { get; set; }
+    public int CurrentPage { get; }
 
     public Pagination()
     {
@@ -16,8 +16,8 @@ public class Pagination
     public Pagination(int totalCount, int pageSize, int currentPage)
     {
         this.TotalCount = totalCount;
-        this.PageSize = pageSize;
-        this.CurrentPage = currentPage;
+        this.PageSize = totalCount > 0 ? pageSize : 0;
+        this.CurrentPage = totalCount > 0 ? currentPage : 0;
         this.TotalPageCount = (int)Math.Ceiling(totalCount / (double)pageSize);
     }
 }
