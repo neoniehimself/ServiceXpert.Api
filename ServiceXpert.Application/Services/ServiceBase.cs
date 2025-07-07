@@ -57,7 +57,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
             await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions);
 
         // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
-        return new PagedResult<TDataObject>(pagedResult.Items.Adapt<ICollection<TDataObject>>(), pagedResult.Pagination);
+        return new PagedResult<TDataObject>(pagedResult.Items.Adapt<List<TDataObject>>(), pagedResult.Pagination);
     }
 
     public async Task<bool> IsExistsByIdAsync(TId id)
