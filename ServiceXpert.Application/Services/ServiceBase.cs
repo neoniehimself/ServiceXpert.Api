@@ -6,7 +6,6 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories.Contracts;
 using ServiceXpert.Domain.ValueObjects;
-using System.Linq.Expressions;
 
 namespace ServiceXpert.Application.Services;
 public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId, TEntity, TDataObject>
@@ -39,18 +38,10 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         await this.repositoryBase.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<TDataObject>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
-        IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<IEnumerable<TDataObject>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null)
     {
-        IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(condition, includeOptions);
+        IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(includeOptions: includeOptions);
         return entities.Adapt<ICollection<TDataObject>>();
-    }
-
-    public async Task<TDataObject?> GetAsync(Expression<Func<TEntity, bool>> condition,
-        IncludeOptions<TEntity>? includeOptions = null)
-    {
-        TEntity? entity = await this.repositoryBase.GetAsync(condition, includeOptions);
-        return entity?.Adapt<TDataObject>();
     }
 
     public async Task<TDataObject?> GetByIdAsync(TId entityId, IncludeOptions<TEntity>? includeOptions = null)
@@ -59,14 +50,14 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return entity?.Adapt<TDataObject>();
     }
 
-    public async Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber = 1, int pageSize = 10,
-        Expression<Func<TEntity, bool>>? condition = null, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber, int pageSize,
+        IncludeOptions<TEntity>? includeOptions = null)
     {
         PagedResult<TEntity> pagedResult =
-            await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, condition, includeOptions);
+            await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions);
 
         // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
-        return new PagedResult<TDataObject>(pagedResult.Items.Adapt<ICollection<TDataObject>>(), pagedResult.Pagination);
+        return new PagedResult<TDataObject>(pagedResult.Items.Adapt<List<TDataObject>>(), pagedResult.Pagination);
     }
 
     public async Task<bool> IsExistsByIdAsync(TId id)
@@ -75,7 +66,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
     }
 
     public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject)
-            where TDataObjectForUpdate : DataObjectBase
+        where TDataObjectForUpdate : DataObjectBase
     {
         TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id);
 

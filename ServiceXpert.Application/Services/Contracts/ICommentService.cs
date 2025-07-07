@@ -4,4 +4,5 @@ using ServiceXpert.Domain.Entities;
 namespace ServiceXpert.Application.Services.Contracts;
 public interface ICommentService : IServiceBase<Guid, Comment, CommentDataObject>
 {
+    Task<IEnumerable<CommentDataObject>> GetAllByIssueKeyAsync(int issueId);
 }

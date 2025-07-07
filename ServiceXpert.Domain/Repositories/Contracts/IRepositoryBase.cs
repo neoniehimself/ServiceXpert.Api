@@ -12,15 +12,15 @@ public interface IRepositoryBase<TEntityId, TEntity> where TEntity : EntityBase
 
     Task DeleteByIdAsync(TEntityId entityId);
 
-    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? condition = null,
+    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,
         IncludeOptions<TEntity>? includeOptions = null);
 
-    Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> condition, IncludeOptions<TEntity>? includeOptions = null);
+    Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<TEntity?> GetByIdAsync(TEntityId entityId, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<PagedResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize,
-        Expression<Func<TEntity, bool>>? condition = null, IncludeOptions<TEntity>? includeOptions = null);
+        Expression<Func<TEntity, bool>>? filter = null, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<bool> IsExistsByIdAsync(TEntityId entityId);
 

@@ -49,7 +49,7 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
 
             // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
             return new PagedResult<IssueDataObject>(
-                pagedResult.Items.Adapt<ICollection<IssueDataObject>>(),
+                pagedResult.Items.Adapt<List<IssueDataObject>>(),
                 pagedResult.Pagination
             );
         }
