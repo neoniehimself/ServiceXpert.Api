@@ -5,7 +5,7 @@ GET {{Presentation_HostAddress}}/issues/
 Accept: application/json
 
 ###
-GET {{Presentation_HostAddress}}/issues/SXP-1?includeComments=True/
+GET {{Presentation_HostAddress}}/issues/SXP-1?includeComments=True
 Accept: application/json
 
 ###
