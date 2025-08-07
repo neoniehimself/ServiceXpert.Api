@@ -10,7 +10,7 @@ public class SxpDbContext : DbContext
     {
         get
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ServiceXpert", EnvironmentVariableTarget.User);
+            string? connectionString = Environment.GetEnvironmentVariable("ServiceXpert", EnvironmentVariableTarget.Machine);
             return connectionString ?? throw new KeyNotFoundException("Fatal: Missing connection string");
         }
     }
