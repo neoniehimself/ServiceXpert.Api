@@ -3,9 +3,9 @@ using ServiceXpert.Domain.Repositories.Contracts;
 using ServiceXpert.Infrastructure.DbContexts;
 
 namespace ServiceXpert.Infrastructure.Repositories;
-public class CommentRepository : RepositoryBase<Guid, Comment>, ICommentRepository
+public class AspNetUserProfileRepository : RepositoryBase<Guid, AspNetUserProfile>, IAspNetUserProfileRepository
 {
-    public CommentRepository(SxpDbContext dbContext) : base(dbContext)
+    public AspNetUserProfileRepository(SxpDbContext dbContext) : base(dbContext)
     {
     }
 }

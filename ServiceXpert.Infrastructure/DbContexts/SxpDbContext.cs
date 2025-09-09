@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ServiceXpert.Domain.Entities;
+using ServiceXpert.Infrastructure.Models;
 using System.Reflection;
 
-namespace ServiceXpert.ServiceXpert.Infrastructure.DbContexts;
-public class SxpDbContext : DbContext
+namespace ServiceXpert.Infrastructure.DbContexts;
+public class SxpDbContext : IdentityDbContext<AspNetUser, AspNetRole, Guid, IdentityUserClaim<Guid>,
+        AspNetUserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
     private static string ConnectionString
     {
@@ -18,6 +22,8 @@ public class SxpDbContext : DbContext
     public DbSet<Issue> Issue { get; set; }
 
     public DbSet<Comment> Comment { get; set; }
+
+    public DbSet<AspNetUserProfile> AspNetUserProfiles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

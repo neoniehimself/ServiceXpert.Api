@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ServiceXpert.ServiceXpert.Infrastructure.DbContexts;
+using ServiceXpert.Infrastructure.DbContexts;
 
 #nullable disable
 

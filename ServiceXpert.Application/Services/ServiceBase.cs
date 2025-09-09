@@ -21,7 +21,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         this.mapper = mapper;
     }
 
-    public async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject)
+    public virtual async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject)
         where TDataObjectForCreate : DataObjectBase
     {
         TEntity entity = dataObject.Adapt<TEntity>();

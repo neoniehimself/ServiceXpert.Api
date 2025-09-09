@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories.Contracts;
 using ServiceXpert.Domain.ValueObjects;
-using ServiceXpert.ServiceXpert.Infrastructure.DbContexts;
+using ServiceXpert.Infrastructure.DbContexts;
 using System.Linq.Expressions;
 
 namespace ServiceXpert.Infrastructure.Repositories;

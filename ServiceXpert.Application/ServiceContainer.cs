@@ -16,6 +16,7 @@ public static class ServiceContainer
 
         services.TryAddScoped<IIssueService, IssueService>();
         services.TryAddScoped<ICommentService, CommentService>();
+        services.TryAddScoped<IAspNetUserProfileService, AspNetUserProfileService>();
 
         return services;
     }
