@@ -41,9 +41,7 @@ public class IssueController : ControllerBase
             propList.Add(i => i.Comments);
         }
 
-        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey),
-            propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
-
+        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
         return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
     }
 
@@ -58,10 +56,7 @@ public class IssueController : ControllerBase
             propList.Add(i => i.Comments);
         }
 
-        var pagedResult =
-            await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize,
-                propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
-
+        var pagedResult = await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize, propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
         return Ok(pagedResult);
     }
 

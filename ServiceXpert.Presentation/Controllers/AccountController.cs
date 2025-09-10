@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects;
 using ServiceXpert.Application.DataObjects.AspNetUserProfile;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Infrastructure.Models;
+using ServiceXpert.Infrastructure.AuthModels;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Api/Account")]

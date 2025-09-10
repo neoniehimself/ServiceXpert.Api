@@ -39,7 +39,6 @@ public class CommentController : ControllerBase
 
         var commentId = await this.commentService.CreateAsync(dataObject);
         var comment = await this.commentService.GetByIdAsync(commentId);
-
         return Created(string.Format(this.CommentControllerFullUriFormat, comment!.IssueKey, commentId), comment);
     }
 

@@ -7,10 +7,10 @@ public class AspNetUserProfileDataObjectForCreate : DataObjectBase
     public Guid Id { get; }
 
     [Required]
-    public required string FirstName { get; set; }
+    public string FirstName { get; set; } = string.Empty;
 
     [Required]
-    public required string LastName { get; set; }
+    public string LastName { get; set; } = string.Empty;
 
     public AspNetUserProfileDataObjectForCreate(Guid id)
     {
