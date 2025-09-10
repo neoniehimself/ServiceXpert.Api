@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using ServiceXpert.Application;
+using ServiceXpert.Domain.Shared.Enums;
 using ServiceXpert.Infrastructure;
 using ServiceXpert.Infrastructure.AuthModels;
 using ServiceXpert.Infrastructure.DbContexts;
@@ -15,6 +16,7 @@ builder.Services
     .AddApplicationLayerServices()
     .AddInfrastructureLayerServices();
 
+#region Authentication & Authorization Service Configurations
 builder.Services
     .AddIdentity<AspNetUser, AspNetRole>()
     .AddEntityFrameworkStores<SxpDbContext>()
@@ -40,8 +42,10 @@ builder.Services.AddAuthentication(options =>
     });
 
 var authBuilder = builder.Services.AddAuthorizationBuilder();
-authBuilder.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-authBuilder.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
+authBuilder.AddPolicy(nameof(Policy.Admin), policy => policy.RequireRole(nameof(Role.Admin)));
+authBuilder.AddPolicy(nameof(Policy.User), policy => policy.RequireRole(nameof(Role.User)));
+
+#endregion
 
 builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true);
 

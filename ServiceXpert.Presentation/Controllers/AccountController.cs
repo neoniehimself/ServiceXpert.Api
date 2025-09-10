@@ -26,4 +26,22 @@ public class AccountController : ControllerBase
         var result = await this.aspNetUserService.RegisterAsync(dataObject);
         return result.Succeeded ? Ok("Register successful!") : BadRequest(result.Errors);
     }
+
+    [HttpPost(nameof(Login))]
+    public Task<ActionResult> Login(LoginUserDataObject dataObject)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpPost(nameof(AddRole))]
+    public Task<ActionResult> AddRole(string roleName)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpPost(nameof(AssignRole))]
+    public Task<ActionResult> AssignRole(UserRoleDataObject dataObject)
+    {
+        throw new NotImplementedException();
+    }
 }
