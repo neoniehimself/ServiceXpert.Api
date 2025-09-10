@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ServiceXpert.Application\ServiceXpert.Application.csproj" />
     <ProjectReference Include="..\ServiceXpert.Domain\ServiceXpert.Domain.csproj" />
   </ItemGroup>
 

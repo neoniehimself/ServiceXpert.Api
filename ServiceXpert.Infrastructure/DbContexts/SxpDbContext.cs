@@ -21,7 +21,7 @@ public class SxpDbContext : IdentityDbContext<
     {
         get
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ServiceXpert", EnvironmentVariableTarget.Machine);
+            string? connectionString = Environment.GetEnvironmentVariable("ServiceXpert_ConnectionString", EnvironmentVariableTarget.Machine);
             return connectionString ?? throw new KeyNotFoundException("Fatal: Missing connection string");
         }
     }
