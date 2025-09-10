@@ -13,7 +13,6 @@ public static class ServiceContainer
         IssueMapsterConfiguration.Map();
 
         services.AddMapster();
-
         services.TryAddScoped<IIssueService, IssueService>();
         services.TryAddScoped<ICommentService, CommentService>();
         services.TryAddScoped<IAspNetUserProfileService, AspNetUserProfileService>();

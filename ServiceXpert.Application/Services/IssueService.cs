@@ -18,9 +18,7 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
         this.issueRepository = issueRepository;
     }
 
-    public async Task<PagedResult<IssueDataObject>> GetPagedIssuesByStatusAsync(
-        string statusCategory, int pageNumber, int pageSize,
-        IncludeOptions<Issue>? includeOptions = null)
+    public async Task<PagedResult<IssueDataObject>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null)
     {
         var pagedResult = new PagedResult<Issue>();
 
@@ -49,7 +47,7 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
 
             // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
             return new PagedResult<IssueDataObject>(
-                pagedResult.Items.Adapt<List<IssueDataObject>>(),
+                pagedResult.Items.Adapt<ICollection<IssueDataObject>>(),
                 pagedResult.Pagination
             );
         }

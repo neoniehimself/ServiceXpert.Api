@@ -1,11 +1,16 @@
-﻿namespace ServiceXpert.Application.DataObjects.AspNetUserProfile;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ServiceXpert.Application.DataObjects.AspNetUserProfile;
 public class AspNetUserProfileDataObjectForCreate : DataObjectBase
 {
+    [Required]
     public Guid Id { get; }
 
-    public string FirstName { get; set; } = string.Empty;
+    [Required]
+    public required string FirstName { get; set; }
 
-    public string LastName { get; set; } = string.Empty;
+    [Required]
+    public required string LastName { get; set; }
 
     public AspNetUserProfileDataObjectForCreate(Guid id)
     {

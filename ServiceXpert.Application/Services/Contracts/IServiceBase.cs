@@ -8,8 +8,7 @@ public interface IServiceBase<TId, TEntity, TDataObject>
     where TEntity : EntityBase
     where TDataObject : DataObjectBase
 {
-    Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject)
-        where TDataObjectForCreate : DataObjectBase;
+    Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject) where TDataObjectForCreate : DataObjectBase;
 
     Task DeleteByIdAsync(TId id);
 
@@ -17,11 +16,9 @@ public interface IServiceBase<TId, TEntity, TDataObject>
 
     Task<TDataObject?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null);
 
-    Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber, int pageSize,
-        IncludeOptions<TEntity>? includeOptions = null);
+    Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<bool> IsExistsByIdAsync(TId id);
 
-    Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject)
-        where TDataObjectForUpdate : DataObjectBase;
+    Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject) where TDataObjectForUpdate : DataObjectBase;
 }

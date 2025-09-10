@@ -4,7 +4,7 @@ public class UserRoleDataObject
     /// <summary>
     /// User's UserName
     /// </summary>
-    public string UserName { get; set; } = string.Empty;
+    public required string UserName { get; set; }
 
-    public string RoleName { get; set; } = string.Empty;
+    public required string RoleName { get; set; }
 }

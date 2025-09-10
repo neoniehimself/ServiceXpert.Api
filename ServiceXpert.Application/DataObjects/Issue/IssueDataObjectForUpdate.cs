@@ -10,7 +10,9 @@ public class IssueDataObjectForUpdate : DataObjectBase
     [MaxLength(4096)]
     public string? Description { get; set; }
 
+    [Required]
     public required int IssueStatusId { get; set; }
 
+    [Required]
     public required int IssuePriorityId { get; set; }
 }

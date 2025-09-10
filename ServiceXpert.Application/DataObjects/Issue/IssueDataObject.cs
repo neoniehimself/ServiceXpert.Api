@@ -19,7 +19,7 @@ public class IssueDataObject : DataObjectBase
 
     public IssuePriorityDataObject? IssuePriority { get; set; }
 
-    public List<CommentDataObject> Comments { get; set; }
+    public ICollection<CommentDataObject> Comments { get; set; }
 
     public IssueDataObject()
     {

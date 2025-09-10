@@ -21,8 +21,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         this.mapper = mapper;
     }
 
-    public virtual async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject)
-        where TDataObjectForCreate : DataObjectBase
+    public virtual async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject) where TDataObjectForCreate : DataObjectBase
     {
         TEntity entity = dataObject.Adapt<TEntity>();
 
@@ -50,14 +49,12 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return entity?.Adapt<TDataObject>();
     }
 
-    public async Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber, int pageSize,
-        IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null)
     {
-        PagedResult<TEntity> pagedResult =
-            await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions);
+        PagedResult<TEntity> pagedResult = await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions);
 
         // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
-        return new PagedResult<TDataObject>(pagedResult.Items.Adapt<List<TDataObject>>(), pagedResult.Pagination);
+        return new PagedResult<TDataObject>(pagedResult.Items.Adapt<ICollection<TDataObject>>(), pagedResult.Pagination);
     }
 
     public async Task<bool> IsExistsByIdAsync(TId id)
@@ -65,8 +62,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return await this.repositoryBase.IsExistsByIdAsync(id);
     }
 
-    public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject)
-        where TDataObjectForUpdate : DataObjectBase
+    public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject) where TDataObjectForUpdate : DataObjectBase
     {
         TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id);
 
