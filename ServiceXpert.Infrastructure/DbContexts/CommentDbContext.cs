@@ -9,7 +9,6 @@ internal class CommentDbContext : DbContextBase, IEntityTypeConfiguration<Commen
     {
         comment.HasKey(c => c.CommentId).IsClustered(false);
         comment.Property(c => c.Content).HasColumnType(VarcharMax);
-
         comment.HasOne<Issue>().WithMany(i => i.Comments).HasForeignKey(c => c.IssueId);
     }
 }

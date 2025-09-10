@@ -3,12 +3,19 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Infrastructure.Models;
+using ServiceXpert.Infrastructure.AuthModels;
 using System.Reflection;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
-public class SxpDbContext : IdentityDbContext<AspNetUser, AspNetRole, Guid, IdentityUserClaim<Guid>,
-        AspNetUserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
+public class SxpDbContext : IdentityDbContext<
+    AspNetUser,
+    AspNetRole,
+    Guid,
+    IdentityUserClaim<Guid>,
+    AspNetUserRole,
+    IdentityUserLogin<Guid>,
+    IdentityRoleClaim<Guid>,
+    IdentityUserToken<Guid>>
 {
     private static string ConnectionString
     {
@@ -19,9 +26,9 @@ public class SxpDbContext : IdentityDbContext<AspNetUser, AspNetRole, Guid, Iden
         }
     }
 
-    public DbSet<Issue> Issue { get; set; }
+    public DbSet<Issue> Issues { get; set; }
 
-    public DbSet<Comment> Comment { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     public DbSet<AspNetUserProfile> AspNetUserProfiles { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ServiceXpert.Infrastructure.Models;
+namespace ServiceXpert.Infrastructure.AuthModels;
 public class AspNetRole : IdentityRole<Guid>
 {
     public AspNetRole()

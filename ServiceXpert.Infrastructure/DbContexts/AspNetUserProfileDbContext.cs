@@ -8,7 +8,7 @@ internal class AspNetUserProfileDbContext : DbContextBase, IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<AspNetUserProfile> profile)
     {
         profile.HasKey(p => p.Id).IsClustered(false);
-        profile.Property(p => p.FirstName).HasColumnType(ToVarcharColumn(256));
-        profile.Property(p => p.LastName).HasColumnType(ToVarcharColumn(256));
+        profile.Property(p => p.FirstName).HasMaxLength(256);
+        profile.Property(p => p.LastName).HasMaxLength(256);
     }
 }
