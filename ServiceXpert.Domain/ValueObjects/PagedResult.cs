@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Domain.ValueObjects;
+
 public class PagedResult<T>
 {
     public List<T> Items { get; }

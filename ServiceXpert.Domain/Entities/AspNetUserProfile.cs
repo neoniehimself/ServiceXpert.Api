@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Domain.Entities;
+
 public class AspNetUserProfile : EntityBase
 {
     public Guid Id { get; set; }

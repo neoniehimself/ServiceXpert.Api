@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Domain.Entities;
+
 public class Comment : EntityBase
 {
     public Guid CommentId { get; set; }

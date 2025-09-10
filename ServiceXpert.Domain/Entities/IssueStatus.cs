@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Domain.Entities;
+
 public class IssueStatus : EntityBase
 {
     public int IssueStatusId { get; set; }
