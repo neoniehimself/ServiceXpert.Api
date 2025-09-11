@@ -15,32 +15,37 @@ public class AspNetRoleService : IAspNetRoleService
         this.roleManager = roleManager;
     }
 
-    public async Task<(bool Succeeded, IEnumerable<string> Errors)> AssignRoleAsync(UserRoleDataObject dataObject)
+    public async Task<(bool Succeeded, IEnumerable<string> Errors)> AssignRoleAsync(UserRoleDataObject userRole)
     {
-        var user = await this.userManager.FindByNameAsync(dataObject.UserName);
+        var user = await this.userManager.FindByNameAsync(userRole.UserName);
 
         if (user == null)
         {
             return (false, new List<string> { "User not found!" });
         }
 
-        if (!await this.roleManager.RoleExistsAsync(dataObject.RoleName))
+        if (!await this.roleManager.RoleExistsAsync(userRole.RoleName))
         {
             return (false, new List<string> { "Role not found!" });
         }
 
-        if (await this.userManager.IsInRoleAsync(user, dataObject.RoleName))
+        if (await this.userManager.IsInRoleAsync(user, userRole.RoleName))
         {
             return (false, new List<string> { "User already assigned to this role!" });
         }
 
-        var result = await this.userManager.AddToRoleAsync(user, dataObject.RoleName);
-
-        return result.Succeeded ? (true, Enumerable.Empty<string>()) : (false, result.Errors.Select(e => e.Description));
+        var result = await this.userManager.AddToRoleAsync(user, userRole.RoleName);
+        return result.Succeeded ? (true, []) : (false, result.Errors.Select(e => e.Description));
     }
 
-    public Task<(bool Succeeded, IEnumerable<string> Errors)> CreateRoleAsync(string roleName)
+    public async Task<(bool Succeeded, IEnumerable<string> Errors)> CreateRoleAsync(string roleName)
     {
-        throw new NotImplementedException();
+        if (!await this.roleManager.RoleExistsAsync(roleName))
+        {
+            var result = await this.roleManager.CreateAsync(new AspNetRole(roleName));
+            return result.Succeeded ? (true, []) : (false, result.Errors.Select(e => e.Description));
+        }
+
+        return (false, new List<string> { "Role already exists!" });
     }
 }

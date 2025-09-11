@@ -8,15 +8,18 @@ namespace ServiceXpert.Presentation.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAspNetUserService aspNetUserService;
+    private readonly IAspNetRoleService aspNetRoleService;
 
     public AccountController(
-        IAspNetUserService aspNetUserService)
+        IAspNetUserService aspNetUserService,
+        IAspNetRoleService aspNetRoleService)
     {
         this.aspNetUserService = aspNetUserService;
+        this.aspNetRoleService = aspNetRoleService;
     }
 
-    [HttpPost(nameof(Register))]
-    public async Task<ActionResult> Register(RegisterUserDataObject dataObject)
+    [HttpPost(nameof(RegisterAsync))]
+    public async Task<ActionResult> RegisterAsync(RegisterUserDataObject dataObject)
     {
         if (!this.ModelState.IsValid)
         {
@@ -27,8 +30,8 @@ public class AccountController : ControllerBase
         return result.Succeeded ? Ok("Register successful!") : BadRequest(result.Errors);
     }
 
-    [HttpPost(nameof(Login))]
-    public async Task<ActionResult> Login(LoginUserDataObject dataObject)
+    [HttpPost(nameof(LoginAsync))]
+    public async Task<ActionResult> LoginAsync(LoginUserDataObject dataObject)
     {
         if (!this.ModelState.IsValid)
         {
@@ -39,15 +42,17 @@ public class AccountController : ControllerBase
         return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
     }
 
-    [HttpPost(nameof(AddRole))]
-    public Task<ActionResult> AddRole(string roleName)
+    [HttpPost(nameof(CreateAsync))]
+    public async Task<ActionResult> CreateAsync(string roleName)
     {
-        throw new NotImplementedException();
+        var result = await this.aspNetRoleService.CreateRoleAsync(roleName);
+        return result.Succeeded ? Ok("Role created successfully!") : BadRequest(result.Errors);
     }
 
-    [HttpPost(nameof(AssignRole))]
-    public Task<ActionResult> AssignRole(UserRoleDataObject dataObject)
+    [HttpPost(nameof(AssignRoleAsync))]
+    public async Task<ActionResult> AssignRoleAsync(UserRoleDataObject dataObject)
     {
-        throw new NotImplementedException();
+        var result = await this.aspNetRoleService.AssignRoleAsync(dataObject);
+        return result.Succeeded ? Ok("Role assigned successfully!") : BadRequest(result.Errors);
     }
 }

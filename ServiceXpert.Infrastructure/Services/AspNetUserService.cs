@@ -26,37 +26,37 @@ public class AspNetUserService : IAspNetUserService
         this.configuration = configuration;
     }
 
-    public async Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterUserDataObject dataObject)
+    public async Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterUserDataObject registerUser)
     {
         var result = await this.userManager.CreateAsync(new AspNetUser()
         {
-            UserName = dataObject.UserName,
-            Email = dataObject.Email
-        }, dataObject.Password);
+            UserName = registerUser.UserName,
+            Email = registerUser.Email
+        }, registerUser.Password);
 
         if (!result.Succeeded)
         {
             return (false, result.Errors.Select(e => e.Description), Guid.Empty);
         }
 
-        var aspNetUser = await this.userManager.FindByNameAsync(dataObject.UserName);
+        var aspNetUser = await this.userManager.FindByNameAsync(registerUser.UserName);
 
         var config = new TypeAdapterConfig();
         config.ForType<RegisterUserDataObject, AspNetUserProfileDataObjectForCreate>()
               .MapToConstructor(true)
               .ConstructUsing(src => new AspNetUserProfileDataObjectForCreate(aspNetUser!.Id));
 
-        var aspNetUserProfile = dataObject.Adapt<AspNetUserProfileDataObjectForCreate>(config);
+        var aspNetUserProfile = registerUser.Adapt<AspNetUserProfileDataObjectForCreate>(config);
         await this.aspNetUserProfileService.CreateAsync(aspNetUserProfile);
 
-        return (true, Enumerable.Empty<string>(), aspNetUser!.Id);
+        return (true, [], aspNetUser!.Id);
     }
 
-    public async Task<(bool Succeeded, IEnumerable<string> Errors, string token)> LoginAsync(LoginUserDataObject dataObject)
+    public async Task<(bool Succeeded, IEnumerable<string> Errors, string token)> LoginAsync(LoginUserDataObject loginUser)
     {
-        var user = await this.userManager.FindByNameAsync(dataObject.UserName);
+        var user = await this.userManager.FindByNameAsync(loginUser.UserName);
 
-        if (user != null && await this.userManager.CheckPasswordAsync(user, dataObject.Password))
+        if (user != null && await this.userManager.CheckPasswordAsync(user, loginUser.Password))
         {
             var userRoles = await this.userManager.GetRolesAsync(user);
 
@@ -80,12 +80,14 @@ public class AspNetUserService : IAspNetUserService
                 expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(this.configuration["Jwt:ExpiresInMinutes"])),
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(
-                        System.Text.Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("ServiceXpert_JwtKey", EnvironmentVariableTarget.Machine)!)),
-                        SecurityAlgorithms.HmacSha256
-                    )
+                        System.Text.Encoding.UTF8.GetBytes(
+                            Environment.GetEnvironmentVariable("ServiceXpert_JwtKey", EnvironmentVariableTarget.Machine)
+                            ?? throw new KeyNotFoundException("Fatal: Missing Jwt key"))
+                    ), SecurityAlgorithms.HmacSha256
+                )
             );
 
-            return (true, Enumerable.Empty<string>(), new JwtSecurityTokenHandler().WriteToken(token));
+            return (true, [], new JwtSecurityTokenHandler().WriteToken(token));
         }
 
         return (false, new List<string> { "Invalid username or password!" }, string.Empty);
