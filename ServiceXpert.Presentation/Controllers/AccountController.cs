@@ -28,9 +28,15 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost(nameof(Login))]
-    public Task<ActionResult> Login(LoginUserDataObject dataObject)
+    public async Task<ActionResult> Login(LoginUserDataObject dataObject)
     {
-        throw new NotImplementedException();
+        if (!this.ModelState.IsValid)
+        {
+            return BadRequest(this.ModelState);
+        }
+
+        var result = await this.aspNetUserService.LoginAsync(dataObject);
+        return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
     }
 
     [HttpPost(nameof(AddRole))]
