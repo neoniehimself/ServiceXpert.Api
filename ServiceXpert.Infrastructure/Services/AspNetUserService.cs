@@ -81,8 +81,7 @@ public class AspNetUserService : IAspNetUserService
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(
                         System.Text.Encoding.UTF8.GetBytes(
-                            Environment.GetEnvironmentVariable("ServiceXpert_JwtKey", EnvironmentVariableTarget.Machine)
-                            ?? throw new KeyNotFoundException("Fatal: Missing Jwt key"))
+                            Environment.GetEnvironmentVariable("ServiceXpert_JwtKey", EnvironmentVariableTarget.Machine) ?? throw new KeyNotFoundException("Fatal: Missing Jwt key"))
                     ), SecurityAlgorithms.HmacSha256
                 )
             );
