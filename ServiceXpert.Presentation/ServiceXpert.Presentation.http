@@ -1,5 +1,41 @@
 @Presentation_HostAddress = https://localhost:7090/api
 
+POST {{Demo.Api_HostAddress}}/account/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+###
+
+POST {{Demo.Api_HostAddress}}/account/register
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer [token]
+
+{
+  "username": "jdoe",
+  "password": "P@ssw0rd123!",
+  "email": "noemail@noemail.com",
+  "firstname": "John",
+  "lastname": "Doe"
+}
+
+###
+
+POST {{Demo.Api_HostAddress}}/account/assignrole
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer [token]
+
+{
+  "username": "jdoe",
+  "role": "User"
+}
+
 ###
 
 GET {{Presentation_HostAddress}}/issues/
