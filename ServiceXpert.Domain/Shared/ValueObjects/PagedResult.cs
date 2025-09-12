@@ -1,7 +1,7 @@
-﻿namespace ServiceXpert.Domain.ValueObjects;
+﻿namespace ServiceXpert.Domain.Shared.ValueObjects;
 public class PagedResult<T>
 {
-    public List<T> Items { get; }
+    public ICollection<T> Items { get; }
 
     public Pagination Pagination { get; }
 
@@ -11,7 +11,7 @@ public class PagedResult<T>
         this.Pagination = new();
     }
 
-    public PagedResult(List<T> items, Pagination pagination)
+    public PagedResult(ICollection<T> items, Pagination pagination)
     {
         this.Items = items;
         this.Pagination = pagination;

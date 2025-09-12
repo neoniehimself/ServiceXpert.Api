@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Utils;
+using ServiceXpert.Application.Utils;
+using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
+[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.User)}")]
 [Route("Api/Issues/{issueKey}/Comments")]
 [ApiController]
 public class CommentController : ControllerBase
@@ -39,7 +42,6 @@ public class CommentController : ControllerBase
 
         var commentId = await this.commentService.CreateAsync(dataObject);
         var comment = await this.commentService.GetByIdAsync(commentId);
-
         return Created(string.Format(this.CommentControllerFullUriFormat, comment!.IssueKey, commentId), comment);
     }
 

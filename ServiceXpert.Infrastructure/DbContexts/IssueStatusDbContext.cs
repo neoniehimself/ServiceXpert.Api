@@ -10,9 +10,9 @@ internal class IssueStatusDbContext : DbContextBase, IEntityTypeConfiguration<Is
 
     public void Configure(EntityTypeBuilder<IssueStatus> issueStatus)
     {
+        issueStatus.ToTable("IssueStatuses");
         issueStatus.HasKey(i => i.IssueStatusId).IsClustered();
-        issueStatus.Property(i => i.Name).HasColumnType(ToVarcharColumn(64));
-
+        issueStatus.Property(i => i.Name).HasMaxLength(64);
         issueStatus.HasData(
             new IssueStatus()
             {

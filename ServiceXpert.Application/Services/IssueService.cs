@@ -4,8 +4,8 @@ using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories.Contracts;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Repositories;
+using ServiceXpert.Domain.Shared.ValueObjects;
 using DomainEnums = ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Application.Services;
@@ -18,9 +18,7 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
         this.issueRepository = issueRepository;
     }
 
-    public async Task<PagedResult<IssueDataObject>> GetPagedIssuesByStatusAsync(
-        string statusCategory, int pageNumber, int pageSize,
-        IncludeOptions<Issue>? includeOptions = null)
+    public async Task<PagedResult<IssueDataObject>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null)
     {
         var pagedResult = new PagedResult<Issue>();
 
@@ -49,7 +47,7 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
 
             // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
             return new PagedResult<IssueDataObject>(
-                pagedResult.Items.Adapt<List<IssueDataObject>>(),
+                pagedResult.Items.Adapt<ICollection<IssueDataObject>>(),
                 pagedResult.Pagination
             );
         }

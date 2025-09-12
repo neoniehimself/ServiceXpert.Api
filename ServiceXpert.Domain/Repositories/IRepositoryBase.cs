@@ -1,9 +1,9 @@
 ﻿using FluentBuilder.Core;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Shared.ValueObjects;
 using System.Linq.Expressions;
 
-namespace ServiceXpert.Domain.Repositories.Contracts;
+namespace ServiceXpert.Domain.Repositories;
 public interface IRepositoryBase<TEntityId, TEntity> where TEntity : EntityBase
 {
     void Attach(TEntity entity);
@@ -12,8 +12,7 @@ public interface IRepositoryBase<TEntityId, TEntity> where TEntity : EntityBase
 
     Task DeleteByIdAsync(TEntityId entityId);
 
-    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,
-        IncludeOptions<TEntity>? includeOptions = null);
+    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, IncludeOptions<TEntity>? includeOptions = null);
 
     Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, IncludeOptions<TEntity>? includeOptions = null);
 

@@ -10,9 +10,9 @@ internal class IssuePriorityDbContext : DbContextBase, IEntityTypeConfiguration<
 
     public void Configure(EntityTypeBuilder<IssuePriority> issuePriority)
     {
+        issuePriority.ToTable("IssuePriorities");
         issuePriority.HasKey(i => i.IssuePriorityId).IsClustered();
-        issuePriority.Property(i => i.Name).HasColumnType(ToVarcharColumn(64));
-
+        issuePriority.Property(i => i.Name).HasMaxLength(64);
         issuePriority.HasData(
             new IssuePriority()
             {

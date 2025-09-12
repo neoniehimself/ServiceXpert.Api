@@ -9,13 +9,13 @@ public class Issue : EntityBase
 
     public int IssueStatusId { get; set; }
 
-    public IssueStatus? IssueStatus { get; set; }
+    public virtual IssueStatus? IssueStatus { get; set; }
 
     public int IssuePriorityId { get; set; }
 
-    public IssuePriority? IssuePriority { get; set; }
+    public virtual IssuePriority? IssuePriority { get; set; }
 
-    public List<Comment> Comments { get; set; }
+    public virtual ICollection<Comment> Comments { get; set; }
 
     public Issue()
     {

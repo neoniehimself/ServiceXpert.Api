@@ -3,7 +3,7 @@ using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories.Contracts;
+using ServiceXpert.Domain.Repositories;
 
 namespace ServiceXpert.Application.Services;
 public class CommentService : ServiceBase<Guid, Comment, CommentDataObject>, ICommentService

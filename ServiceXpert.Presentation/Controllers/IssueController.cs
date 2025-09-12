@@ -1,13 +1,15 @@
 ﻿using FluentBuilder.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Shared.Enums;
-using ServiceXpert.Domain.Utils;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Shared.ValueObjects;
 
 namespace ServiceXpert.Presentation.Controllers;
+[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.User)}")]
 [Route("Api/Issues")]
 [ApiController]
 public class IssueController : ControllerBase
@@ -41,9 +43,7 @@ public class IssueController : ControllerBase
             propList.Add(i => i.Comments);
         }
 
-        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey),
-            propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
-
+        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
         return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
     }
 
@@ -58,10 +58,7 @@ public class IssueController : ControllerBase
             propList.Add(i => i.Comments);
         }
 
-        var pagedResult =
-            await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize,
-                propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
-
+        var pagedResult = await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize, propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
         return Ok(pagedResult);
     }
 

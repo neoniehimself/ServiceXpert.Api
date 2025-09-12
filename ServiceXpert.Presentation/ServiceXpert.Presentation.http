@@ -1,17 +1,61 @@
 @Presentation_HostAddress = https://localhost:7090/api
 
+POST {{Presentation_HostAddress}}/account/loginasync
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
 ###
+
+POST {{Presentation_HostAddress}}/account/registerasync
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "jdoe",
+  "password": "P@ssw0rd123!",
+  "email": "noemail@noemail.com",
+  "firstname": "John",
+  "lastname": "Doe"
+}
+
+###
+
+POST {{Demo.Api_HostAddress}}/account/addroleasync?role=User
+Content-Type: application/json
+Accept: application/json
+
+###
+
+POST {{Presentation_HostAddress}}/account/assignroleasync
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "jdoe",
+  "role": "User"
+}
+
+###
+
 GET {{Presentation_HostAddress}}/issues/
 Accept: application/json
 
 ###
+
 GET {{Presentation_HostAddress}}/issues/SXP-1?includeComments=True
 Accept: application/json
 
 ###
+
 POST {{Presentation_HostAddress}}/issues/
 Accept: application/json
 Content-Type: application/json
+
 {
  "name": "Request timed out",
  "description": "Time out error on page load.",
@@ -19,9 +63,11 @@ Content-Type: application/json
 }
 
 ###
+
 PUT {{Presentation_HostAddress}}/issues/SXP-1/
 Accept: application/json
 Content-Type: application/json
+
 {
   "name": "Request timed out - Updated",
   "description": "Time out error on page load.",
@@ -30,10 +76,12 @@ Content-Type: application/json
 }
 
 ### Assuming there is an issue with 1 as its Id
+
 GET {{Presentation_HostAddress}}/issues/SXP-1/comments/
 Accept: application/json
 
 ###
+
 POST {{Presentation_HostAddress}}/issues/SXP-1/comments/
 Accept: application/json
 Content-Type: application/json

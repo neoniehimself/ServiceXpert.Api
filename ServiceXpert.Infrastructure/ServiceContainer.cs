@@ -1,17 +1,26 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using ServiceXpert.Domain.Repositories.Contracts;
+using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Domain.Repositories;
+using ServiceXpert.Infrastructure.DbContexts;
 using ServiceXpert.Infrastructure.Repositories;
-using ServiceXpert.ServiceXpert.Infrastructure.DbContexts;
+using ServiceXpert.Infrastructure.Services;
 
 namespace ServiceXpert.Infrastructure;
 public static class ServiceContainer
 {
     public static IServiceCollection AddInfrastructureLayerServices(this IServiceCollection services)
     {
+        // DbContext
         services.AddDbContext<SxpDbContext>();
-        services.TryAddScoped<IIssueRepository, IssueRepository>();
-        services.TryAddScoped<ICommentRepository, CommentRepository>();
+
+        // Repositories
+        services.AddScoped<IIssueRepository, IssueRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
+        services.AddScoped<IAspNetUserProfileRepository, AspNetUserProfileRepository>();
+
+        // Services
+        services.AddScoped<IAspNetUserService, AspNetUserService>();
+        services.AddScoped<IAspNetRoleService, AspNetRoleService>();
 
         return services;
     }

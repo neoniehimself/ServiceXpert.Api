@@ -1,23 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ServiceXpert.Domain.Entities;
+using ServiceXpert.Infrastructure.AuthModels;
 using System.Reflection;
 
-namespace ServiceXpert.ServiceXpert.Infrastructure.DbContexts;
-public class SxpDbContext : DbContext
+namespace ServiceXpert.Infrastructure.DbContexts;
+public class SxpDbContext : IdentityDbContext<
+    AspNetUser,
+    AspNetRole,
+    Guid,
+    IdentityUserClaim<Guid>,
+    AspNetUserRole,
+    IdentityUserLogin<Guid>,
+    IdentityRoleClaim<Guid>,
+    IdentityUserToken<Guid>>
 {
     private static string ConnectionString
     {
         get
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ServiceXpert", EnvironmentVariableTarget.Machine);
+            string? connectionString = Environment.GetEnvironmentVariable("ServiceXpert_ConnectionString", EnvironmentVariableTarget.Machine);
             return connectionString ?? throw new KeyNotFoundException("Fatal: Missing connection string");
         }
     }
 
-    public DbSet<Issue> Issue { get; set; }
+    public DbSet<Issue> Issues { get; set; }
 
-    public DbSet<Comment> Comment { get; set; }
+    public DbSet<Comment> Comments { get; set; }
+
+    public DbSet<AspNetUserProfile> AspNetUserProfiles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -31,7 +44,6 @@ public class SxpDbContext : DbContext
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        configurationBuilder.Properties<string>().HaveColumnType("VARCHAR");
         configurationBuilder.Conventions.Remove(typeof(ForeignKeyIndexConvention));
         base.ConfigureConventions(configurationBuilder);
     }
