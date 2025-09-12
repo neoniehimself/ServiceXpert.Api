@@ -1,4 +1,5 @@
 ﻿using FluentBuilder.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
@@ -8,6 +9,7 @@ using ServiceXpert.Domain.Shared.Enums;
 using ServiceXpert.Domain.ValueObjects;
 
 namespace ServiceXpert.Presentation.Controllers;
+[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.User)}")]
 [Route("Api/Issues")]
 [ApiController]
 public class IssueController : ControllerBase

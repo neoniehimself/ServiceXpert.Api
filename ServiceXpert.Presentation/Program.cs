@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using ServiceXpert.Application;
 using ServiceXpert.Domain.Shared.Enums;
@@ -47,7 +49,17 @@ authBuilder.AddPolicy(nameof(Policy.User), policy => policy.RequireRole(nameof(R
 
 #endregion
 
-builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true);
+builder.Services.AddControllers(options =>
+{
+    options.ReturnHttpNotAcceptable = true;
+
+    // Global Authorization Filter
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
 
 builder.Services.Configure<RouteOptions>(options => options.AppendTrailingSlash = true);
 
