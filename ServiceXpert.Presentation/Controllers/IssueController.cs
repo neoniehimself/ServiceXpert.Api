@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Shared.Enums;
-using ServiceXpert.Domain.Utils;
 using ServiceXpert.Domain.ValueObjects;
 
 namespace ServiceXpert.Presentation.Controllers;

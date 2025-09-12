@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Utils;
+using ServiceXpert.Application.Utils;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Api/Issues/{issueKey}/Comments")]
