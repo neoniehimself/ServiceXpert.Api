@@ -14,7 +14,6 @@ Accept: application/json
 POST {{Presentation_HostAddress}}/account/registerasync
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer [token]
 
 {
   "username": "jdoe",
@@ -35,7 +34,6 @@ Accept: application/json
 POST {{Presentation_HostAddress}}/account/assignroleasync
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer [token]
 
 {
   "username": "jdoe",
@@ -57,6 +55,7 @@ Accept: application/json
 POST {{Presentation_HostAddress}}/issues/
 Accept: application/json
 Content-Type: application/json
+
 {
  "name": "Request timed out",
  "description": "Time out error on page load.",
@@ -68,6 +67,7 @@ Content-Type: application/json
 PUT {{Presentation_HostAddress}}/issues/SXP-1/
 Accept: application/json
 Content-Type: application/json
+
 {
   "name": "Request timed out - Updated",
   "description": "Time out error on page load.",
