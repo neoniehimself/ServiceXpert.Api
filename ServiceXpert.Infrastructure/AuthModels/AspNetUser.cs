@@ -2,11 +2,15 @@
 using ServiceXpert.Domain.Shared.Audits;
 
 namespace ServiceXpert.Infrastructure.AuthModels;
-public class AspNetUser : IdentityUser<Guid>, IDate
+public class AspNetUser : IdentityUser<Guid>, IAuditable
 {
-    public DateTime CreateDate { get; set; } = DateTime.UtcNow;
+    public Guid CreateUserId { get; set; }
 
-    public DateTime ModifyDate { get; set; } = DateTime.UtcNow;
+    public DateTime CreateDate { get; set; }
+
+    public Guid ModifyUserId { get; set; }
+
+    public DateTime ModifyDate { get; set; }
 
     public AspNetUser()
     {
