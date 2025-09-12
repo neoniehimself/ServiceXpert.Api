@@ -1,8 +1,9 @@
-﻿namespace ServiceXpert.Domain.Entities;
+﻿using ServiceXpert.Domain.Shared.Audits;
 
-public abstract class EntityBase
+namespace ServiceXpert.Domain.Entities;
+public abstract class EntityBase : IDate
 {
     public DateTime CreateDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime ModifyDate { get; set; }
 }

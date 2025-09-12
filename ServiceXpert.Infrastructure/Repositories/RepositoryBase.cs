@@ -2,8 +2,8 @@
 using FluentBuilder.Persistence;
 using Microsoft.EntityFrameworkCore;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories.Contracts;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Repositories;
+using ServiceXpert.Domain.Shared.ValueObjects;
 using ServiceXpert.Infrastructure.DbContexts;
 using System.Linq.Expressions;
 

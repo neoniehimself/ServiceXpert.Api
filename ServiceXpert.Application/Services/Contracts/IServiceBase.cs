@@ -1,7 +1,7 @@
 ﻿using FluentBuilder.Core;
 using ServiceXpert.Application.DataObjects;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Shared.ValueObjects;
 
 namespace ServiceXpert.Application.Services.Contracts;
 public interface IServiceBase<TId, TEntity, TDataObject>

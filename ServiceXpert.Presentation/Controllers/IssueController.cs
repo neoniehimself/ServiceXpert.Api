@@ -6,7 +6,7 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Shared.Enums;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Shared.ValueObjects;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.User)}")]

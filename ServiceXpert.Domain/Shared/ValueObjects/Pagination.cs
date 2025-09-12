@@ -1,5 +1,4 @@
-﻿namespace ServiceXpert.Domain.ValueObjects;
-
+﻿namespace ServiceXpert.Domain.Shared.ValueObjects;
 public class Pagination
 {
     public int TotalCount { get; }

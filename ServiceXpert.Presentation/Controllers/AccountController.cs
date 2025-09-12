@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects;
+using ServiceXpert.Application.DataObjects.Auth;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
+[Authorize(Roles = nameof(Role.Admin))]
 [Route("Api/Account")]
 [ApiController]
 public class AccountController : ControllerBase
@@ -20,7 +21,6 @@ public class AccountController : ControllerBase
         this.aspNetRoleService = aspNetRoleService;
     }
 
-    [AllowAnonymous]
     [HttpPost(nameof(RegisterAsync))]
     public async Task<ActionResult> RegisterAsync(RegisterUserDataObject dataObject)
     {
@@ -46,7 +46,6 @@ public class AccountController : ControllerBase
         return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
     }
 
-    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPost(nameof(CreateAsync))]
     public async Task<ActionResult> CreateAsync(string roleName)
     {
@@ -54,7 +53,6 @@ public class AccountController : ControllerBase
         return result.Succeeded ? Ok("Role created successfully!") : BadRequest(result.Errors);
     }
 
-    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPost(nameof(AssignRoleAsync))]
     public async Task<ActionResult> AssignRoleAsync(UserRoleDataObject dataObject)
     {

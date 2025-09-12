@@ -1,5 +1,4 @@
 ﻿namespace ServiceXpert.Domain.Shared.Enums;
-
 public enum IssuePriority
 {
     Outage = 1,

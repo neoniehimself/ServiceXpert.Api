@@ -44,7 +44,6 @@ public class SxpDbContext : IdentityDbContext<
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        configurationBuilder.Properties<string>().HaveColumnType("VARCHAR");
         configurationBuilder.Conventions.Remove(typeof(ForeignKeyIndexConvention));
         base.ConfigureConventions(configurationBuilder);
     }

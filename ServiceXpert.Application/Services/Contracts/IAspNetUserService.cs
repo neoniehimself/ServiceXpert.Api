@@ -1,4 +1,4 @@
-﻿using ServiceXpert.Application.DataObjects;
+﻿using ServiceXpert.Application.DataObjects.Auth;
 
 namespace ServiceXpert.Application.Services.Contracts;
 public interface IAspNetUserService

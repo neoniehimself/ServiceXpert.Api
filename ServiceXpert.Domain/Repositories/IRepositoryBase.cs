@@ -1,10 +1,9 @@
 ﻿using FluentBuilder.Core;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Shared.ValueObjects;
 using System.Linq.Expressions;
 
-namespace ServiceXpert.Domain.Repositories.Contracts;
-
+namespace ServiceXpert.Domain.Repositories;
 public interface IRepositoryBase<TEntityId, TEntity> where TEntity : EntityBase
 {
     void Attach(TEntity entity);

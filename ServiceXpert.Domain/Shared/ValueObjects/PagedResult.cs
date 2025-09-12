@@ -1,5 +1,4 @@
-﻿namespace ServiceXpert.Domain.ValueObjects;
-
+﻿namespace ServiceXpert.Domain.Shared.ValueObjects;
 public class PagedResult<T>
 {
     public ICollection<T> Items { get; }

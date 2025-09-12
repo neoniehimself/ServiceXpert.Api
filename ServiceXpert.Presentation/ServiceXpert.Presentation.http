@@ -1,6 +1,6 @@
 @Presentation_HostAddress = https://localhost:7090/api
 
-POST {{Demo.Api_HostAddress}}/account/login
+POST {{Presentation_HostAddress}}/account/loginasync
 Content-Type: application/json
 Accept: application/json
 
@@ -11,7 +11,7 @@ Accept: application/json
 
 ###
 
-POST {{Demo.Api_HostAddress}}/account/register
+POST {{Presentation_HostAddress}}/account/registerasync
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer [token]
@@ -26,7 +26,13 @@ Authorization: Bearer [token]
 
 ###
 
-POST {{Demo.Api_HostAddress}}/account/assignrole
+POST {{Demo.Api_HostAddress}}/account/addroleasync?role=User
+Content-Type: application/json
+Accept: application/json
+
+###
+
+POST {{Presentation_HostAddress}}/account/assignroleasync
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer [token]

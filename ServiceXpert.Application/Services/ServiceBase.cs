@@ -4,8 +4,8 @@ using MapsterMapper;
 using ServiceXpert.Application.DataObjects;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories.Contracts;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Repositories;
+using ServiceXpert.Domain.Shared.ValueObjects;
 
 namespace ServiceXpert.Application.Services;
 public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId, TEntity, TDataObject>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Repositories.Contracts;
+using ServiceXpert.Domain.Repositories;
 using ServiceXpert.Infrastructure.DbContexts;
 using ServiceXpert.Infrastructure.Repositories;
 using ServiceXpert.Infrastructure.Services;

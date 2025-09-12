@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ServiceXpert.Application.DataObjects;
+namespace ServiceXpert.Application.DataObjects.Auth;
 public class LoginUserDataObject
 {
     [Required]
-    [MaxLength(256)]
     public required string UserName { get; set; }
 
     [Required]
-    [MaxLength]
     public required string Password { get; set; }
 }

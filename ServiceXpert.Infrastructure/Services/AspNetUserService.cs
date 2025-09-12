@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ServiceXpert.Application.DataObjects;
 using ServiceXpert.Application.DataObjects.AspNetUserProfile;
+using ServiceXpert.Application.DataObjects.Auth;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Infrastructure.AuthModels;
 using System.IdentityModel.Tokens.Jwt;

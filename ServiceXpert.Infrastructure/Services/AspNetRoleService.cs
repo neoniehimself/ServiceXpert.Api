@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ServiceXpert.Application.DataObjects;
+using ServiceXpert.Application.DataObjects.Auth;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Infrastructure.AuthModels;
 

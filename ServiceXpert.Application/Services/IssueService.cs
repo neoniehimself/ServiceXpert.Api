@@ -4,8 +4,8 @@ using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories.Contracts;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Repositories;
+using ServiceXpert.Domain.Shared.ValueObjects;
 using DomainEnums = ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Application.Services;
