@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Options;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Shared.Auditables;
+using ServiceXpert.Domain.Shared.Audits
 using ServiceXpert.Infrastructure.AuthModels;
 using System.Reflection;
 using System.Security.Claims;
@@ -66,7 +66,7 @@ public class SxpDbContext : IdentityDbContext<
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var entries = this.ChangeTracker.Entries<IAuditable>();
+        var entries = this.ChangeTracker.Entries<IAudit>();
         var userId = Guid.Parse(this.httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
         var dateTimeUtcNow = DateTime.UtcNow;
 
@@ -82,8 +82,8 @@ public class SxpDbContext : IdentityDbContext<
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreateUserId = userId;
-                    entry.Entity.CreateDate = dateTimeUtcNow;
+                    entry.Entity.CreatedByUserId = userId;
+                    entry.Entity.CreatedDate = dateTimeUtcNow;
                     break;
                 case EntityState.Modified:
                     entry.Entity.ModifyUserId = userId;

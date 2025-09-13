@@ -1,27 +1,27 @@
-﻿using ServiceXpert.Domain.Shared.Auditables;
+﻿using ServiceXpert.Domain.Shared.Audits
 
 namespace ServiceXpert.Application.DataObjects;
-public abstract class DataObjectBase : IAuditable
+public abstract class DataObjectBase : IAudit
 {
-    public Guid CreateUserId { get; set; }
+    public Guid CreatedByUserId { get; set; }
 
-    public DateTime CreateDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     public Guid? ModifyUserId { get; set; }
 
     public DateTime? ModifyDate { get; set; }
 }
 
-public abstract class DataObjectBaseForCreate : ICreateAuditable
+public abstract class DataObjectBaseForCreate : ICreationAudit
 {
-    public Guid CreateUserId { get; set; }
+    public Guid CreatedByUserId { get; set; }
 
-    public DateTime CreateDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 }
 
-public abstract class DataObjectBaseForUpdate : IModifyAuditable
+public abstract class DataObjectBaseForUpdate : IModificationAudit
 {
-    public Guid? ModifyUserId { get; set; }
+    public Guid? ModifiedByUserId { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 }

@@ -18,35 +18,35 @@ internal class IssuePriorityDbContext : DbContextBase, IEntityTypeConfiguration<
             {
                 IssuePriorityId = (int)DomainEnums.IssuePriority.Outage,
                 Name = "Outage",
-                CreateDate = this.dateTime,
+                CreatedDate = this.dateTime,
                 ModifyDate = this.dateTime
             },
             new IssuePriority()
             {
                 IssuePriorityId = (int)DomainEnums.IssuePriority.Critical,
                 Name = "Critical",
-                CreateDate = this.dateTime,
+                CreatedDate = this.dateTime,
                 ModifyDate = this.dateTime
             },
             new IssuePriority()
             {
                 IssuePriorityId = (int)DomainEnums.IssuePriority.High,
                 Name = "High",
-                CreateDate = this.dateTime,
+                CreatedDate = this.dateTime,
                 ModifyDate = this.dateTime
             },
             new IssuePriority()
             {
                 IssuePriorityId = (int)DomainEnums.IssuePriority.Medium,
                 Name = "Medium",
-                CreateDate = this.dateTime,
+                CreatedDate = this.dateTime,
                 ModifyDate = this.dateTime
             },
             new IssuePriority()
             {
                 IssuePriorityId = (int)DomainEnums.IssuePriority.Low,
                 Name = "Low",
-                CreateDate = this.dateTime,
+                CreatedDate = this.dateTime,
                 ModifyDate = this.dateTime
             }
         );

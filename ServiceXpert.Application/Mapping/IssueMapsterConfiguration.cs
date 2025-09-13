@@ -9,6 +9,6 @@ public static class IssueMapsterConfiguration
     {
         TypeAdapterConfig<IssueDataObjectForUpdate, Issue>
             .NewConfig()
-            .Ignore(dest => dest.CreateDate);
+            .Ignore(dest => dest.CreatedDate);
     }
 }

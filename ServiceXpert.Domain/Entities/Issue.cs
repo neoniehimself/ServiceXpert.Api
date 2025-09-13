@@ -1,8 +1,6 @@
 ﻿namespace ServiceXpert.Domain.Entities;
-public class Issue : EntityBase
+public class Issue : EntityBase<int>
 {
-    public int IssueId { get; set; }
-
     public string Name { get; set; } = string.Empty;
 
     public string? Description { get; set; }
@@ -19,7 +17,7 @@ public class Issue : EntityBase
 
     public Guid AssigneeId { get; set; }
 
-    public AspNetUserProfile? Assignee { get; set; }
+    public virtual AspNetUserProfile? Assignee { get; set; }
 
     public Issue()
     {

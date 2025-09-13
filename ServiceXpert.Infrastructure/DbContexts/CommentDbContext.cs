@@ -7,7 +7,7 @@ internal class CommentDbContext : DbContextBase, IEntityTypeConfiguration<Commen
 {
     public void Configure(EntityTypeBuilder<Comment> comment)
     {
-        comment.HasKey(c => c.CommentId).IsClustered(false);
+        comment.HasKey(c => c.Id).IsClustered(false);
         comment.Property(c => c.Content);
         comment.HasOne<Issue>().WithMany(i => i.Comments).HasForeignKey(c => c.IssueId);
     }

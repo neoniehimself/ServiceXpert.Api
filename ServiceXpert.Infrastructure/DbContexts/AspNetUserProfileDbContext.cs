@@ -19,7 +19,7 @@ internal class AspNetUserProfileDbContext : DbContextBase, IEntityTypeConfigurat
                 Id = Guid.Parse("{E45ACEFA-74B0-4F28-B81F-FBC02D9778B5}"),
                 FirstName = "Admin",
                 LastName = "Admin",
-                CreateDate = this.dateTime,
+                CreatedDate = this.dateTime,
             }
         );
     }

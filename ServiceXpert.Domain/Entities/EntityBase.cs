@@ -1,13 +1,15 @@
-﻿using ServiceXpert.Domain.Shared.Auditables;
+﻿using ServiceXpert.Domain.Shared.Audits;
 
 namespace ServiceXpert.Domain.Entities;
-public abstract class EntityBase : IAuditable
+public abstract class EntityBase<TId> : IAudit
 {
-    public Guid CreateUserId { get; set; }
+    public TId Id { get; set; } = default!;
 
-    public DateTime CreateDate { get; set; }
+    public Guid CreatedByUserId { get; set; }
 
-    public Guid? ModifyUserId { get; set; }
+    public DateTime CreatedDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public Guid? ModifiedByUserId { get; set; }
+
+    public DateTime? ModifiedDate { get; set; }
 }

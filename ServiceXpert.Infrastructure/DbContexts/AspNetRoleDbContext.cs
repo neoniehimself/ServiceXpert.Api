@@ -15,7 +15,7 @@ internal class AspNetRoleDbContext : IEntityTypeConfiguration<AspNetRole>
                 Id = Guid.Parse("{2B954289-7678-4BD1-A3A3-171EB48346B2}"),
                 Name = "Admin",
                 NormalizedName = "ADMIN",
-                CreateDate = this.dateTime,
+                CreatedDate = this.dateTime,
             }
         );
     }

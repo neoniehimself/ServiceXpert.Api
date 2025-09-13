@@ -1,7 +1,5 @@
 ﻿namespace ServiceXpert.Domain.Entities;
-public class IssuePriority : EntityBase
+public class IssuePriority : EntityBase<int>
 {
-    public int IssuePriorityId { get; set; }
-
     public string Name { get; set; } = string.Empty;
 }

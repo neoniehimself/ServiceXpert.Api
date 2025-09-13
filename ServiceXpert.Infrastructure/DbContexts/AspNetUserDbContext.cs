@@ -20,7 +20,7 @@ internal class AspNetUserDbContext : IEntityTypeConfiguration<AspNetUser>
             Email = "noemail@noemail.com",
             NormalizedEmail = "NOEMAIL@NOEMAIL.COM",
             ConcurrencyStamp = "CD774732-9643-4427-A745-B72B3EAB125D",
-            CreateDate = this.dateTime,
+            CreatedDate = this.dateTime,
         });
     }
 }
