@@ -10,6 +10,8 @@ public static class ServiceContainer
 {
     public static IServiceCollection AddInfrastructureLayerServices(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
+
         // DbContext
         services.AddDbContext<SxpDbContext>();
 

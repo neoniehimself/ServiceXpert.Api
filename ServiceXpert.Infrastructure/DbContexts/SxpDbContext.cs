@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Options;
 using ServiceXpert.Domain.Entities;
+using ServiceXpert.Domain.Shared.Auditables;
 using ServiceXpert.Infrastructure.AuthModels;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
 public class SxpDbContext : IdentityDbContext<
@@ -17,14 +21,8 @@ public class SxpDbContext : IdentityDbContext<
     IdentityRoleClaim<Guid>,
     IdentityUserToken<Guid>>
 {
-    private static string ConnectionString
-    {
-        get
-        {
-            string? connectionString = Environment.GetEnvironmentVariable("ServiceXpert_ConnectionString", EnvironmentVariableTarget.Machine);
-            return connectionString ?? throw new KeyNotFoundException("Fatal: Missing connection string");
-        }
-    }
+    private readonly ServiceXpertConfiguration serviceXpertConfiguration;
+    private readonly IHttpContextAccessor httpContextAccessor;
 
     public DbSet<Issue> Issues { get; set; }
 
@@ -32,10 +30,16 @@ public class SxpDbContext : IdentityDbContext<
 
     public DbSet<AspNetUserProfile> AspNetUserProfiles { get; set; }
 
+    public SxpDbContext(IOptions<ServiceXpertConfiguration> options, IHttpContextAccessor httpContextAccessor)
+    {
+        this.serviceXpertConfiguration = options.Value;
+        this.httpContextAccessor = httpContextAccessor;
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder
-            .UseSqlServer(ConnectionString, sqlServerOptionsAction =>
+            .UseSqlServer(this.serviceXpertConfiguration.ConnectionString, sqlServerOptionsAction =>
                 sqlServerOptionsAction.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
@@ -58,5 +62,38 @@ public class SxpDbContext : IdentityDbContext<
         }
 
         base.OnModelCreating(modelBuilder);
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = this.ChangeTracker.Entries<IAuditable>();
+        var userId = Guid.Parse(this.httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+        var dateTimeUtcNow = DateTime.UtcNow;
+
+        // Used for debugging purposes
+        /*var claims = this.httpContextAccessor.HttpContext?.User?.Claims;
+        foreach (var claim in claims!)
+        {
+            Console.WriteLine($"{claim.Type} = {claim.Value}");
+        }*/
+
+        foreach (var entry in entries)
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.CreateUserId = userId;
+                    entry.Entity.CreateDate = dateTimeUtcNow;
+                    break;
+                case EntityState.Modified:
+                    entry.Entity.ModifyUserId = userId;
+                    entry.Entity.ModifyDate = dateTimeUtcNow;
+                    break;
+                default:
+                    continue;
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
     }
 }

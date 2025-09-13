@@ -20,7 +20,6 @@ internal class AspNetUserProfileDbContext : DbContextBase, IEntityTypeConfigurat
                 FirstName = "Admin",
                 LastName = "Admin",
                 CreateDate = this.dateTime,
-                ModifyDate = this.dateTime
             }
         );
     }

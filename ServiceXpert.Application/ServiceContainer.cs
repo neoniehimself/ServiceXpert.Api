@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using Microsoft.Extensions.DependencyInjection;
-using ServiceXpert.Application.Mapping;
 using ServiceXpert.Application.Services;
 using ServiceXpert.Application.Services.Contracts;
 
@@ -10,7 +9,7 @@ public static class ServiceContainer
     public static IServiceCollection AddApplicationLayerServices(this IServiceCollection services)
     {
         // Mapster Configurations
-        IssueMapsterConfiguration.Map();
+        // IssueMapsterConfiguration.Map();
 
         // Mapster
         services.AddMapster();

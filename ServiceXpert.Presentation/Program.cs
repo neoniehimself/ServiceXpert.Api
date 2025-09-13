@@ -14,6 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddOptions<ServiceXpertConfiguration>()
+    .Bind(builder.Configuration.GetSection(nameof(ServiceXpertConfiguration)))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
 builder.Services
     .AddApplicationLayerServices()
     .AddInfrastructureLayerServices();
@@ -30,18 +35,20 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddJwtBearer(options =>
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new()
     {
-        options.TokenValidationParameters = new()
-        {
-            ValidateIssuerSigningKey = true,
-            ValidateAudience = false,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ClockSkew = TimeSpan.Zero,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                Environment.GetEnvironmentVariable("ServiceXpert_JwtKey", EnvironmentVariableTarget.Machine) ?? throw new KeyNotFoundException("Fatal: Missing Jwt Key")))
-        };
-    });
+        ValidateIssuerSigningKey = true,
+        ValidateAudience = false,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration.GetSection(
+                nameof(ServiceXpertConfiguration)).Get<ServiceXpertConfiguration>()!.JwtSecretKey)
+        )
+    };
+});
 
 var authBuilder = builder.Services.AddAuthorizationBuilder();
 authBuilder.AddPolicy(nameof(Policy.Admin), policy => policy.RequireRole(nameof(Role.Admin)));

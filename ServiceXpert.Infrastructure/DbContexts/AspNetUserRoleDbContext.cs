@@ -15,7 +15,6 @@ internal class AspNetUserRoleDbContext : IEntityTypeConfiguration<AspNetUserRole
                 UserId = Guid.Parse("{E45ACEFA-74B0-4F28-B81F-FBC02D9778B5}"),
                 RoleId = Guid.Parse("{2B954289-7678-4BD1-A3A3-171EB48346B2}"),
                 CreateDate = this.dateTime,
-                ModifyDate = this.dateTime
             }
         );
     }
