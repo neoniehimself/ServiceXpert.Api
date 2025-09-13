@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects.Auth;
+using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
 
@@ -21,8 +21,8 @@ public class AccountController : ControllerBase
         this.aspNetRoleService = aspNetRoleService;
     }
 
-    [HttpPost(nameof(RegisterAsync))]
-    public async Task<ActionResult> RegisterAsync(RegisterUserDataObject dataObject)
+    [HttpPost(nameof(RegisterUserAsync))]
+    public async Task<ActionResult> RegisterUserAsync(RegisterUserDataObject dataObject)
     {
         if (!this.ModelState.IsValid)
         {
@@ -34,8 +34,8 @@ public class AccountController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost(nameof(LoginAsync))]
-    public async Task<ActionResult> LoginAsync(LoginUserDataObject dataObject)
+    [HttpPost(nameof(LoginUserAsync))]
+    public async Task<ActionResult> LoginUserAsync(LoginUserDataObject dataObject)
     {
         if (!this.ModelState.IsValid)
         {
@@ -46,15 +46,15 @@ public class AccountController : ControllerBase
         return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
     }
 
-    [HttpPost(nameof(CreateAsync))]
-    public async Task<ActionResult> CreateAsync(string roleName)
-    {
-        var result = await this.aspNetRoleService.CreateRoleAsync(roleName);
-        return result.Succeeded ? Ok("Role created successfully!") : BadRequest(result.Errors);
-    }
+    //[HttpPost(nameof(CreateRoleAsync))]
+    //public async Task<ActionResult> CreateRoleAsync(string roleName)
+    //{
+    //    var result = await this.aspNetRoleService.CreateRoleAsync(roleName);
+    //    return result.Succeeded ? Ok("Role created successfully!") : BadRequest(result.Errors);
+    //}
 
-    [HttpPost(nameof(AssignRoleAsync))]
-    public async Task<ActionResult> AssignRoleAsync(UserRoleDataObject dataObject)
+    [HttpPost(nameof(AssignRoleToUserAsync))]
+    public async Task<ActionResult> AssignRoleToUserAsync(UserRoleDataObject dataObject)
     {
         var result = await this.aspNetRoleService.AssignRoleAsync(dataObject);
         return result.Succeeded ? Ok("Role assigned successfully!") : BadRequest(result.Errors);

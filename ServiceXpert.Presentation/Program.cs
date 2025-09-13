@@ -6,8 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using ServiceXpert.Application;
 using ServiceXpert.Domain.Shared.Enums;
 using ServiceXpert.Infrastructure;
-using ServiceXpert.Infrastructure.AuthModels;
 using ServiceXpert.Infrastructure.DbContexts;
+using ServiceXpert.Infrastructure.SecurityModels;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

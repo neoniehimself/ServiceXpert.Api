@@ -15,9 +15,13 @@ public class Issue : EntityBase<int>
 
     public virtual ICollection<Comment> Comments { get; set; }
 
-    public Guid AssigneeId { get; set; }
+    public virtual AspNetUserProfile? CreatedByUser { get; set; }
+
+    public Guid? AssigneeId { get; set; }
 
     public virtual AspNetUserProfile? Assignee { get; set; }
+
+    public virtual AspNetUserProfile? ModifiedByUser { get; set; }
 
     public Issue()
     {

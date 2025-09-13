@@ -13,8 +13,15 @@ internal class AspNetRoleDbContext : IEntityTypeConfiguration<AspNetRole>
             new AspNetRole
             {
                 Id = Guid.Parse("{2B954289-7678-4BD1-A3A3-171EB48346B2}"),
-                Name = "Admin",
+                Name = nameof(Domain.Shared.Enums.Role.Admin),
                 NormalizedName = "ADMIN",
+                CreatedDate = this.dateTime,
+            },
+            new AspNetRole
+            {
+                Id = Guid.Parse("{9EA822F4-CFB5-41B2-A0B9-26D65E57261F}"),
+                Name = nameof(Domain.Shared.Enums.Role.User),
+                NormalizedName = "USER",
                 CreatedDate = this.dateTime,
             }
         );

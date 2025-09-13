@@ -20,9 +20,13 @@ public class IssueDataObject : DataObjectBase<int>
 
     public ICollection<CommentDataObject> Comments { get; set; }
 
+    public AspNetUserProfileDataObject? CreatedByUser { get; set; }
+
     public Guid AssigneeId { get; set; }
 
     public AspNetUserProfileDataObject? Assignee { get; set; }
+
+    public virtual AspNetUserProfileDataObject? ModifiedByUser { get; set; }
 
     public IssueDataObject()
     {
