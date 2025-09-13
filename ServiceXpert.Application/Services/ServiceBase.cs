@@ -68,6 +68,8 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
 
         if (entityToUpdate != null)
         {
+            /* Attach the entity to the change tracker before updating or mapping data
+             * to ensure that only modified values are persisted. */
             this.repositoryBase.Attach(entityToUpdate);
             this.mapper.Map(dataObject, entityToUpdate);
             await this.repositoryBase.SaveChangesAsync();
