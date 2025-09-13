@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ServiceXpert.Application.DataObjects.AspNetUserProfile;
 using ServiceXpert.Application.DataObjects.Auth;
@@ -8,6 +9,7 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Infrastructure.AuthModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace ServiceXpert.Infrastructure.Services;
 public class AspNetUserService : IAspNetUserService
@@ -15,15 +17,18 @@ public class AspNetUserService : IAspNetUserService
     private readonly UserManager<AspNetUser> userManager;
     private readonly IAspNetUserProfileService aspNetUserProfileService;
     private readonly IConfiguration configuration;
+    private readonly ServiceXpertConfiguration serviceXpertConfiguration;
 
     public AspNetUserService(
         UserManager<AspNetUser> userManager,
         IAspNetUserProfileService aspNetUserProfileService,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IOptions<ServiceXpertConfiguration> options)
     {
         this.userManager = userManager;
         this.aspNetUserProfileService = aspNetUserProfileService;
         this.configuration = configuration;
+        this.serviceXpertConfiguration = options.Value;
     }
 
     public async Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterUserDataObject registerUser)
@@ -80,10 +85,7 @@ public class AspNetUserService : IAspNetUserService
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(this.configuration["Jwt:ExpiresInMinutes"])),
                 signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(
-                        System.Text.Encoding.UTF8.GetBytes(
-                            Environment.GetEnvironmentVariable("ServiceXpert_JwtKey", EnvironmentVariableTarget.Machine) ?? throw new KeyNotFoundException("Fatal: Missing Jwt key"))
-                    ), SecurityAlgorithms.HmacSha256
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.serviceXpertConfiguration.JwtSecretKey)), SecurityAlgorithms.HmacSha256
                 )
             );
 

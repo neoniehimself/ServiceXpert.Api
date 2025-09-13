@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Options;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Shared.Audits;
 using ServiceXpert.Infrastructure.AuthModels;
@@ -20,16 +21,8 @@ public class SxpDbContext : IdentityDbContext<
     IdentityRoleClaim<Guid>,
     IdentityUserToken<Guid>>
 {
+    private readonly ServiceXpertConfiguration serviceXpertConfiguration;
     private readonly IHttpContextAccessor httpContextAccessor;
-
-    private static string ConnectionString
-    {
-        get
-        {
-            string? connectionString = Environment.GetEnvironmentVariable("ServiceXpert_ConnectionString", EnvironmentVariableTarget.Machine);
-            return connectionString ?? throw new KeyNotFoundException("Fatal: Missing connection string");
-        }
-    }
 
     public DbSet<Issue> Issues { get; set; }
 
@@ -37,15 +30,16 @@ public class SxpDbContext : IdentityDbContext<
 
     public DbSet<AspNetUserProfile> AspNetUserProfiles { get; set; }
 
-    public SxpDbContext(IHttpContextAccessor httpContextAccessor)
+    public SxpDbContext(IOptions<ServiceXpertConfiguration> options, IHttpContextAccessor httpContextAccessor)
     {
+        this.serviceXpertConfiguration = options.Value;
         this.httpContextAccessor = httpContextAccessor;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder
-            .UseSqlServer(ConnectionString, sqlServerOptionsAction =>
+            .UseSqlServer(this.serviceXpertConfiguration.ConnectionString, sqlServerOptionsAction =>
                 sqlServerOptionsAction.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
