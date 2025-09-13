@@ -16,7 +16,6 @@ internal class AspNetRoleDbContext : IEntityTypeConfiguration<AspNetRole>
                 Name = "Admin",
                 NormalizedName = "ADMIN",
                 CreateDate = this.dateTime,
-                ModifyDate = this.dateTime
             }
         );
     }

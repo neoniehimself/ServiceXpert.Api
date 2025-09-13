@@ -8,7 +8,7 @@ public interface IServiceBase<TId, TEntity, TDataObject>
     where TEntity : EntityBase
     where TDataObject : DataObjectBase
 {
-    Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject) where TDataObjectForCreate : DataObjectBase;
+    Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject) where TDataObjectForCreate : DataObjectBaseForCreate;
 
     Task DeleteByIdAsync(TId id);
 
@@ -20,5 +20,5 @@ public interface IServiceBase<TId, TEntity, TDataObject>
 
     Task<bool> IsExistsByIdAsync(TId id);
 
-    Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject) where TDataObjectForUpdate : DataObjectBase;
+    Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject) where TDataObjectForUpdate : DataObjectBaseForUpdate;
 }

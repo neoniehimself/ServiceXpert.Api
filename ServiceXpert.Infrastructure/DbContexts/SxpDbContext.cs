@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Options;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Shared.Audits;
+using ServiceXpert.Domain.Shared.Auditables;
 using ServiceXpert.Infrastructure.AuthModels;
 using System.Reflection;
 using System.Security.Claims;

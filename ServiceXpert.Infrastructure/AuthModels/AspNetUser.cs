@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ServiceXpert.Domain.Shared.Audits;
+using ServiceXpert.Domain.Shared.Auditables;
 
 namespace ServiceXpert.Infrastructure.AuthModels;
 public class AspNetUser : IdentityUser<Guid>, IAuditable
@@ -8,9 +8,9 @@ public class AspNetUser : IdentityUser<Guid>, IAuditable
 
     public DateTime CreateDate { get; set; }
 
-    public Guid ModifyUserId { get; set; }
+    public Guid? ModifyUserId { get; set; }
 
-    public DateTime ModifyDate { get; set; }
+    public DateTime? ModifyDate { get; set; }
 
     public AspNetUser()
     {

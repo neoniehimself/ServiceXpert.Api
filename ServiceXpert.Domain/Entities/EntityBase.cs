@@ -1,4 +1,4 @@
-﻿using ServiceXpert.Domain.Shared.Audits;
+﻿using ServiceXpert.Domain.Shared.Auditables;
 
 namespace ServiceXpert.Domain.Entities;
 public abstract class EntityBase : IAuditable
@@ -7,7 +7,7 @@ public abstract class EntityBase : IAuditable
 
     public DateTime CreateDate { get; set; }
 
-    public Guid ModifyUserId { get; set; }
+    public Guid? ModifyUserId { get; set; }
 
-    public DateTime ModifyDate { get; set; }
+    public DateTime? ModifyDate { get; set; }
 }

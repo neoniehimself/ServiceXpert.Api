@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Application.DataObjects.Issue;
-public class IssueDataObjectForCreate : DataObjectBase
+public class IssueDataObjectForCreate : DataObjectBaseForCreate
 {
     [Required]
     public required string Name { get; set; }

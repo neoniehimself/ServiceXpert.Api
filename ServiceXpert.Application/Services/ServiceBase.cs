@@ -21,7 +21,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         this.mapper = mapper;
     }
 
-    public virtual async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject) where TDataObjectForCreate : DataObjectBase
+    public virtual async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject) where TDataObjectForCreate : DataObjectBaseForCreate
     {
         TEntity entity = dataObject.Adapt<TEntity>();
 
@@ -62,7 +62,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return await this.repositoryBase.IsExistsByIdAsync(id);
     }
 
-    public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject) where TDataObjectForUpdate : DataObjectBase
+    public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject) where TDataObjectForUpdate : DataObjectBaseForUpdate
     {
         TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id);
 
