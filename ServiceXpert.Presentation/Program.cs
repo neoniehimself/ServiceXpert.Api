@@ -1,13 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using ServiceXpert.Application;
-using ServiceXpert.Domain.Shared.Enums;
 using ServiceXpert.Infrastructure;
-using ServiceXpert.Infrastructure.DbContexts;
-using ServiceXpert.Infrastructure.SecurityModels;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,19 +19,13 @@ builder.Services
     .AddApplicationLayerServices()
     .AddInfrastructureLayerServices();
 
-#region Authentication & Authorization Service Configurations
-builder.Services
-    .AddIdentity<AspNetUser, AspNetRole>()
-    .AddEntityFrameworkStores<SxpDbContext>()
-    .AddDefaultTokenProviders();
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(options =>
+    .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new()
     {
@@ -49,12 +39,6 @@ builder.Services.AddAuthentication(options =>
         )
     };
 });
-
-var authBuilder = builder.Services.AddAuthorizationBuilder();
-authBuilder.AddPolicy(nameof(Policy.Admin), policy => policy.RequireRole(nameof(Role.Admin)));
-authBuilder.AddPolicy(nameof(Policy.User), policy => policy.RequireRole(nameof(Role.User)));
-
-#endregion
 
 builder.Services.AddControllers(options =>
 {

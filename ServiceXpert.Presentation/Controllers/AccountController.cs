@@ -5,7 +5,7 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize(Roles = nameof(Role.Admin))]
+[Authorize(Policy = nameof(Policy.Admin))]
 [Route("Api/Account")]
 [ApiController]
 public class AccountController : ControllerBase
@@ -43,7 +43,7 @@ public class AccountController : ControllerBase
         }
 
         var result = await this.aspNetUserService.LoginAsync(dataObject);
-        return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
+        return result.Succeeded ? Ok(new { result.token }) : BadRequest(result.Errors);
     }
 
     //[HttpPost(nameof(CreateRoleAsync))]
