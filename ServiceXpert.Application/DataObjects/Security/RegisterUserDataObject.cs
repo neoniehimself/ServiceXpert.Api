@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ServiceXpert.Application.DataObjects.Auth;
+namespace ServiceXpert.Application.DataObjects.Security;
 public class RegisterUserDataObject
 {
     [Required]

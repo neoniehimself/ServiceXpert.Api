@@ -2,11 +2,9 @@
 using ServiceXpert.Application.DataObjects.Comment;
 
 namespace ServiceXpert.Application.DataObjects.Issue;
-public class IssueDataObject : DataObjectBase
+public class IssueDataObject : DataObjectBase<int>
 {
-    public int IssueId { get; set; }
-
-    public string IssueKey { get => string.Concat(nameof(Domain.Shared.Enums.IssuePreFix.SXP), '-', this.IssueId); }
+    public string IssueKey { get => string.Concat(nameof(Domain.Shared.Enums.IssuePreFix.SXP), '-', this.Id); }
 
     public string Name { get; set; } = string.Empty;
 

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Application.Utils;
+using ServiceXpert.Application.Shared.Utils;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;

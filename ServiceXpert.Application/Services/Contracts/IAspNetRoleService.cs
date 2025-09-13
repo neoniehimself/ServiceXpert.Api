@@ -1,4 +1,4 @@
-﻿using ServiceXpert.Application.DataObjects.Auth;
+﻿using ServiceXpert.Application.DataObjects.Security;
 
 namespace ServiceXpert.Application.Services.Contracts;
 public interface IAspNetRoleService

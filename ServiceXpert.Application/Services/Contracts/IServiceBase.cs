@@ -5,8 +5,8 @@ using ServiceXpert.Domain.Shared.ValueObjects;
 
 namespace ServiceXpert.Application.Services.Contracts;
 public interface IServiceBase<TId, TEntity, TDataObject>
-    where TEntity : EntityBase
-    where TDataObject : DataObjectBase
+    where TEntity : EntityBase<TId>
+    where TDataObject : DataObjectBase<TId>
 {
     Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject) where TDataObjectForCreate : DataObjectBaseForCreate;
 

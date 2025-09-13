@@ -1,7 +1,5 @@
 ﻿namespace ServiceXpert.Application.DataObjects;
-public class IssueStatusDataObject : DataObjectBase
+public class IssueStatusDataObject : DataObjectBase<int>
 {
-    public int IssueStatusId { get; set; }
-
     public string Name { get; set; } = string.Empty;
 }

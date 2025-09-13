@@ -8,9 +8,7 @@ using ServiceXpert.Domain.Repositories;
 using ServiceXpert.Domain.Shared.ValueObjects;
 
 namespace ServiceXpert.Application.Services;
-public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId, TEntity, TDataObject>
-    where TEntity : EntityBase
-    where TDataObject : DataObjectBase
+public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId, TEntity, TDataObject> where TEntity : EntityBase<TId> where TDataObject : DataObjectBase<TId>
 {
     private readonly IRepositoryBase<TId, TEntity> repositoryBase;
     private readonly IMapper mapper;
@@ -28,7 +26,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         await this.repositoryBase.CreateAsync(entity);
         await this.repositoryBase.SaveChangesAsync();
 
-        return GetId(entity);
+        return entity.Id;
     }
 
     public async Task DeleteByIdAsync(TId id)
@@ -43,9 +41,9 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return entities.Adapt<ICollection<TDataObject>>();
     }
 
-    public async Task<TDataObject?> GetByIdAsync(TId entityId, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<TDataObject?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
     {
-        TEntity? entity = await this.repositoryBase.GetByIdAsync(entityId, includeOptions);
+        TEntity? entity = await this.repositoryBase.GetByIdAsync(id, includeOptions);
         return entity?.Adapt<TDataObject>();
     }
 
@@ -74,16 +72,5 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
             this.mapper.Map(dataObject, entityToUpdate);
             await this.repositoryBase.SaveChangesAsync();
         }
-    }
-
-    protected static TId GetId(TEntity entity)
-    {
-        var propId = typeof(TEntity).GetProperty($"{typeof(TEntity).Name}Id");
-
-        var propIdValue = propId != null ? propId.GetValue(entity) : throw new NullReferenceException(nameof(propId));
-
-        return propIdValue != null && propId.GetValue(entity) != null
-            ? (TId)propId.GetValue(entity)!
-            : throw new NullReferenceException($"{typeof(TEntity).Name}Id is null.");
     }
 }
