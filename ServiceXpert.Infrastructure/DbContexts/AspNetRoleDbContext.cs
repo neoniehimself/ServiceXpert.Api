@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ServiceXpert.Infrastructure.AuthModels;
+using ServiceXpert.Infrastructure.SecurityModels;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
 internal class AspNetRoleDbContext : IEntityTypeConfiguration<AspNetRole>

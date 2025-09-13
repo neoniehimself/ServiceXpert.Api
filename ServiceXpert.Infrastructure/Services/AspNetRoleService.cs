@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ServiceXpert.Application.DataObjects.Auth;
+using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Infrastructure.AuthModels;
+using ServiceXpert.Infrastructure.SecurityModels;
 
 namespace ServiceXpert.Infrastructure.Services;
 public class AspNetRoleService : IAspNetRoleService

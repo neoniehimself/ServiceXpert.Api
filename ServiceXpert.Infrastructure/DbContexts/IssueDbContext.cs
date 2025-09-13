@@ -7,7 +7,7 @@ internal class IssueDbContext : DbContextBase, IEntityTypeConfiguration<Issue>
 {
     public void Configure(EntityTypeBuilder<Issue> issue)
     {
-        issue.HasKey(i => i.IssueId).IsClustered();
+        issue.HasKey(i => i.Id).IsClustered();
         issue.Property(i => i.Name).HasMaxLength(256);
         issue.Property(i => i.Description).HasMaxLength(4096);
         issue.HasOne(i => i.IssueStatus).WithOne().HasForeignKey<Issue>(i => i.IssueStatusId);

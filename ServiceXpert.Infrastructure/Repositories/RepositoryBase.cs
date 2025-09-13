@@ -8,11 +8,9 @@ using ServiceXpert.Infrastructure.DbContexts;
 using System.Linq.Expressions;
 
 namespace ServiceXpert.Infrastructure.Repositories;
-public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEntityId, TEntity> where TEntity : EntityBase
+public abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEntity> where TEntity : EntityBase<TId>
 {
     private readonly SxpDbContext dbContext;
-
-    protected string EntityId { get => string.Concat(typeof(TEntity).Name, "Id"); }
 
     public RepositoryBase(SxpDbContext dbContext)
     {
@@ -29,9 +27,9 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
         await this.dbContext.Set<TEntity>().AddAsync(entity);
     }
 
-    public async Task DeleteByIdAsync(TEntityId entityId)
+    public async Task DeleteByIdAsync(TId id)
     {
-        await this.dbContext.Set<TEntity>().Where(e => EF.Property<TEntityId>(e, this.EntityId)!.Equals(entityId)).ExecuteDeleteAsync();
+        await this.dbContext.Set<TEntity>().Where(e => e.Id!.Equals(id)).ExecuteDeleteAsync();
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, IncludeOptions<TEntity>? includeOptions = null)
@@ -52,10 +50,10 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
         return query.Where(filter).SingleOrDefaultAsync();
     }
 
-    public async Task<TEntity?> GetByIdAsync(TEntityId entityId, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<TEntity?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
     {
         IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
-        return await query.SingleOrDefaultAsync(e => EF.Property<TEntityId>(e, this.EntityId)!.Equals(entityId));
+        return await query.SingleOrDefaultAsync(e => e.Id!.Equals(id));
     }
 
     public async Task<PagedResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize,
@@ -70,8 +68,12 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
             totalCountQuery = totalCountQuery.Where(filter);
         }
 
+        if (IsNumericType())
+        {
+            selectQuery = selectQuery.OrderBy(e => e.Id);
+        }
+
         var entities = await selectQuery
-            .OrderBy(e => EF.Property<TEntityId>(e, this.EntityId))
             .Skip(pageSize * (pageNumber - 1))
             .Take(pageSize)
             .ToListAsync();
@@ -79,13 +81,24 @@ public abstract class RepositoryBase<TEntityId, TEntity> : IRepositoryBase<TEnti
         return new PagedResult<TEntity>(entities, new Pagination(await totalCountQuery.CountAsync(), pageSize, pageNumber));
     }
 
-    public async Task<bool> IsExistsByIdAsync(TEntityId entityId)
+    public async Task<bool> IsExistsByIdAsync(TId id)
     {
-        return await this.dbContext.Set<TEntity>().AnyAsync(e => EF.Property<TEntityId>(e, this.EntityId)!.Equals(entityId));
+        return await this.dbContext.Set<TEntity>().AnyAsync(e => e.Id!.Equals(id));
     }
 
     public async Task<int> SaveChangesAsync()
     {
         return await this.dbContext.SaveChangesAsync();
+    }
+
+    private static bool IsNumericType()
+    {
+        var type = typeof(TId);
+        return type == typeof(byte) || type == typeof(sbyte) ||
+               type == typeof(short) || type == typeof(ushort) ||
+               type == typeof(int) || type == typeof(uint) ||
+               type == typeof(long) || type == typeof(ulong) ||
+               type == typeof(float) || type == typeof(double) ||
+               type == typeof(decimal);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Infrastructure.AuthModels;
+using ServiceXpert.Infrastructure.SecurityModels;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
 internal class AspNetUserDbContext : IEntityTypeConfiguration<AspNetUser>

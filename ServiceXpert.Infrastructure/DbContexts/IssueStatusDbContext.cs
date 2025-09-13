@@ -11,43 +11,43 @@ internal class IssueStatusDbContext : DbContextBase, IEntityTypeConfiguration<Is
     public void Configure(EntityTypeBuilder<IssueStatus> issueStatus)
     {
         issueStatus.ToTable("IssueStatuses");
-        issueStatus.HasKey(i => i.IssueStatusId).IsClustered();
+        issueStatus.HasKey(i => i.Id).IsClustered();
         issueStatus.Property(i => i.Name).HasMaxLength(64);
         issueStatus.HasData(
             new IssueStatus()
             {
-                IssueStatusId = (int)DomainEnums.IssueStatus.New,
+                Id = (int)DomainEnums.IssueStatus.New,
                 Name = "New",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             },
             new IssueStatus()
             {
-                IssueStatusId = (int)DomainEnums.IssueStatus.ForAnalysis,
+                Id = (int)DomainEnums.IssueStatus.ForAnalysis,
                 Name = "For Analysis",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             },
             new IssueStatus()
             {
-                IssueStatusId = (int)DomainEnums.IssueStatus.InProgress,
+                Id = (int)DomainEnums.IssueStatus.InProgress,
                 Name = "In Progress",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             },
             new IssueStatus()
             {
-                IssueStatusId = (int)DomainEnums.IssueStatus.Resolved,
+                Id = (int)DomainEnums.IssueStatus.Resolved,
                 Name = "Resolved",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             },
             new IssueStatus()
             {
-                IssueStatusId = (int)DomainEnums.IssueStatus.Closed,
+                Id = (int)DomainEnums.IssueStatus.Closed,
                 Name = "Closed",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             }
         );
     }

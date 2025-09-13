@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Options;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Shared.Audits
-using ServiceXpert.Infrastructure.AuthModels;
+using ServiceXpert.Domain.Shared.Audits;
+using ServiceXpert.Infrastructure.SecurityModels;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -86,8 +86,8 @@ public class SxpDbContext : IdentityDbContext<
                     entry.Entity.CreatedDate = dateTimeUtcNow;
                     break;
                 case EntityState.Modified:
-                    entry.Entity.ModifyUserId = userId;
-                    entry.Entity.ModifyDate = dateTimeUtcNow;
+                    entry.Entity.ModifiedByUserId = userId;
+                    entry.Entity.ModifiedDate = dateTimeUtcNow;
                     break;
                 default:
                     continue;

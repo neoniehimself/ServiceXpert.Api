@@ -11,43 +11,43 @@ internal class IssuePriorityDbContext : DbContextBase, IEntityTypeConfiguration<
     public void Configure(EntityTypeBuilder<IssuePriority> issuePriority)
     {
         issuePriority.ToTable("IssuePriorities");
-        issuePriority.HasKey(i => i.IssuePriorityId).IsClustered();
+        issuePriority.HasKey(i => i.Id).IsClustered();
         issuePriority.Property(i => i.Name).HasMaxLength(64);
         issuePriority.HasData(
             new IssuePriority()
             {
-                IssuePriorityId = (int)DomainEnums.IssuePriority.Outage,
+                Id = (int)DomainEnums.IssuePriority.Outage,
                 Name = "Outage",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             },
             new IssuePriority()
             {
-                IssuePriorityId = (int)DomainEnums.IssuePriority.Critical,
+                Id = (int)DomainEnums.IssuePriority.Critical,
                 Name = "Critical",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             },
             new IssuePriority()
             {
-                IssuePriorityId = (int)DomainEnums.IssuePriority.High,
+                Id = (int)DomainEnums.IssuePriority.High,
                 Name = "High",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             },
             new IssuePriority()
             {
-                IssuePriorityId = (int)DomainEnums.IssuePriority.Medium,
+                Id = (int)DomainEnums.IssuePriority.Medium,
                 Name = "Medium",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             },
             new IssuePriority()
             {
-                IssuePriorityId = (int)DomainEnums.IssuePriority.Low,
+                Id = (int)DomainEnums.IssuePriority.Low,
                 Name = "Low",
                 CreatedDate = this.dateTime,
-                ModifyDate = this.dateTime
+                ModifiedDate = this.dateTime
             }
         );
     }
