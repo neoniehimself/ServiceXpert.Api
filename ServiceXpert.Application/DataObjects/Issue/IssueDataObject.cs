@@ -1,4 +1,5 @@
-﻿using ServiceXpert.Application.DataObjects.Comment;
+﻿using ServiceXpert.Application.DataObjects.AspNetUserProfile;
+using ServiceXpert.Application.DataObjects.Comment;
 
 namespace ServiceXpert.Application.DataObjects.Issue;
 public class IssueDataObject : DataObjectBase
@@ -20,6 +21,10 @@ public class IssueDataObject : DataObjectBase
     public IssuePriorityDataObject? IssuePriority { get; set; }
 
     public ICollection<CommentDataObject> Comments { get; set; }
+
+    public Guid AssigneeId { get; set; }
+
+    public AspNetUserProfileDataObject? Assignee { get; set; }
 
     public IssueDataObject()
     {

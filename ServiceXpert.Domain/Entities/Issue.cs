@@ -17,6 +17,10 @@ public class Issue : EntityBase
 
     public virtual ICollection<Comment> Comments { get; set; }
 
+    public Guid AssigneeId { get; set; }
+
+    public AspNetUserProfile? Assignee { get; set; }
+
     public Issue()
     {
         this.Comments = [];
