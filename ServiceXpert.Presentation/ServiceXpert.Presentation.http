@@ -1,6 +1,6 @@
 @Presentation_HostAddress = https://localhost:7090/api
 
-POST {{Presentation_HostAddress}}/account/loginuserasync
+POST {{Presentation_HostAddress}}/accounts/loginuserasync
 Content-Type: application/json
 Accept: application/json
 
@@ -11,7 +11,7 @@ Accept: application/json
 
 ###
 
-POST {{Presentation_HostAddress}}/account/registeruserasync
+POST {{Presentation_HostAddress}}/accounts/registeruserasync
 Content-Type: application/json
 Accept: application/json
 
@@ -25,7 +25,7 @@ Accept: application/json
 
 ###
 
-POST {{Presentation_HostAddress}}/account/assignroletouserasync
+POST {{Presentation_HostAddress}}/accounts/assignroletouserasync
 Content-Type: application/json
 Accept: application/json
 

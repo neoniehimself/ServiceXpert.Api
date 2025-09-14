@@ -6,7 +6,7 @@ using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Authorize(Policy = nameof(Policy.Admin))]
-[Route("Api/Account")]
+[Route("Api/Accounts")]
 [ApiController]
 public class AccountController : ControllerBase
 {

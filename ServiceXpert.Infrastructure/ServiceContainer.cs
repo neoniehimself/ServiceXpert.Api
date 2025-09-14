@@ -63,8 +63,7 @@ public static class ServiceContainer
         // Admin Policies
         authBuilder.AddPolicy(nameof(Policy.Admin), policy => policy.RequireRole(nameof(Role.Admin)));
         // User Policies
-        authBuilder.AddPolicy(nameof(Policy.User), policy => policy.RequireRole(nameof(Role.Admin)));
-        authBuilder.AddPolicy(nameof(Policy.User), policy => policy.RequireRole(nameof(Role.User)));
+        authBuilder.AddPolicy(nameof(Policy.User), policy => policy.RequireRole(nameof(Role.Admin), nameof(Role.User)));
         #endregion
 
         return services;
