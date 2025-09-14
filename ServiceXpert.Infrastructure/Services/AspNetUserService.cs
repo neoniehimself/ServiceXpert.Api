@@ -83,7 +83,7 @@ public class AspNetUserService : IAspNetUserService
             (
                 issuer: this.configuration["Jwt:Issuer"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(this.configuration["Jwt:ExpiresInMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToInt16(this.configuration["Jwt:ExpiresInMinutes"])),
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.serviceXpertConfiguration.JwtSecretKey)), SecurityAlgorithms.HmacSha256
                 )
