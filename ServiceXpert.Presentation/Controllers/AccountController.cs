@@ -43,7 +43,7 @@ public class AccountController : ControllerBase
         }
 
         var result = await this.aspNetUserService.LoginAsync(dataObject);
-        return result.Succeeded ? Ok(new { result.token }) : BadRequest(result.Errors);
+        return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
     }
 
     //[HttpPost(nameof(CreateRoleAsync))]
