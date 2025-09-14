@@ -22,7 +22,7 @@ public class IssueDataObject : DataObjectBase<int>
 
     public AspNetUserProfileDataObject? CreatedByUser { get; set; }
 
-    public Guid AssigneeId { get; set; }
+    public Guid? AssigneeId { get; set; }
 
     public AspNetUserProfileDataObject? Assignee { get; set; }
 
