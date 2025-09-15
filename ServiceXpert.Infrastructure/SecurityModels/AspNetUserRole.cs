@@ -6,9 +6,9 @@ public class AspNetUserRole : IdentityUserRole<Guid>, IAudit
 {
     public Guid CreatedByUserId { get; set; }
 
-    public DateTime CreatedDate { get; set; }
+    public DateTimeOffset CreatedDate { get; set; }
 
     public Guid? ModifiedByUserId { get; set; }
 
-    public DateTime? ModifiedDate { get; set; }
+    public DateTimeOffset? ModifiedDate { get; set; }
 }

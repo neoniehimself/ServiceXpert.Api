@@ -6,7 +6,7 @@ using DomainEnums = ServiceXpert.Domain.Shared.Enums;
 namespace ServiceXpert.Infrastructure.DbContexts;
 internal class IssueStatusDbContext : DbContextBase, IEntityTypeConfiguration<IssueStatus>
 {
-    private readonly DateTime dateTime = new(2025, 2, 24, 0, 0, 0, 0, DateTimeKind.Utc);
+    private readonly DateTimeOffset dateTimeOffset = new(2025, 2, 24, 0, 0, 0, 0, TimeSpan.Zero);
 
     public void Configure(EntityTypeBuilder<IssueStatus> issueStatus)
     {
@@ -18,36 +18,36 @@ internal class IssueStatusDbContext : DbContextBase, IEntityTypeConfiguration<Is
             {
                 Id = (int)DomainEnums.IssueStatus.New,
                 Name = "New",
-                CreatedDate = this.dateTime,
-                ModifiedDate = this.dateTime
+                CreatedDate = this.dateTimeOffset,
+                ModifiedDate = this.dateTimeOffset
             },
             new IssueStatus()
             {
                 Id = (int)DomainEnums.IssueStatus.ForAnalysis,
                 Name = "For Analysis",
-                CreatedDate = this.dateTime,
-                ModifiedDate = this.dateTime
+                CreatedDate = this.dateTimeOffset,
+                ModifiedDate = this.dateTimeOffset
             },
             new IssueStatus()
             {
                 Id = (int)DomainEnums.IssueStatus.InProgress,
                 Name = "In Progress",
-                CreatedDate = this.dateTime,
-                ModifiedDate = this.dateTime
+                CreatedDate = this.dateTimeOffset,
+                ModifiedDate = this.dateTimeOffset
             },
             new IssueStatus()
             {
                 Id = (int)DomainEnums.IssueStatus.Resolved,
                 Name = "Resolved",
-                CreatedDate = this.dateTime,
-                ModifiedDate = this.dateTime
+                CreatedDate = this.dateTimeOffset,
+                ModifiedDate = this.dateTimeOffset
             },
             new IssueStatus()
             {
                 Id = (int)DomainEnums.IssueStatus.Closed,
                 Name = "Closed",
-                CreatedDate = this.dateTime,
-                ModifiedDate = this.dateTime
+                CreatedDate = this.dateTimeOffset,
+                ModifiedDate = this.dateTimeOffset
             }
         );
     }

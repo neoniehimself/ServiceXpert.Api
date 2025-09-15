@@ -68,7 +68,7 @@ public class SxpDbContext : IdentityDbContext<
     {
         var entries = this.ChangeTracker.Entries<IAudit>();
         var userId = Guid.Parse(this.httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-        var dateTimeUtcNow = DateTime.UtcNow;
+        var dateTimeOffset = DateTimeOffset.UtcNow;
 
         // Used for debugging purposes
         /*var claims = this.httpContextAccessor.HttpContext?.User?.Claims;
@@ -83,11 +83,11 @@ public class SxpDbContext : IdentityDbContext<
             {
                 case EntityState.Added:
                     entry.Entity.CreatedByUserId = userId;
-                    entry.Entity.CreatedDate = dateTimeUtcNow;
+                    entry.Entity.CreatedDate = dateTimeOffset;
                     break;
                 case EntityState.Modified:
                     entry.Entity.ModifiedByUserId = userId;
-                    entry.Entity.ModifiedDate = dateTimeUtcNow;
+                    entry.Entity.ModifiedDate = dateTimeOffset;
                     break;
                 default:
                     continue;

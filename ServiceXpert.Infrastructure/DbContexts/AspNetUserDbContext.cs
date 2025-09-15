@@ -6,7 +6,7 @@ using ServiceXpert.Infrastructure.SecurityModels;
 namespace ServiceXpert.Infrastructure.DbContexts;
 internal class AspNetUserDbContext : IEntityTypeConfiguration<AspNetUser>
 {
-    private readonly DateTime dateTime = new(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Utc);
+    private readonly DateTimeOffset dateTimeOffset = new(2025, 9, 12, 0, 0, 0, 0, TimeSpan.Zero);
 
     public void Configure(EntityTypeBuilder<AspNetUser> user)
     {
@@ -20,7 +20,7 @@ internal class AspNetUserDbContext : IEntityTypeConfiguration<AspNetUser>
             Email = "noemail@noemail.com",
             NormalizedEmail = "NOEMAIL@NOEMAIL.COM",
             ConcurrencyStamp = "CD774732-9643-4427-A745-B72B3EAB125D",
-            CreatedDate = this.dateTime,
+            CreatedDate = this.dateTimeOffset,
         });
     }
 }

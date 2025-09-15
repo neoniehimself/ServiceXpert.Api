@@ -5,7 +5,7 @@ using ServiceXpert.Domain.Entities;
 namespace ServiceXpert.Infrastructure.DbContexts;
 internal class AspNetUserProfileDbContext : DbContextBase, IEntityTypeConfiguration<AspNetUserProfile>
 {
-    private readonly DateTime dateTime = new(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Utc);
+    private readonly DateTimeOffset dateTimeOffset = new(2025, 9, 12, 0, 0, 0, 0, TimeSpan.Zero);
 
     public void Configure(EntityTypeBuilder<AspNetUserProfile> profile)
     {
@@ -19,7 +19,7 @@ internal class AspNetUserProfileDbContext : DbContextBase, IEntityTypeConfigurat
                 Id = Guid.Parse("{E45ACEFA-74B0-4F28-B81F-FBC02D9778B5}"),
                 FirstName = "Admin",
                 LastName = "Admin",
-                CreatedDate = this.dateTime,
+                CreatedDate = this.dateTimeOffset,
             }
         );
     }
