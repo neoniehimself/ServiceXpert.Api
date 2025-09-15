@@ -72,21 +72,22 @@ public class AspNetUserService : IAspNetUserService
 
             var claims = new List<Claim>
             {
-                new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new(JwtRegisteredClaimNames.Sub, user.Id.ToString()), // Equivalent of  ClaimTypes.NameIdentifier
                 new(JwtRegisteredClaimNames.UniqueName, user.UserName!),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
             claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.serviceXpertConfiguration.JwtSecretKey));
+            var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken
             (
                 issuer: this.configuration["Jwt:Issuer"],
+                audience: this.configuration["Jwt:Audience"],
+                signingCredentials: signingCredentials,
                 claims: claims,
-                expires: DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt16(this.configuration["Jwt:ExpiresInMinutes"])).UtcDateTime,
-                signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.serviceXpertConfiguration.JwtSecretKey)), SecurityAlgorithms.HmacSha256
-                )
+                expires: DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt16(this.configuration["Jwt:ExpiresInMinutes"])).UtcDateTime
             );
 
             return (true, [], new JwtSecurityTokenHandler().WriteToken(token));

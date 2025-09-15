@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Rewrite;
 using ServiceXpert.Application;
 using ServiceXpert.Infrastructure;
 
@@ -28,11 +29,11 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(new AuthorizeFilter(policy));
 });
 
-builder.Services.Configure<RouteOptions>(options => options.AppendTrailingSlash = true);
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseRewriter(new RewriteOptions().AddRedirect("(.*)/$", "$1", 301));
 
 app.UseHttpsRedirection();
 
