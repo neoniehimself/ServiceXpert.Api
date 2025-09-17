@@ -27,6 +27,7 @@ public class UserController : ControllerBase
         return result.Succeeded ? Ok("Role assigned successfully!") : BadRequest(result.Errors);
     }
 
+    [Authorize(Policy = nameof(Policy.AdminOrUser))]
     [HttpGet("{userId:guid}")]
     public async Task<ActionResult<AspNetUserProfileDataObject>> GetUserProfileByIdAsync(Guid userId)
     {

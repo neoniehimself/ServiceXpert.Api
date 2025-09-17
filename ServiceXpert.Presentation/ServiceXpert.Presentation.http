@@ -11,6 +11,11 @@ Accept: application/json
 
 ###
 
+GET {{Presentation_HostAddress}}/Users/E45ACEFA-74B0-4F28-B81F-FBC02D9778B5
+Accept: application/json
+
+###
+
 POST {{Presentation_HostAddress}}/Accounts/RegisterUserAsync
 Content-Type: application/json
 Accept: application/json
