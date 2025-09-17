@@ -1,6 +1,6 @@
-@Presentation_HostAddress = https://localhost:7090/api
+@Presentation_HostAddress = https://localhost:7090/Api
 
-POST {{Presentation_HostAddress}}/accounts/loginuserasync
+POST {{Presentation_HostAddress}}/Accounts/LoginUserAsync
 Content-Type: application/json
 Accept: application/json
 
@@ -11,7 +11,7 @@ Accept: application/json
 
 ###
 
-POST {{Presentation_HostAddress}}/accounts/registeruserasync
+POST {{Presentation_HostAddress}}/Accounts/RegisterUserAsync
 Content-Type: application/json
 Accept: application/json
 
@@ -25,7 +25,7 @@ Accept: application/json
 
 ###
 
-POST {{Presentation_HostAddress}}/accounts/assignroletouserasync
+POST {{Presentation_HostAddress}}/Users/AssignRoleToUserAsync
 Content-Type: application/json
 Accept: application/json
 
@@ -36,17 +36,17 @@ Accept: application/json
 
 ###
 
-GET {{Presentation_HostAddress}}/issues/
+GET {{Presentation_HostAddress}}/Issues/
 Accept: application/json
 
 ###
 
-GET {{Presentation_HostAddress}}/issues/SXP-1?includeComments=True
+GET {{Presentation_HostAddress}}/Issues/SXP-1?includeComments=True
 Accept: application/json
 
 ###
 
-POST {{Presentation_HostAddress}}/issues/
+POST {{Presentation_HostAddress}}/Issues/
 Accept: application/json
 Content-Type: application/json
 
@@ -57,7 +57,7 @@ Content-Type: application/json
 
 ###
 
-PUT {{Presentation_HostAddress}}/issues/SXP-1/
+PUT {{Presentation_HostAddress}}/Issues/SXP-1/
 Accept: application/json
 Content-Type: application/json
 
@@ -70,12 +70,12 @@ Content-Type: application/json
 
 ### Assuming there is an issue with 1 as its Id
 
-GET {{Presentation_HostAddress}}/issues/SXP-1/comments/
+GET {{Presentation_HostAddress}}/Issues/SXP-1/Comments/
 Accept: application/json
 
 ###
 
-POST {{Presentation_HostAddress}}/issues/SXP-1/comments/
+POST {{Presentation_HostAddress}}/Issues/SXP-1/Comments/
 Accept: application/json
 Content-Type: application/json
 

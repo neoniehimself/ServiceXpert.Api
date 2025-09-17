@@ -11,14 +11,10 @@ namespace ServiceXpert.Presentation.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAspNetUserService aspNetUserService;
-    private readonly IAspNetRoleService aspNetRoleService;
 
-    public AccountController(
-        IAspNetUserService aspNetUserService,
-        IAspNetRoleService aspNetRoleService)
+    public AccountController(IAspNetUserService aspNetUserService)
     {
         this.aspNetUserService = aspNetUserService;
-        this.aspNetRoleService = aspNetRoleService;
     }
 
     [HttpPost(nameof(RegisterUserAsync))]
@@ -44,19 +40,5 @@ public class AccountController : ControllerBase
 
         var result = await this.aspNetUserService.LoginAsync(dataObject);
         return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
-    }
-
-    //[HttpPost(nameof(CreateRoleAsync))]
-    //public async Task<ActionResult> CreateRoleAsync(string roleName)
-    //{
-    //    var result = await this.aspNetRoleService.CreateRoleAsync(roleName);
-    //    return result.Succeeded ? Ok("Role created successfully!") : BadRequest(result.Errors);
-    //}
-
-    [HttpPost(nameof(AssignRoleToUserAsync))]
-    public async Task<ActionResult> AssignRoleToUserAsync(UserRoleDataObject dataObject)
-    {
-        var result = await this.aspNetRoleService.AssignRoleAsync(dataObject);
-        return result.Succeeded ? Ok("Role assigned successfully!") : BadRequest(result.Errors);
     }
 }
