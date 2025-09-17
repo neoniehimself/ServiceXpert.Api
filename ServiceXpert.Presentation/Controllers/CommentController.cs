@@ -23,9 +23,9 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate dataObject)
+    public async Task<ActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate commentForCreate)
     {
-        if (!string.Equals(issueKey, dataObject.IssueKey))
+        if (!string.Equals(issueKey, commentForCreate.IssueKey))
         {
             return BadRequest("URL.IssueKey and Comment.IssueKey does not match");
         }
@@ -40,7 +40,7 @@ public class CommentController : ControllerBase
             return BadRequest(this.ModelState);
         }
 
-        var commentId = await this.commentService.CreateAsync(dataObject);
+        var commentId = await this.commentService.CreateAsync(commentForCreate);
         var comment = await this.commentService.GetByIdAsync(commentId);
         return Created(string.Format(this.CommentControllerFullUriFormat, comment!.IssueKey, commentId), comment);
     }
@@ -59,7 +59,7 @@ public class CommentController : ControllerBase
         return Ok(comments);
     }
 
-    [HttpGet("{commentId}")]
+    [HttpGet("{commentId:guid}")]
     public async Task<ActionResult> GetByIdAsync(string issueKey, Guid commentId)
     {
         var issueId = IssueUtil.GetIdFromIssueKey(issueKey);

@@ -16,14 +16,14 @@ public class AspNetUserProfileService : ServiceBase<Guid, AspNetUserProfile, Asp
         this.mapper = mapper;
     }
 
-    public override async Task<Guid> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject)
+    public override async Task<Guid> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObjectForCreate)
     {
-        if (dataObject is not AspNetUserProfileDataObjectForCreate)
+        if (dataObjectForCreate is not AspNetUserProfileDataObjectForCreate)
         {
-            throw new ArgumentException($"The data object must be of type {nameof(AspNetUserProfileDataObjectForCreate)}", nameof(dataObject));
+            throw new ArgumentException($"The data object must be of type {nameof(AspNetUserProfileDataObjectForCreate)}", nameof(dataObjectForCreate));
         }
 
-        var userProfile = this.mapper.Map<AspNetUserProfile>(dataObject);
+        var userProfile = this.mapper.Map<AspNetUserProfile>(dataObjectForCreate);
 
         await this.userProfileRepository.CreateAsync(userProfile);
         await this.userProfileRepository.SaveChangesAsync();

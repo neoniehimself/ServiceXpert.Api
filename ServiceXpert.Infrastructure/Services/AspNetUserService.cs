@@ -15,46 +15,24 @@ namespace ServiceXpert.Infrastructure.Services;
 public class AspNetUserService : IAspNetUserService
 {
     private readonly UserManager<AspNetUser> userManager;
-    private readonly IAspNetUserProfileService aspNetUserProfileService;
     private readonly IConfiguration configuration;
     private readonly ServiceXpertConfiguration serviceXpertConfiguration;
+    private readonly IAspNetUserProfileService aspNetUserProfileService;
+    private readonly RoleManager<AspNetRole> roleManager;
 
     public AspNetUserService(
         UserManager<AspNetUser> userManager,
-        IAspNetUserProfileService aspNetUserProfileService,
         IConfiguration configuration,
-        IOptions<ServiceXpertConfiguration> options)
+        IOptions<ServiceXpertConfiguration> options,
+        IAspNetUserProfileService aspNetUserProfileService,
+        RoleManager<AspNetRole> roleManager
+        )
     {
         this.userManager = userManager;
-        this.aspNetUserProfileService = aspNetUserProfileService;
         this.configuration = configuration;
         this.serviceXpertConfiguration = options.Value;
-    }
-
-    public async Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterUserDataObject registerUser)
-    {
-        var result = await this.userManager.CreateAsync(new AspNetUser()
-        {
-            UserName = registerUser.UserName,
-            Email = registerUser.Email
-        }, registerUser.Password);
-
-        if (!result.Succeeded)
-        {
-            return (false, result.Errors.Select(e => e.Description), Guid.Empty);
-        }
-
-        var aspNetUser = await this.userManager.FindByNameAsync(registerUser.UserName);
-
-        var config = new TypeAdapterConfig();
-        config.ForType<RegisterUserDataObject, AspNetUserProfileDataObjectForCreate>()
-              .MapToConstructor(true)
-              .ConstructUsing(src => new AspNetUserProfileDataObjectForCreate(aspNetUser!.Id));
-
-        var aspNetUserProfile = registerUser.Adapt<AspNetUserProfileDataObjectForCreate>(config);
-        await this.aspNetUserProfileService.CreateAsync(aspNetUserProfile);
-
-        return (true, [], aspNetUser!.Id);
+        this.aspNetUserProfileService = aspNetUserProfileService;
+        this.roleManager = roleManager;
     }
 
     public async Task<(bool Succeeded, IEnumerable<string> Errors, string token)> LoginAsync(LoginUserDataObject loginUser)
@@ -94,5 +72,54 @@ public class AspNetUserService : IAspNetUserService
         }
 
         return (false, new List<string> { "Invalid username or password!" }, string.Empty);
+    }
+
+    public async Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterUserDataObject registerUser)
+    {
+        var result = await this.userManager.CreateAsync(new AspNetUser()
+        {
+            UserName = registerUser.UserName,
+            Email = registerUser.Email
+        }, registerUser.Password);
+
+        if (!result.Succeeded)
+        {
+            return (false, result.Errors.Select(e => e.Description), Guid.Empty);
+        }
+
+        var aspNetUser = await this.userManager.FindByNameAsync(registerUser.UserName);
+
+        var config = new TypeAdapterConfig();
+        config.ForType<RegisterUserDataObject, AspNetUserProfileDataObjectForCreate>()
+              .MapToConstructor(true)
+              .ConstructUsing(src => new AspNetUserProfileDataObjectForCreate(aspNetUser!.Id));
+
+        var aspNetUserProfile = registerUser.Adapt<AspNetUserProfileDataObjectForCreate>(config);
+        await this.aspNetUserProfileService.CreateAsync(aspNetUserProfile);
+
+        return (true, [], aspNetUser!.Id);
+    }
+
+    public async Task<(bool Succeeded, IEnumerable<string> Errors)> AssignRoleAsync(UserRoleDataObject userRole)
+    {
+        var user = await this.userManager.FindByNameAsync(userRole.UserName);
+
+        if (user == null)
+        {
+            return (false, new List<string> { "User not found!" });
+        }
+
+        if (!await this.roleManager.RoleExistsAsync(userRole.RoleName))
+        {
+            return (false, new List<string> { "Role not found!" });
+        }
+
+        if (await this.userManager.IsInRoleAsync(user, userRole.RoleName))
+        {
+            return (false, new List<string> { "User already assigned to this role!" });
+        }
+
+        var result = await this.userManager.AddToRoleAsync(user, userRole.RoleName);
+        return result.Succeeded ? (true, []) : (false, result.Errors.Select(e => e.Description));
     }
 }

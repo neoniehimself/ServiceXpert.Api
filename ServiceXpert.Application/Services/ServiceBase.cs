@@ -19,9 +19,9 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         this.mapper = mapper;
     }
 
-    public virtual async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObject) where TDataObjectForCreate : DataObjectBaseForCreate
+    public virtual async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObjectForCreate) where TDataObjectForCreate : DataObjectBaseForCreate
     {
-        TEntity entity = dataObject.Adapt<TEntity>();
+        TEntity entity = dataObjectForCreate.Adapt<TEntity>();
 
         await this.repositoryBase.CreateAsync(entity);
         await this.repositoryBase.SaveChangesAsync();
@@ -60,7 +60,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         return await this.repositoryBase.IsExistsByIdAsync(id);
     }
 
-    public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObject) where TDataObjectForUpdate : DataObjectBaseForUpdate
+    public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObjectForUpdate) where TDataObjectForUpdate : DataObjectBaseForUpdate
     {
         TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id);
 
@@ -69,7 +69,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
             /* Attach the entity to the change tracker before updating or mapping data
              * to ensure that only modified values are persisted. */
             this.repositoryBase.Attach(entityToUpdate);
-            this.mapper.Map(dataObject, entityToUpdate);
+            this.mapper.Map(dataObjectForUpdate, entityToUpdate);
             await this.repositoryBase.SaveChangesAsync();
         }
     }

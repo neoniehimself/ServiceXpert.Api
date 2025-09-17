@@ -22,14 +22,14 @@ public class IssueController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<string>> CreateAsync(IssueDataObjectForCreate dataObject)
+    public async Task<ActionResult<string>> CreateAsync(IssueDataObjectForCreate issueForCreate)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequest(this.ModelState);
         }
 
-        var issueId = await this.issueService.CreateAsync(dataObject);
+        var issueId = await this.issueService.CreateAsync(issueForCreate);
         return Ok(string.Concat(nameof(IssuePreFix.SXP), '-', issueId));
     }
 
@@ -63,7 +63,7 @@ public class IssueController : ControllerBase
     }
 
     [HttpPut("{issueKey}")]
-    public async Task<ActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate dataObject)
+    public async Task<ActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate issueForUpdate)
     {
         if (!await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey)))
         {
@@ -75,7 +75,7 @@ public class IssueController : ControllerBase
             return BadRequest(this.ModelState);
         }
 
-        await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), dataObject);
+        await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), issueForUpdate);
         return NoContent();
     }
 }
