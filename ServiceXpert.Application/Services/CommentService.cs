@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using FluentBuilder.Core;
+using Mapster;
 using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
@@ -17,7 +18,8 @@ public class CommentService : ServiceBase<Guid, Comment, CommentDataObject>, ICo
 
     public async Task<IEnumerable<CommentDataObject>> GetAllByIssueKeyAsync(int issueId)
     {
-        var comments = await this.commentRepository.GetAllAsync(c => c.IssueId == issueId);
+        var comments = await this.commentRepository.GetAllAsync(c => c.IssueId == issueId,
+            includeOptions: new IncludeOptions<Comment>(c => c.CreatedByUser!));
         return comments.Adapt<ICollection<CommentDataObject>>();
     }
 }
