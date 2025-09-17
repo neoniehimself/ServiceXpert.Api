@@ -4,7 +4,6 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize(Policy = nameof(Policy.Admin))]
 [Route("Roles")]
 [ApiController]
 public class RoleController : ControllerBase
@@ -16,6 +15,7 @@ public class RoleController : ControllerBase
         this.aspNetRoleService = aspNetRoleService;
     }
 
+    [Authorize(Policy = nameof(Policy.AdminOnly))]
     [HttpPost(nameof(CreateRoleAsync))]
     public async Task<ActionResult> CreateRoleAsync(string roleName)
     {

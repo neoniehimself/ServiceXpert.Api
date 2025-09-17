@@ -60,8 +60,9 @@ public static class ServiceContainer
             });
 
         var authBuilder = services.AddAuthorizationBuilder();
-        authBuilder.AddPolicy(nameof(Policy.Admin), policy => policy.RequireRole(nameof(Role.Admin)));
-        authBuilder.AddPolicy(nameof(Policy.User), policy => policy.RequireRole(nameof(Role.Admin), nameof(Role.User)));
+        authBuilder.AddPolicy(nameof(Policy.AdminOnly), policy => policy.RequireRole(nameof(Role.Admin)));
+        authBuilder.AddPolicy(nameof(Policy.UserOnly), policy => policy.RequireRole(nameof(Role.User)));
+        authBuilder.AddPolicy(nameof(Policy.AdminOrUser), policy => policy.RequireRole(nameof(Role.Admin), nameof(Role.User)));
         #endregion
 
         return services;

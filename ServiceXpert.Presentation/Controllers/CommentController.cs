@@ -6,7 +6,7 @@ using ServiceXpert.Application.Shared.Utils;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.User)}")]
+[Authorize(Policy = nameof(Policy.AdminOrUser))]
 [Route("Api/Issues/{issueKey}/Comments")]
 [ApiController]
 public class CommentController : ControllerBase

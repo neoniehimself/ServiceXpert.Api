@@ -5,7 +5,6 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize(Policy = nameof(Policy.Admin))]
 [Route("Api/Accounts")]
 [ApiController]
 public class AccountController : ControllerBase
@@ -17,6 +16,7 @@ public class AccountController : ControllerBase
         this.aspNetUserService = aspNetUserService;
     }
 
+    [Authorize(Policy = nameof(Policy.AdminOnly))]
     [HttpPost(nameof(RegisterUserAsync))]
     public async Task<ActionResult> RegisterUserAsync(RegisterUserDataObject dataObject)
     {
