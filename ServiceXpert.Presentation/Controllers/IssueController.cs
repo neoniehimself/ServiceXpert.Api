@@ -7,6 +7,7 @@ using ServiceXpert.Application.Shared.Utils;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Shared.Enums;
 using ServiceXpert.Domain.Shared.ValueObjects;
+using ServiceXpert.Presentation.Models.QueryOptions;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Authorize]
@@ -48,17 +49,15 @@ public class IssueController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(
-        string statusCategory = "All", int pageNumber = 1, int pageSize = 10,
-        bool includeComments = false, bool includeCreatedByUser = false, bool includeAssignee = false)
+    public async Task<ActionResult<PagedResult<IssueDataObject>>> GetPagedIssuesByStatusAsync([FromQuery] GetPagedIssuesByStatusQueryOption queryOption)
     {
         var propList = new PropertyList<Issue>();
 
-        if (includeComments) propList.Add(i => i.Comments);
-        if (includeCreatedByUser) propList.Add(i => i.CreatedByUser!);
-        if (includeAssignee) propList.Add(i => i.Assignee);
+        if (queryOption.IncludeComments) propList.Add(i => i.Comments);
+        if (queryOption.IncludeCreatedByUser) propList.Add(i => i.CreatedByUser!);
+        if (queryOption.IncludeAssignee) propList.Add(i => i.Assignee);
 
-        var pagedResult = await this.issueService.GetPagedIssuesByStatusAsync(statusCategory, pageNumber, pageSize, propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
+        var pagedResult = await this.issueService.GetPagedIssuesByStatusAsync(queryOption.StatusCategory, queryOption.PageNumber, queryOption.PageSize, propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
         return Ok(pagedResult);
     }
 
