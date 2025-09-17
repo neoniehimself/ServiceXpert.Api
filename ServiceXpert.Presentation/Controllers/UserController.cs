@@ -6,6 +6,7 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
+[Authorize]
 [Route("Api/Users")]
 [ApiController]
 public class UserController : ControllerBase
@@ -27,7 +28,6 @@ public class UserController : ControllerBase
         return result.Succeeded ? Ok("Role assigned successfully!") : BadRequest(result.Errors);
     }
 
-    [Authorize(Policy = nameof(Policy.AdminOrUser))]
     [HttpGet("{userId:guid}")]
     public async Task<ActionResult<AspNetUserProfileDataObject>> GetUserProfileByIdAsync(Guid userId)
     {

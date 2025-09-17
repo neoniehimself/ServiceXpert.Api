@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Shared.Utils;
-using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize(Policy = nameof(Policy.AdminOrUser))]
+[Authorize]
 [Route("Api/Issues/{issueKey}/Comments")]
 [ApiController]
 public class CommentController : ControllerBase

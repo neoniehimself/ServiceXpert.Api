@@ -9,7 +9,7 @@ using ServiceXpert.Domain.Shared.Enums;
 using ServiceXpert.Domain.Shared.ValueObjects;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize(Policy = nameof(Policy.AdminOrUser))]
+[Authorize]
 [Route("Api/Issues")]
 [ApiController]
 public class IssueController : ControllerBase
