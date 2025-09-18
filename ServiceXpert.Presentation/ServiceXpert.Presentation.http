@@ -36,7 +36,7 @@ Accept: application/json
 
 {
   "username": "jdoe",
-  "role": "User"
+  "rolename": "User"
 }
 
 ###
