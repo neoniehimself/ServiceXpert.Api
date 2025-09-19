@@ -35,14 +35,9 @@ public class IssueController : ControllerBase
     }
 
     [HttpGet("{issueKey}")]
-    public async Task<ActionResult> GetByIssueKeyAsync(string issueKey, bool includeComments = false)
+    public async Task<ActionResult> GetByIssueKeyAsync(string issueKey)
     {
         var propList = new PropertyList<Issue>();
-
-        if (includeComments)
-        {
-            propList.Add(i => i.Comments);
-        }
 
         var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
         return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
@@ -53,7 +48,6 @@ public class IssueController : ControllerBase
     {
         var propList = new PropertyList<Issue>();
 
-        if (queryOption.IncludeComments) propList.Add(i => i.Comments);
         if (queryOption.IncludeCreatedByUser) propList.Add(i => i.CreatedByUser!);
         if (queryOption.IncludeAssignee) propList.Add(i => i.Assignee);
 

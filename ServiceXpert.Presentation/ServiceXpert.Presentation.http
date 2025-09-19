@@ -46,7 +46,7 @@ Accept: application/json
 
 ###
 
-GET {{Presentation_HostAddress}}/Issues/SXP-1?includeComments=True
+GET {{Presentation_HostAddress}}/Issues/SXP-1
 Accept: application/json
 
 ###
