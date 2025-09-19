@@ -11,4 +11,6 @@ public class IssueDataObjectForCreate : DataObjectBaseForCreate
     public int IssueStatusId { get; set; } = (int)Domain.Shared.Enums.IssueStatus.New;
 
     public int IssuePriorityId { get; set; } = (int)Domain.Shared.Enums.IssuePriority.Low;
+
+    public Guid? AssigneeId { get; set; }
 }

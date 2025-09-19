@@ -29,9 +29,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("SearchUserByName")]
-    public Task<ActionResult<IEnumerable<AspNetUserProfileDataObject>>> SearchUserByNameAsync()
+    public async Task<ActionResult<IEnumerable<AspNetUserProfileDataObject>>> SearchUserByNameAsync(string searchQuery)
     {
-        throw new NotImplementedException();
+        return Ok(await this.aspNetUserProfileService.SearchUserByName(searchQuery));
     }
 
     [HttpGet("{userId:guid}")]

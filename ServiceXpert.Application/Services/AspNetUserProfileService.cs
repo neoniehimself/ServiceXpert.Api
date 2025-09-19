@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using Mapster;
+using MapsterMapper;
 using ServiceXpert.Application.DataObjects.AspNetUserProfile;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Entities;
@@ -29,5 +30,11 @@ public class AspNetUserProfileService : ServiceBase<Guid, AspNetUserProfile, Asp
         await this.userProfileRepository.SaveChangesAsync();
 
         return userProfile.Id;
+    }
+
+    public async Task<IEnumerable<AspNetUserProfileDataObject>> SearchUserByName(string searchQuery)
+    {
+        var userProfiles = await this.userProfileRepository.SearchUserByName(searchQuery);
+        return userProfiles.Adapt<IEnumerable<AspNetUserProfileDataObject>>();
     }
 }
