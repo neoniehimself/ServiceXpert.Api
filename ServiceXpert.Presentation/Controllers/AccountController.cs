@@ -17,28 +17,28 @@ public class AccountController : ControllerBase
     }
 
     [Authorize(Policy = nameof(Policy.AdminOnly))]
-    [HttpPost(nameof(RegisterUserAsync))]
-    public async Task<ActionResult> RegisterUserAsync(RegisterUserDataObject registerUser)
+    [HttpPost("Register")]
+    public async Task<ActionResult> RegisterAsync(RegisterDataObject register)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequest(this.ModelState);
         }
 
-        var result = await this.aspNetUserService.RegisterAsync(registerUser);
+        var result = await this.aspNetUserService.RegisterAsync(register);
         return result.Succeeded ? Ok("Register successful!") : BadRequest(result.Errors);
     }
 
     [AllowAnonymous]
-    [HttpPost(nameof(LoginUserAsync))]
-    public async Task<ActionResult> LoginUserAsync(LoginUserDataObject loginUser)
+    [HttpPost("Login")]
+    public async Task<ActionResult> LoginAsync(LoginDataObject login)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequest(this.ModelState);
         }
 
-        var result = await this.aspNetUserService.LoginAsync(loginUser);
+        var result = await this.aspNetUserService.LoginAsync(login);
         return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
     }
 }

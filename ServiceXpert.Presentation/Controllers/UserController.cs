@@ -21,14 +21,14 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Policy = nameof(Policy.AdminOnly))]
-    [HttpPost(nameof(AssignRoleToUserAsync))]
-    public async Task<ActionResult> AssignRoleToUserAsync(UserRoleDataObject dataObject)
+    [HttpPost("AssignRoleToUser")]
+    public async Task<ActionResult> AssignRoleToUserAsync(UserRoleDataObject userRole)
     {
-        var result = await this.aspNetUserService.AssignRoleAsync(dataObject);
+        var result = await this.aspNetUserService.AssignRoleAsync(userRole);
         return result.Succeeded ? Ok("Role assigned successfully!") : BadRequest(result.Errors);
     }
 
-    [HttpGet(nameof(SearchUserByNameAsync))]
+    [HttpGet("SearchUserByName")]
     public Task<ActionResult<IEnumerable<AspNetUserProfileDataObject>>> SearchUserByNameAsync()
     {
         throw new NotImplementedException();

@@ -35,11 +35,11 @@ public class AspNetUserService : IAspNetUserService
         this.roleManager = roleManager;
     }
 
-    public async Task<(bool Succeeded, IEnumerable<string> Errors, string token)> LoginAsync(LoginUserDataObject loginUser)
+    public async Task<(bool Succeeded, IEnumerable<string> Errors, string token)> LoginAsync(LoginDataObject login)
     {
-        var user = await this.userManager.FindByNameAsync(loginUser.UserName);
+        var user = await this.userManager.FindByNameAsync(login.UserName);
 
-        if (user != null && await this.userManager.CheckPasswordAsync(user, loginUser.Password))
+        if (user != null && await this.userManager.CheckPasswordAsync(user, login.Password))
         {
             var userRoles = await this.userManager.GetRolesAsync(user);
 
@@ -74,27 +74,27 @@ public class AspNetUserService : IAspNetUserService
         return (false, new List<string> { "Invalid username or password!" }, string.Empty);
     }
 
-    public async Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterUserDataObject registerUser)
+    public async Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterDataObject register)
     {
         var result = await this.userManager.CreateAsync(new AspNetUser()
         {
-            UserName = registerUser.UserName,
-            Email = registerUser.Email
-        }, registerUser.Password);
+            UserName = register.UserName,
+            Email = register.Email
+        }, register.Password);
 
         if (!result.Succeeded)
         {
             return (false, result.Errors.Select(e => e.Description), Guid.Empty);
         }
 
-        var aspNetUser = await this.userManager.FindByNameAsync(registerUser.UserName);
+        var aspNetUser = await this.userManager.FindByNameAsync(register.UserName);
 
         var config = new TypeAdapterConfig();
-        config.ForType<RegisterUserDataObject, AspNetUserProfileDataObjectForCreate>()
+        config.ForType<RegisterDataObject, AspNetUserProfileDataObjectForCreate>()
               .MapToConstructor(true)
               .ConstructUsing(src => new AspNetUserProfileDataObjectForCreate(aspNetUser!.Id));
 
-        var aspNetUserProfile = registerUser.Adapt<AspNetUserProfileDataObjectForCreate>(config);
+        var aspNetUserProfile = register.Adapt<AspNetUserProfileDataObjectForCreate>(config);
         await this.aspNetUserProfileService.CreateAsync(aspNetUserProfile);
 
         return (true, [], aspNetUser!.Id);

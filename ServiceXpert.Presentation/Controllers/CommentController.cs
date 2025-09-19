@@ -13,7 +13,7 @@ public class CommentController : ControllerBase
     private readonly ICommentService commentService;
     private readonly IIssueService issueService;
 
-    private string CommentControllerFullUriFormat { get => "api/issues/{0}/comments/{1}"; }
+    private string CommentControllerFullUriFormat { get => "Api/Issues/{0}/Comments/{1}"; }
 
     public CommentController(ICommentService commentService, IIssueService issueService)
     {
