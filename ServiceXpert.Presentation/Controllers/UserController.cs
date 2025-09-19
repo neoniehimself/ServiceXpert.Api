@@ -28,6 +28,12 @@ public class UserController : ControllerBase
         return result.Succeeded ? Ok("Role assigned successfully!") : BadRequest(result.Errors);
     }
 
+    [HttpGet(nameof(SearchUserByNameAsync))]
+    public Task<ActionResult<IEnumerable<AspNetUserProfileDataObject>>> SearchUserByNameAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     [HttpGet("{userId:guid}")]
     public async Task<ActionResult<AspNetUserProfileDataObject>> GetUserProfileByIdAsync(Guid userId)
     {
