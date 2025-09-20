@@ -13,4 +13,6 @@ public class IssueDataObjectForUpdate : DataObjectBaseForUpdate
 
     [Required]
     public required int IssuePriorityId { get; set; }
+
+    public Guid? AssigneeId { get; set; }
 }
