@@ -12,5 +12,7 @@ public class IssueDataObjectForCreate : DataObjectBaseForCreate
 
     public int IssuePriorityId { get; set; } = (int)Domain.Shared.Enums.IssuePriority.Low;
 
+    public Guid? ReporterId { get; set; }
+
     public Guid? AssigneeId { get; set; }
 }
