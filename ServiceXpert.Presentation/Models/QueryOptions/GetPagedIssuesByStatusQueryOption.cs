@@ -6,8 +6,4 @@ public class GetPagedIssuesByStatusQueryOption
     public int PageNumber { get; set; } = 1;
 
     public int PageSize { get; set; } = 10;
-
-    public bool IncludeCreatedByUser { get; set; } = false;
-
-    public bool IncludeAssignee { get; set; } = false;
 }

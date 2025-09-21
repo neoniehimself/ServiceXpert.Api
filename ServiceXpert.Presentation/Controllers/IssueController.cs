@@ -1,10 +1,8 @@
-﻿using FluentBuilder.Core;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Shared.Utils;
-using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Shared.Enums;
 using ServiceXpert.Domain.Shared.ValueObjects;
 using ServiceXpert.Presentation.Models.QueryOptions;
@@ -37,21 +35,14 @@ public class IssueController : ControllerBase
     [HttpGet("{issueKey}")]
     public async Task<ActionResult> GetByIssueKeyAsync(string issueKey)
     {
-        var propList = new PropertyList<Issue>();
-
-        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
+        var issue = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
         return issue != null ? Ok(issue) : NotFound($"{issueKey} not found.");
     }
 
     [HttpGet]
     public async Task<ActionResult<PagedResult<IssueDataObject>>> GetPagedIssuesByStatusAsync([FromQuery] GetPagedIssuesByStatusQueryOption queryOption)
     {
-        var propList = new PropertyList<Issue>();
-
-        if (queryOption.IncludeCreatedByUser) propList.Add(i => i.CreatedByUser!);
-        if (queryOption.IncludeAssignee) propList.Add(i => i.Assignee);
-
-        var pagedResult = await this.issueService.GetPagedIssuesByStatusAsync(queryOption.StatusCategory, queryOption.PageNumber, queryOption.PageSize, propList.Count > 0 ? new IncludeOptions<Issue>(propList) : null);
+        var pagedResult = await this.issueService.GetPagedIssuesByStatusAsync(queryOption.StatusCategory, queryOption.PageNumber, queryOption.PageSize);
         return Ok(pagedResult);
     }
 
