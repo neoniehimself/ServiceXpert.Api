@@ -6,7 +6,6 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize]
 [Route("Api/Users")]
 [ApiController]
 public class UserController : ControllerBase

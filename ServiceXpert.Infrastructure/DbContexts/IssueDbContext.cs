@@ -13,14 +13,14 @@ internal class IssueDbContext : DbContextBase, IEntityTypeConfiguration<Issue>
         issue.HasOne(i => i.IssueStatus).WithOne().HasForeignKey<Issue>(i => i.IssueStatusId);
         issue.HasOne(i => i.IssuePriority).WithOne().HasForeignKey<Issue>(i => i.IssuePriorityId);
         issue.HasMany(i => i.Comments).WithOne().HasForeignKey(c => c.IssueId);
-        issue.HasOne(i => i.CreatedByUser).WithMany().HasForeignKey(i => i.CreatedByUserId);
+        issue.HasOne(i => i.Reporter).WithMany().HasForeignKey(i => i.ReporterId);
         issue.HasOne(i => i.Assignee).WithMany().HasForeignKey(i => i.AssigneeId);
+        issue.HasOne(i => i.CreatedByUser).WithMany().HasForeignKey(i => i.CreatedByUserId);
         issue.HasOne(i => i.ModifiedByUser).WithMany().HasForeignKey(i => i.ModifiedByUserId);
 
         issue.Navigation(i => i.IssueStatus).AutoInclude();
         issue.Navigation(i => i.IssuePriority).AutoInclude();
-        issue.Navigation(i => i.CreatedByUser).AutoInclude();
+        issue.Navigation(i => i.Reporter).AutoInclude();
         issue.Navigation(i => i.Assignee).AutoInclude();
-        // issue.Navigation(i => i.ModifiedByUser).AutoInclude();
     }
 }
