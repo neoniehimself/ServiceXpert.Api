@@ -3,41 +3,41 @@
 namespace ServiceXpert.Application.Shared;
 public class Result
 {
-    protected const string GenericErrorMessage = "One or more errors occurred.";
-
     public ResultStatus Status { get; init; }
 
     public bool IsSuccess { get => this.Status == ResultStatus.Success; }
 
-    public string Title { get; set; } = string.Empty;
+    public string Title
+    {
+        get => this.Status != ResultStatus.ValidationError
+            ? "One or more errors occurred."
+            : "One or more validation errors occurred.";
+    }
 
     public IReadOnlyCollection<string> Errors { get; set; } = [];
 
-    public static Result Ok(string title = "")
+    public static Result Ok()
     {
         return new Result
         {
-            Title = title,
             Status = ResultStatus.Success
         };
     }
 
-    public static Result Fail(ResultStatus status, string title = GenericErrorMessage)
+    public static Result Fail(ResultStatus status)
     {
         return new Result
         {
-            Status = status,
-            Title = title
+            Status = status
         };
     }
 
-    public static Result Fail(ResultStatus status, IEnumerable<string> errors, string title = GenericErrorMessage)
+    public static Result Fail(ResultStatus status, IEnumerable<string> errors)
     {
         return new Result
         {
             Status = status,
-            Errors = [.. errors],
-            Title = title
+            Errors = [.. errors]
         };
     }
 }
@@ -46,32 +46,29 @@ public class Result<T> : Result
 {
     T Value { get; set; } = default!;
 
-    public static Result<T> Ok(T value, string title = "")
+    public static Result<T> Ok(T value)
     {
         return new Result<T>
         {
             Value = value,
-            Title = title,
             Status = ResultStatus.Success
         };
     }
 
-    public new static Result<T> Fail(ResultStatus status, string title = GenericErrorMessage)
+    public new static Result<T> Fail(ResultStatus status)
     {
         return new Result<T>
         {
-            Status = status,
-            Title = title
+            Status = status
         };
     }
 
-    public new static Result<T> Fail(ResultStatus status, IEnumerable<string> errors, string title = GenericErrorMessage)
+    public new static Result<T> Fail(ResultStatus status, IEnumerable<string> errors)
     {
         return new Result<T>
         {
             Status = status,
-            Errors = [.. errors],
-            Title = title
+            Errors = [.. errors]
         };
     }
 }

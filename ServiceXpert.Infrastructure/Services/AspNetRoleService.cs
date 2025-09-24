@@ -25,6 +25,6 @@ public class AspNetRoleService : IAspNetRoleService
                 : Result.Fail(ResultStatus.InternalError, result.Errors.Select(e => e.Description));
         }
 
-        return Result.Fail(ResultStatus.ValidationError, "Role already exists!");
+        return Result.Fail(ResultStatus.ValidationError, ["Role already exists!"]);
     }
 }

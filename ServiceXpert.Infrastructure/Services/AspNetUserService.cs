@@ -86,7 +86,7 @@ public class AspNetUserService : IAspNetUserService
 
         if (!result.Succeeded)
         {
-            return Result<Guid>.Fail(ResultStatus.InternalError, result.Errors.Select(e => e.Description));
+            return Result<Guid>.Fail(ResultStatus.ValidationError, result.Errors.Select(e => e.Description));
         }
 
         var aspNetUser = await this.userManager.FindByNameAsync(register.UserName);
@@ -108,17 +108,18 @@ public class AspNetUserService : IAspNetUserService
 
         if (user == null)
         {
-            return Result.Fail(ResultStatus.NotFound, "User not found!");
+            return Result.Fail(ResultStatus.NotFound, ["User not found!"]);
         }
 
         if (!await this.roleManager.RoleExistsAsync(userRole.RoleName))
         {
-            return Result.Fail(ResultStatus.NotFound, "Role not found!");
+            return Result.Fail(ResultStatus.NotFound, ["Role not found!"]);
         }
 
         if (await this.userManager.IsInRoleAsync(user, userRole.RoleName))
         {
-            return Result.Fail(ResultStatus.ValidationError, "User " + userRole.UserName + " is already assigned with role: " + userRole.RoleName);
+            var errorMsg = $"User {userRole.UserName} is already assigned with role: {userRole.RoleName}!";
+            return Result.Fail(ResultStatus.ValidationError, [errorMsg]);
         }
 
         var result = await this.userManager.AddToRoleAsync(user, userRole.RoleName);
