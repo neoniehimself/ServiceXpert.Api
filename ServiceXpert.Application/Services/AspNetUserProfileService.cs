@@ -2,6 +2,8 @@
 using MapsterMapper;
 using ServiceXpert.Application.DataObjects.AspNetUserProfile;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Shared;
+using ServiceXpert.Application.Shared.Enums;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories;
 
@@ -17,11 +19,11 @@ public class AspNetUserProfileService : ServiceBase<Guid, AspNetUserProfile, Asp
         this.mapper = mapper;
     }
 
-    public override async Task<Guid> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObjectForCreate)
+    public override async Task<Result<Guid>> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObjectForCreate)
     {
         if (dataObjectForCreate is not AspNetUserProfileDataObjectForCreate)
         {
-            throw new ArgumentException($"The data object must be of type {nameof(AspNetUserProfileDataObjectForCreate)}", nameof(dataObjectForCreate));
+            return Result<Guid>.Fail(ResultStatus.ValidationError, "The data object must be of type " + nameof(AspNetUserProfileDataObjectForCreate));
         }
 
         var userProfile = this.mapper.Map<AspNetUserProfile>(dataObjectForCreate);
@@ -29,12 +31,14 @@ public class AspNetUserProfileService : ServiceBase<Guid, AspNetUserProfile, Asp
         await this.userProfileRepository.CreateAsync(userProfile);
         await this.userProfileRepository.SaveChangesAsync();
 
-        return userProfile.Id;
+        return Result<Guid>.Ok(userProfile.Id);
     }
 
-    public async Task<IEnumerable<AspNetUserProfileDataObject>> SearchUserByName(string searchQuery)
+    public async Task<Result<IEnumerable<AspNetUserProfileDataObject>>> SearchUserByName(string searchQuery)
     {
         var userProfiles = await this.userProfileRepository.SearchUserByName(searchQuery);
-        return userProfiles.Adapt<IEnumerable<AspNetUserProfileDataObject>>();
+        var userProfilesToReturn = userProfiles.Adapt<IEnumerable<AspNetUserProfileDataObject>>();
+
+        return Result<IEnumerable<AspNetUserProfileDataObject>>.Ok(userProfilesToReturn);
     }
 }

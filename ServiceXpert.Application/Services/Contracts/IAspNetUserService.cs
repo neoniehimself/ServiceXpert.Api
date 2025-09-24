@@ -1,11 +1,12 @@
 ﻿using ServiceXpert.Application.DataObjects.Security;
+using ServiceXpert.Application.Shared;
 
 namespace ServiceXpert.Application.Services.Contracts;
 public interface IAspNetUserService
 {
-    Task<(bool Succeeded, IEnumerable<string> Errors, string token)> LoginAsync(LoginDataObject login);
+    Task<Result<string>> LoginAsync(LoginDataObject login);
 
-    Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterDataObject register);
+    Task<Result<Guid>> RegisterAsync(RegisterDataObject register);
 
-    Task<(bool Succeeded, IEnumerable<string> Errors)> AssignRoleAsync(UserRoleDataObject userRole);
+    Task<Result> AssignRoleAsync(UserRoleDataObject userRole);
 }

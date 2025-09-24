@@ -11,7 +11,7 @@ public class Result
 
     public string Title { get; set; } = string.Empty;
 
-    public IReadOnlyCollection<string> ErrorMessages { get; set; } = [];
+    public IReadOnlyCollection<string> Errors { get; set; } = [];
 
     public static Result Ok(string title = "")
     {
@@ -22,24 +22,33 @@ public class Result
         };
     }
 
-    public static Result Error(IEnumerable<string> errorMessages, string title = GenericErrorMessage, ResultStatus status = ResultStatus.InternalError)
+    public static Result Fail(ResultStatus status, string title = GenericErrorMessage)
     {
         return new Result
         {
-            ErrorMessages = [.. errorMessages],
-            Title = title,
-            Status = status
+            Status = status,
+            Title = title
+        };
+    }
+
+    public static Result Fail(ResultStatus status, IEnumerable<string> errors, string title = GenericErrorMessage)
+    {
+        return new Result
+        {
+            Status = status,
+            Errors = [.. errors],
+            Title = title
         };
     }
 }
 
 public class Result<T> : Result
 {
-    T? Value { get; set; }
+    T Value { get; set; } = default!;
 
-    public static Result<T?> Ok(T? value, string title = "")
+    public static Result<T> Ok(T value, string title = "")
     {
-        return new Result<T?>
+        return new Result<T>
         {
             Value = value,
             Title = title,
@@ -47,13 +56,22 @@ public class Result<T> : Result
         };
     }
 
-    public new static Result<T?> Error(IEnumerable<string> errorMessages, string title = GenericErrorMessage, ResultStatus status = ResultStatus.InternalError)
+    public new static Result<T> Fail(ResultStatus status, string title = GenericErrorMessage)
     {
-        return new Result<T?>
+        return new Result<T>
         {
-            ErrorMessages = [.. errorMessages],
-            Title = title,
-            Status = status
+            Status = status,
+            Title = title
+        };
+    }
+
+    public new static Result<T> Fail(ResultStatus status, IEnumerable<string> errors, string title = GenericErrorMessage)
+    {
+        return new Result<T>
+        {
+            Status = status,
+            Errors = [.. errors],
+            Title = title
         };
     }
 }

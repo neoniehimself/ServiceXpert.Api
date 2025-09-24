@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using ServiceXpert.Application.DataObjects.AspNetUserProfile;
 using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Shared;
+using ServiceXpert.Application.Shared.Enums;
 using ServiceXpert.Infrastructure.SecurityModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -35,7 +37,7 @@ public class AspNetUserService : IAspNetUserService
         this.roleManager = roleManager;
     }
 
-    public async Task<(bool Succeeded, IEnumerable<string> Errors, string token)> LoginAsync(LoginDataObject login)
+    public async Task<Result<string>> LoginAsync(LoginDataObject login)
     {
         var user = await this.userManager.FindByNameAsync(login.UserName);
 
@@ -45,7 +47,7 @@ public class AspNetUserService : IAspNetUserService
 
             if (!userRoles.Any())
             {
-                return (false, new List<string> { "User has no roles assigned!" }, string.Empty);
+                return Result<string>.Fail(ResultStatus.Unauthorized, "No roles assigned!");
             }
 
             var claims = new List<Claim>
@@ -68,13 +70,13 @@ public class AspNetUserService : IAspNetUserService
                 expires: DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt16(this.configuration["Jwt:ExpiresInMinutes"])).UtcDateTime
             );
 
-            return (true, [], new JwtSecurityTokenHandler().WriteToken(token));
+            return Result<string>.Ok(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        return (false, new List<string> { "Invalid username or password!" }, string.Empty);
+        return Result<string>.Fail(ResultStatus.Unauthorized, "Invalid username or password");
     }
 
-    public async Task<(bool Succeeded, IEnumerable<string> Errors, Guid aspNetUserId)> RegisterAsync(RegisterDataObject register)
+    public async Task<Result<Guid>> RegisterAsync(RegisterDataObject register)
     {
         var result = await this.userManager.CreateAsync(new AspNetUser()
         {
@@ -84,7 +86,7 @@ public class AspNetUserService : IAspNetUserService
 
         if (!result.Succeeded)
         {
-            return (false, result.Errors.Select(e => e.Description), Guid.Empty);
+            return Result<Guid>.Fail(ResultStatus.InternalError, result.Errors.Select(e => e.Description));
         }
 
         var aspNetUser = await this.userManager.FindByNameAsync(register.UserName);
@@ -97,29 +99,31 @@ public class AspNetUserService : IAspNetUserService
         var aspNetUserProfile = register.Adapt<AspNetUserProfileDataObjectForCreate>(config);
         await this.aspNetUserProfileService.CreateAsync(aspNetUserProfile);
 
-        return (true, [], aspNetUser!.Id);
+        return Result<Guid>.Ok(aspNetUser!.Id);
     }
 
-    public async Task<(bool Succeeded, IEnumerable<string> Errors)> AssignRoleAsync(UserRoleDataObject userRole)
+    public async Task<Result> AssignRoleAsync(UserRoleDataObject userRole)
     {
         var user = await this.userManager.FindByNameAsync(userRole.UserName);
 
         if (user == null)
         {
-            return (false, new List<string> { "User not found!" });
+            return Result.Fail(ResultStatus.NotFound, "User not found!");
         }
 
         if (!await this.roleManager.RoleExistsAsync(userRole.RoleName))
         {
-            return (false, new List<string> { "Role not found!" });
+            return Result.Fail(ResultStatus.NotFound, "Role not found!");
         }
 
         if (await this.userManager.IsInRoleAsync(user, userRole.RoleName))
         {
-            return (false, new List<string> { "User already assigned to this role!" });
+            return Result.Fail(ResultStatus.ValidationError, "User " + userRole.UserName + " is already assigned with role: " + userRole.RoleName);
         }
 
         var result = await this.userManager.AddToRoleAsync(user, userRole.RoleName);
-        return result.Succeeded ? (true, []) : (false, result.Errors.Select(e => e.Description));
+        return result.Succeeded
+            ? Result.Ok()
+            : Result.Fail(ResultStatus.InternalError, result.Errors.Select(e => e.Description));
     }
 }
