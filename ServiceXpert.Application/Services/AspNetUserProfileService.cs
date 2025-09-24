@@ -23,7 +23,7 @@ public class AspNetUserProfileService : ServiceBase<Guid, AspNetUserProfile, Asp
     {
         if (dataObjectForCreate is not AspNetUserProfileDataObjectForCreate)
         {
-            return Result<Guid>.Fail(ResultStatus.ValidationError, "The data object must be of type " + nameof(AspNetUserProfileDataObjectForCreate));
+            return Result<Guid>.Fail(ResultStatus.ValidationError, ["The data object must be of type " + nameof(AspNetUserProfileDataObjectForCreate)]);
         }
 
         var userProfile = this.mapper.Map<AspNetUserProfile>(dataObjectForCreate);

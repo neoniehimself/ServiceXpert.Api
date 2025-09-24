@@ -51,6 +51,6 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
             return Result<PagedResult<IssueDataObject>>.Ok(pagedResultToReturn);
         }
 
-        return Result<PagedResult<IssueDataObject>>.Fail(ResultStatus.InternalError, $"Invalid cast of string to enum. {nameof(statusCategory)}");
+        return Result<PagedResult<IssueDataObject>>.Fail(ResultStatus.InternalError, [$"Invalid cast of string to enum. {nameof(statusCategory)}"]);
     }
 }
