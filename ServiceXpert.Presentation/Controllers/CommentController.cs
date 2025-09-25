@@ -26,11 +26,11 @@ public class CommentController : SxpController
             return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
         }
 
-        var resultIfExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
 
-        if (!resultIfExists.IsSuccess)
+        if (!resultOnExists.IsSuccess)
         {
-            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultIfExists.Errors));
+            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
         }
 
         if (!this.ModelState.IsValid)

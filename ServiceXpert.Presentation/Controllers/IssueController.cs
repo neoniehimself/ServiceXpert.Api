@@ -48,11 +48,11 @@ public class IssueController : SxpController
     [HttpPut("{issueKey}")]
     public async Task<IActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate issueForUpdate)
     {
-        var resultIfExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
 
-        if (!resultIfExists.IsSuccess)
+        if (!resultOnExists.IsSuccess)
         {
-            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultIfExists.Errors));
+            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
         }
 
         if (!this.ModelState.IsValid)

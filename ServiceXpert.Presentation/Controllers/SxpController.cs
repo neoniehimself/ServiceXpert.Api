@@ -22,7 +22,7 @@ public class SxpController : ControllerBase
                 ResultStatus.ValidationError => BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, result.Errors)),
                 ResultStatus.Unauthorized => Unauthorized(Models.ApiResponse.Fail(HttpStatusCode.Unauthorized, result.Errors)),
                 ResultStatus.NotFound => NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, result.Errors)),
-                _ => InternalServerError(result.Errors),
+                _ => InternalServerError(result.Errors)
             };
         }
 
@@ -39,7 +39,7 @@ public class SxpController : ControllerBase
                 ResultStatus.ValidationError => BadRequest(Models.ApiResponse<T>.Fail(HttpStatusCode.BadRequest, result.Errors)),
                 ResultStatus.Unauthorized => Unauthorized(Models.ApiResponse<T>.Fail(HttpStatusCode.Unauthorized, result.Errors)),
                 ResultStatus.NotFound => NotFound(Models.ApiResponse<T>.Fail(HttpStatusCode.NotFound, result.Errors)),
-                _ => InternalServerError<T>(result.Errors),
+                _ => InternalServerError<T>(result.Errors)
             };
         }
 
