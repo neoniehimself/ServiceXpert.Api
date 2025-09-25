@@ -3,57 +3,49 @@
 namespace ServiceXpert.Presentation.Models;
 public class ApiResponse
 {
-    protected const string GenericErrorMessage = "One or more errors occurred.";
-
     public HttpStatusCode Status { get; set; }
 
     public bool IsSuccess { get => this.Status == HttpStatusCode.OK; }
 
-    public string Title { get; set; } = string.Empty;
+    public IReadOnlyCollection<string> Errors { get; set; } = [];
 
-    public IReadOnlyCollection<string> ErrorMessages { get; set; } = [];
-
-    public static ApiResponse Ok(string title = "")
+    public static ApiResponse Ok()
     {
         return new ApiResponse
         {
-            Title = title,
             Status = HttpStatusCode.OK
         };
     }
 
-    public static ApiResponse Error(IEnumerable<string> errorMessages, string title = GenericErrorMessage, HttpStatusCode status = HttpStatusCode.InternalServerError)
+    public static ApiResponse Fail(HttpStatusCode status, IEnumerable<string> errors)
     {
         return new ApiResponse
         {
-            ErrorMessages = [.. errorMessages],
-            Title = title,
-            Status = status
+            Status = status,
+            Errors = [.. errors]
         };
     }
 }
 
 public class ApiResponse<T> : ApiResponse
 {
-    T? Value { get; set; }
+    public T Value { get; set; } = default!;
 
-    public static ApiResponse<T?> Ok(T? value, string title = "")
+    public static ApiResponse<T> Ok(T value)
     {
-        return new ApiResponse<T?>
+        return new ApiResponse<T>
         {
             Value = value,
-            Title = title,
-            Status = HttpStatusCode.OK
+            Status = HttpStatusCode.OK,
         };
     }
 
-    public new static ApiResponse<T?> Error(IEnumerable<string> errorMessages, string title = GenericErrorMessage, HttpStatusCode status = HttpStatusCode.InternalServerError)
+    public new static ApiResponse<T> Fail(HttpStatusCode status, IEnumerable<string> errors)
     {
-        return new ApiResponse<T?>
+        return new ApiResponse<T>
         {
-            ErrorMessages = [.. errorMessages],
-            Title = title,
-            Status = status
+            Status = status,
+            Errors = [.. errors],
         };
     }
 }

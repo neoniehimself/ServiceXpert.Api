@@ -7,7 +7,7 @@ using ServiceXpert.Domain.Shared.Enums;
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Api/Accounts")]
 [ApiController]
-public class AccountController : ControllerBase
+public class AccountController : SxpController
 {
     private readonly IAspNetUserService aspNetUserService;
 
@@ -18,27 +18,27 @@ public class AccountController : ControllerBase
 
     [Authorize(Policy = nameof(Policy.AdminOnly))]
     [HttpPost("Register")]
-    public async Task<ActionResult> RegisterAsync(RegisterDataObject register)
+    public async Task<IActionResult> RegisterAsync(RegisterDataObject register)
     {
         if (!this.ModelState.IsValid)
         {
-            return BadRequest(this.ModelState);
+            return BadRequestInvalidModelState();
         }
 
         var result = await this.aspNetUserService.RegisterAsync(register);
-        return result.Succeeded ? Ok("Register successful!") : BadRequest(result.Errors);
+        return ApiResponse(result);
     }
 
     [AllowAnonymous]
     [HttpPost("Login")]
-    public async Task<ActionResult> LoginAsync(LoginDataObject login)
+    public async Task<IActionResult> LoginAsync(LoginDataObject login)
     {
         if (!this.ModelState.IsValid)
         {
-            return BadRequest(this.ModelState);
+            return BadRequestInvalidModelState();
         }
 
         var result = await this.aspNetUserService.LoginAsync(login);
-        return result.Succeeded ? Ok(result.token) : BadRequest(result.Errors);
+        return ApiResponse(result);
     }
 }

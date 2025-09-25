@@ -7,7 +7,7 @@ namespace ServiceXpert.Presentation.Controllers;
 [Authorize(Policy = nameof(Policy.AdminOnly))]
 [Route("Roles")]
 [ApiController]
-public class RoleController : ControllerBase
+public class RoleController : SxpController
 {
     private readonly IAspNetRoleService aspNetRoleService;
 
@@ -17,9 +17,9 @@ public class RoleController : ControllerBase
     }
 
     [HttpPost(nameof(CreateRoleAsync))]
-    public async Task<ActionResult> CreateRoleAsync(string roleName)
+    public async Task<IActionResult> CreateRoleAsync(string roleName)
     {
-        var result = await this.aspNetRoleService.CreateRoleAsync(roleName);
-        return result.Succeeded ? Ok("Role created successfully!") : BadRequest(result.Errors);
+        var resultOnCreate = await this.aspNetRoleService.CreateRoleAsync(roleName);
+        return ApiResponse(resultOnCreate);
     }
 }

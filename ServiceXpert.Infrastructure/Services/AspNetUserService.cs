@@ -47,7 +47,7 @@ public class AspNetUserService : IAspNetUserService
 
             if (!userRoles.Any())
             {
-                return Result<string>.Fail(ResultStatus.Unauthorized, "No roles assigned!");
+                return Result<string>.Fail(ResultStatus.Unauthorized, ["No roles assigned!"]);
             }
 
             var claims = new List<Claim>
@@ -73,7 +73,7 @@ public class AspNetUserService : IAspNetUserService
             return Result<string>.Ok(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        return Result<string>.Fail(ResultStatus.Unauthorized, "Invalid username or password");
+        return Result<string>.Fail(ResultStatus.Unauthorized, ["Invalid username or password"]);
     }
 
     public async Task<Result<Guid>> RegisterAsync(RegisterDataObject register)

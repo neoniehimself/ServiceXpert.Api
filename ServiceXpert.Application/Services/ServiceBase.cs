@@ -53,7 +53,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
 
         return entity != null
             ? Result<TDataObject>.Ok(entity.Adapt<TDataObject>())
-            : Result<TDataObject>.Fail(ResultStatus.NotFound);
+            : Result<TDataObject>.Fail(ResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
     }
 
     public async Task<Result<PagedResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null)
@@ -68,7 +68,7 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
     {
         return await this.repositoryBase.IsExistsByIdAsync(id)
             ? Result.Ok()
-            : Result.Fail(ResultStatus.NotFound);
+            : Result.Fail(ResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
     }
 
     public async Task<Result> UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObjectForUpdate) where TDataObjectForUpdate : DataObjectBaseForUpdate
@@ -86,6 +86,6 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
             return Result.Ok();
         }
 
-        return Result.Fail(ResultStatus.NotFound);
+        return Result.Fail(ResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
     }
 }

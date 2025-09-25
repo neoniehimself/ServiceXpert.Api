@@ -7,13 +7,6 @@ public class Result
 
     public bool IsSuccess { get => this.Status == ResultStatus.Success; }
 
-    public string Title
-    {
-        get => this.Status != ResultStatus.ValidationError
-            ? "One or more errors occurred."
-            : "One or more validation errors occurred.";
-    }
-
     public IReadOnlyCollection<string> Errors { get; set; } = [];
 
     public static Result Ok()
@@ -21,14 +14,6 @@ public class Result
         return new Result
         {
             Status = ResultStatus.Success
-        };
-    }
-
-    public static Result Fail(ResultStatus status)
-    {
-        return new Result
-        {
-            Status = status
         };
     }
 
@@ -44,7 +29,7 @@ public class Result
 
 public class Result<T> : Result
 {
-    T Value { get; set; } = default!;
+    public T Value { get; set; } = default!;
 
     public static Result<T> Ok(T value)
     {
@@ -52,14 +37,6 @@ public class Result<T> : Result
         {
             Value = value,
             Status = ResultStatus.Success
-        };
-    }
-
-    public new static Result<T> Fail(ResultStatus status)
-    {
-        return new Result<T>
-        {
-            Status = status
         };
     }
 
