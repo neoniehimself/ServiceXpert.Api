@@ -3,9 +3,9 @@
 namespace ServiceXpert.Presentation.Models;
 public class ApiResponse
 {
-    public HttpStatusCode Status { get; set; }
+    public HttpStatusCode StatusCode { get; set; }
 
-    public bool IsSuccess { get => this.Status == HttpStatusCode.OK; }
+    public bool IsSuccess { get => this.StatusCode == HttpStatusCode.OK; }
 
     public IReadOnlyCollection<string> Errors { get; set; } = [];
 
@@ -13,15 +13,15 @@ public class ApiResponse
     {
         return new ApiResponse
         {
-            Status = HttpStatusCode.OK
+            StatusCode = HttpStatusCode.OK
         };
     }
 
-    public static ApiResponse Fail(HttpStatusCode status, IEnumerable<string> errors)
+    public static ApiResponse Fail(HttpStatusCode statusCode, IEnumerable<string> errors)
     {
         return new ApiResponse
         {
-            Status = status,
+            StatusCode = statusCode,
             Errors = [.. errors]
         };
     }
@@ -36,15 +36,15 @@ public class ApiResponse<T> : ApiResponse
         return new ApiResponse<T>
         {
             Value = value,
-            Status = HttpStatusCode.OK,
+            StatusCode = HttpStatusCode.OK,
         };
     }
 
-    public new static ApiResponse<T> Fail(HttpStatusCode status, IEnumerable<string> errors)
+    public new static ApiResponse<T> Fail(HttpStatusCode statusCode, IEnumerable<string> errors)
     {
         return new ApiResponse<T>
         {
-            Status = status,
+            StatusCode = statusCode,
             Errors = [.. errors],
         };
     }

@@ -10,10 +10,7 @@ public class SxpController : ControllerBase
     protected IEnumerable<string> GetModelStateErrors() => this.ModelState.Values.SelectMany(modelStateEntry => modelStateEntry.Errors).Select(modelError => modelError.ErrorMessage);
 
     [NonAction]
-    protected IActionResult BadRequestInvalidModelState()
-    {
-        return base.BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, GetModelStateErrors()));
-    }
+    protected IActionResult BadRequestInvalidModelState() => BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, GetModelStateErrors()));
 
     [NonAction]
     protected IActionResult ApiResponse(Result result)
