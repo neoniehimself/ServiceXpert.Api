@@ -2,16 +2,15 @@
 using ServiceXpert.Application.DataObjects.Comment;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Shared.Utils;
+using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Api/Issues/{issueKey}/Comments")]
 [ApiController]
-public class CommentController : ControllerBase
+public class CommentController : SxpController
 {
     private readonly ICommentService commentService;
     private readonly IIssueService issueService;
-
-    private string CommentControllerFullUriFormat { get => "Api/Issues/{0}/Comments/{1}"; }
 
     public CommentController(ICommentService commentService, IIssueService issueService)
     {
@@ -20,53 +19,44 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate commentForCreate)
+    public async Task<IActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate commentForCreate)
     {
         if (!string.Equals(issueKey, commentForCreate.IssueKey))
         {
-            return BadRequest("URL.IssueKey and Comment.IssueKey does not match");
+            return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
         }
 
-        if (!await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey)))
+        var resultIfExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+
+        if (!resultIfExists.IsSuccess)
         {
-            return NotFound($"No such issue exists. IssueKey: {issueKey}");
+            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultIfExists.Errors));
         }
 
         if (!this.ModelState.IsValid)
         {
-            return BadRequest(this.ModelState);
+            return BadRequestInvalidModelState();
         }
 
-        var commentId = await this.commentService.CreateAsync(commentForCreate);
-        var comment = await this.commentService.GetByIdAsync(commentId);
-        return Created(string.Format(this.CommentControllerFullUriFormat, comment!.IssueKey, commentId), comment);
+        var resultOnCreate = await this.commentService.CreateAsync(commentForCreate);
+        var resultOnGet = await this.commentService.GetByIdAsync(resultOnCreate.Value);
+
+        return ApiResponse(resultOnGet);
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CommentDataObject>>> GetAllByIssueKeyAsync(string issueKey)
+    public async Task<IActionResult> GetAllByIssueKeyAsync(string issueKey)
     {
         var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
 
-        if (!await this.issueService.IsExistsByIdAsync(issueId))
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(issueId);
+
+        if (!resultOnExists.IsSuccess)
         {
-            return NotFound($"No such issue exists. IssueKey: {issueKey}");
+            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
         }
 
-        var comments = await this.commentService.GetAllByIssueKeyAsync(issueId);
-        return Ok(comments);
-    }
-
-    [HttpGet("{commentId:guid}")]
-    public async Task<ActionResult> GetByIdAsync(string issueKey, Guid commentId)
-    {
-        var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
-
-        if (!await this.issueService.IsExistsByIdAsync(issueId))
-        {
-            return NotFound($"No such issue exists. IssueKey: {issueKey}");
-        }
-
-        var comment = await this.commentService.GetByIdAsync(commentId);
-        return comment != null ? Ok(comment) : NotFound(commentId);
+        var resultOnGet = await this.commentService.GetAllByIssueKeyAsync(issueId);
+        return ApiResponse(resultOnGet);
     }
 }

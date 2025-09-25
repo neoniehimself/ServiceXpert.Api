@@ -3,6 +3,8 @@ using Mapster;
 using MapsterMapper;
 using ServiceXpert.Application.DataObjects;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Shared;
+using ServiceXpert.Application.Shared.Enums;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories;
 using ServiceXpert.Domain.Shared.ValueObjects;
@@ -19,48 +21,57 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
         this.mapper = mapper;
     }
 
-    public virtual async Task<TId> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObjectForCreate) where TDataObjectForCreate : DataObjectBaseForCreate
+    public virtual async Task<Result<TId>> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObjectForCreate) where TDataObjectForCreate : DataObjectBaseForCreate
     {
         TEntity entity = dataObjectForCreate.Adapt<TEntity>();
 
         await this.repositoryBase.CreateAsync(entity);
         await this.repositoryBase.SaveChangesAsync();
 
-        return entity.Id;
+        return Result<TId>.Ok(entity.Id);
     }
 
-    public async Task DeleteByIdAsync(TId id)
+    public async Task<Result> DeleteByIdAsync(TId id)
     {
         await this.repositoryBase.DeleteByIdAsync(id);
         await this.repositoryBase.SaveChangesAsync();
+
+        return Result.Ok();
     }
 
-    public async Task<IEnumerable<TDataObject>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<Result<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null)
     {
         IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(includeOptions: includeOptions);
-        return entities.Adapt<ICollection<TDataObject>>();
+        ICollection<TDataObject> dataObjects = entities.Adapt<ICollection<TDataObject>>();
+
+        return Result<IEnumerable<TDataObject>>.Ok(dataObjects);
     }
 
-    public async Task<TDataObject?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<Result<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
     {
         TEntity? entity = await this.repositoryBase.GetByIdAsync(id, includeOptions);
-        return entity?.Adapt<TDataObject>();
+
+        return entity != null
+            ? Result<TDataObject>.Ok(entity.Adapt<TDataObject>())
+            : Result<TDataObject>.Fail(ResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
     }
 
-    public async Task<PagedResult<TDataObject>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<Result<PagedResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null)
     {
         PagedResult<TEntity> pagedResult = await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions);
+        PagedResult<TDataObject> pagedResultToReturn = new(pagedResult.Items.Adapt<ICollection<TDataObject>>(), pagedResult.Pagination);
 
-        // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
-        return new PagedResult<TDataObject>(pagedResult.Items.Adapt<ICollection<TDataObject>>(), pagedResult.Pagination);
+        return Result<PagedResult<TDataObject>>.Ok(pagedResultToReturn);
     }
 
-    public async Task<bool> IsExistsByIdAsync(TId id)
+    public async Task<Result> IsExistsByIdAsync(TId id)
     {
-        return await this.repositoryBase.IsExistsByIdAsync(id);
+        return await this.repositoryBase.IsExistsByIdAsync(id)
+            ? Result.Ok()
+            : Result.Fail(ResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
     }
 
-    public async Task UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObjectForUpdate) where TDataObjectForUpdate : DataObjectBaseForUpdate
+    public async Task<Result> UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObjectForUpdate) where TDataObjectForUpdate : DataObjectBaseForUpdate
     {
         TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id);
 
@@ -71,6 +82,10 @@ public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId,
             this.repositoryBase.Attach(entityToUpdate);
             this.mapper.Map(dataObjectForUpdate, entityToUpdate);
             await this.repositoryBase.SaveChangesAsync();
+
+            return Result.Ok();
         }
+
+        return Result.Fail(ResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
     }
 }

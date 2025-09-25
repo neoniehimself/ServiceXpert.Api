@@ -1,5 +1,7 @@
-﻿namespace ServiceXpert.Application.Services.Contracts;
+﻿using ServiceXpert.Application.Shared;
+
+namespace ServiceXpert.Application.Services.Contracts;
 public interface IAspNetRoleService
 {
-    Task<(bool Succeeded, IEnumerable<string> Errors)> CreateRoleAsync(string roleName);
+    Task<Result> CreateRoleAsync(string roleName);
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects.AspNetUserProfile;
 using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
@@ -8,7 +7,7 @@ using ServiceXpert.Domain.Shared.Enums;
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Api/Users")]
 [ApiController]
-public class UserController : ControllerBase
+public class UserController : SxpController
 {
     private readonly IAspNetUserService aspNetUserService;
     private readonly IAspNetUserProfileService aspNetUserProfileService;
@@ -21,22 +20,22 @@ public class UserController : ControllerBase
 
     [Authorize(Policy = nameof(Policy.AdminOnly))]
     [HttpPost("AssignRoleToUser")]
-    public async Task<ActionResult> AssignRoleToUserAsync(UserRoleDataObject userRole)
+    public async Task<IActionResult> AssignRoleToUserAsync(UserRoleDataObject userRole)
     {
-        var result = await this.aspNetUserService.AssignRoleAsync(userRole);
-        return result.Succeeded ? Ok("Role assigned successfully!") : BadRequest(result.Errors);
+        var resultOnAssign = await this.aspNetUserService.AssignRoleAsync(userRole);
+        return ApiResponse(resultOnAssign);
     }
 
     [HttpGet("SearchUserByName")]
-    public async Task<ActionResult<IEnumerable<AspNetUserProfileDataObject>>> SearchUserByNameAsync(string searchQuery)
+    public async Task<IActionResult> SearchUserByNameAsync(string searchQuery)
     {
-        return Ok(await this.aspNetUserProfileService.SearchUserByName(searchQuery));
+        return ApiResponse(await this.aspNetUserProfileService.SearchUserByName(searchQuery));
     }
 
     [HttpGet("{userId:guid}")]
-    public async Task<ActionResult<AspNetUserProfileDataObject>> GetUserProfileByIdAsync(Guid userId)
+    public async Task<IActionResult> GetUserProfileByIdAsync(Guid userId)
     {
-        var userProfile = await this.aspNetUserProfileService.GetByIdAsync(userId);
-        return userProfile != null ? Ok(userProfile) : NotFound($"User profile not found. Id = {userId}.");
+        var resultOnGet = await this.aspNetUserProfileService.GetByIdAsync(userId);
+        return ApiResponse(resultOnGet);
     }
 }

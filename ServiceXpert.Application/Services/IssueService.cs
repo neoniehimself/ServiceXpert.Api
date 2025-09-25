@@ -3,6 +3,8 @@ using Mapster;
 using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Shared;
+using ServiceXpert.Application.Shared.Enums;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories;
 using ServiceXpert.Domain.Shared.ValueObjects;
@@ -18,7 +20,7 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
         this.issueRepository = issueRepository;
     }
 
-    public async Task<PagedResult<IssueDataObject>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null)
+    public async Task<Result<PagedResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null)
     {
         var pagedResult = new PagedResult<Issue>();
 
@@ -45,13 +47,10 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
                     break;
             }
 
-            // Use ICollection instead of IEnumerable to materialize object (required for Mapster)
-            return new PagedResult<IssueDataObject>(
-                pagedResult.Items.Adapt<ICollection<IssueDataObject>>(),
-                pagedResult.Pagination
-            );
+            var pagedResultToReturn = new PagedResult<IssueDataObject>(pagedResult.Items.Adapt<ICollection<IssueDataObject>>(), pagedResult.Pagination);
+            return Result<PagedResult<IssueDataObject>>.Ok(pagedResultToReturn);
         }
 
-        throw new InvalidCastException($"Cannot cast string into enum. Value: {statusCategory}");
+        return Result<PagedResult<IssueDataObject>>.Fail(ResultStatus.InternalError, [$"Invalid cast of string to enum. {nameof(statusCategory)}"]);
     }
 }
