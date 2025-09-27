@@ -39,9 +39,7 @@ public class CommentController : SxpController
         }
 
         var resultOnCreate = await this.commentService.CreateAsync(commentForCreate);
-        var resultOnGet = await this.commentService.GetByIdAsync(resultOnCreate.Value);
-
-        return ApiResponse(resultOnGet);
+        return ApiResponse(resultOnCreate);
     }
 
     [HttpGet]
