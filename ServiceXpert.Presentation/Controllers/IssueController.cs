@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Shared.Utils;
@@ -7,8 +6,7 @@ using ServiceXpert.Presentation.Models.QueryOptions;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize]
-[Route("Api/Issues")]
+[Route("Issues")]
 [ApiController]
 public class IssueController : SxpController
 {

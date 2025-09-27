@@ -5,7 +5,7 @@ using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Route("Api/Users")]
+[Route("Users")]
 [ApiController]
 public class UserController : SxpController
 {

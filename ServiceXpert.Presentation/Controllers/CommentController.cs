@@ -5,7 +5,7 @@ using ServiceXpert.Application.Shared.Utils;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Route("Api/Issues/{issueKey}/Comments")]
+[Route("Issues/{issueKey}/Comments")]
 [ApiController]
 public class CommentController : SxpController
 {
