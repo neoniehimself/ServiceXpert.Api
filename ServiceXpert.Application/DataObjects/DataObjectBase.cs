@@ -14,14 +14,14 @@ public abstract class DataObjectBase<TId> : IAudit
     public DateTimeOffset? ModifiedDate { get; set; }
 }
 
-public abstract class DataObjectBaseForCreate : ICreationAudit
+public abstract class CreateDataObjectBase : ICreationAudit
 {
     public Guid CreatedByUserId { get; set; }
 
     public DateTimeOffset CreatedDate { get; set; }
 }
 
-public abstract class DataObjectBaseForUpdate : IModificationAudit
+public abstract class UpdateDataObjectBase : IModificationAudit
 {
     public Guid? ModifiedByUserId { get; set; }
 

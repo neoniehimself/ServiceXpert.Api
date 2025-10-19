@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects.Security;
-using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Models.Auth;
+using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Enums.Security;
 
 namespace ServiceXpert.Presentation.Controllers;
@@ -9,10 +9,10 @@ namespace ServiceXpert.Presentation.Controllers;
 [ApiController]
 public class UserController : SxpController
 {
-    private readonly IAspNetUserService aspNetUserService;
-    private readonly IAspNetUserProfileService aspNetUserProfileService;
+    private readonly ISecurityUserService aspNetUserService;
+    private readonly ISecurityProfileService aspNetUserProfileService;
 
-    public UserController(IAspNetUserService aspNetUserService, IAspNetUserProfileService aspNetUserProfileService)
+    public UserController(ISecurityUserService aspNetUserService, ISecurityProfileService aspNetUserProfileService)
     {
         this.aspNetUserService = aspNetUserService;
         this.aspNetUserProfileService = aspNetUserProfileService;
@@ -20,7 +20,7 @@ public class UserController : SxpController
 
     [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
     [HttpPost("AssignRoleToUser")]
-    public async Task<IActionResult> AssignRoleToUserAsync(UserRoleDataObject userRole)
+    public async Task<IActionResult> AssignRoleToUserAsync(UserRole userRole)
     {
         var resultOnAssign = await this.aspNetUserService.AssignRoleAsync(userRole);
         return ApiResponse(resultOnAssign);

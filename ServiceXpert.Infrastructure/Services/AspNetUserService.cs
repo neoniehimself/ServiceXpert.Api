@@ -3,30 +3,30 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ServiceXpert.Application.DataObjects.AspNetUserProfile;
 using ServiceXpert.Application.DataObjects.Security;
-using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Application.Shared;
-using ServiceXpert.Application.Shared.Enums;
+using ServiceXpert.Application.Enums;
+using ServiceXpert.Application.Models;
+using ServiceXpert.Application.Models.Auth;
+using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Infrastructure.SecurityModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace ServiceXpert.Infrastructure.Services;
-public class AspNetUserService : IAspNetUserService
+public class AspNetUserService : ISecurityUserService
 {
     private readonly UserManager<AspNetUser> userManager;
     private readonly IConfiguration configuration;
     private readonly ServiceXpertConfiguration serviceXpertConfiguration;
-    private readonly IAspNetUserProfileService aspNetUserProfileService;
+    private readonly ISecurityProfileService aspNetUserProfileService;
     private readonly RoleManager<AspNetRole> roleManager;
 
     public AspNetUserService(
         UserManager<AspNetUser> userManager,
         IConfiguration configuration,
         IOptions<ServiceXpertConfiguration> options,
-        IAspNetUserProfileService aspNetUserProfileService,
+        ISecurityProfileService aspNetUserProfileService,
         RoleManager<AspNetRole> roleManager
         )
     {
@@ -37,7 +37,7 @@ public class AspNetUserService : IAspNetUserService
         this.roleManager = roleManager;
     }
 
-    public async Task<Result<string>> LoginAsync(LoginDataObject login)
+    public async Task<ServiceResult<string>> LoginAsync(LoginUser login)
     {
         var user = await this.userManager.FindByNameAsync(login.UserName);
 
@@ -47,7 +47,7 @@ public class AspNetUserService : IAspNetUserService
 
             if (!userRoles.Any())
             {
-                return Result<string>.Fail(ResultStatus.Unauthorized, ["No roles assigned!"]);
+                return ServiceResult<string>.Fail(ServiceResultStatus.Unauthorized, ["No roles assigned!"]);
             }
 
             var claims = new List<Claim>
@@ -70,13 +70,13 @@ public class AspNetUserService : IAspNetUserService
                 expires: DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt16(this.configuration["Jwt:ExpiresInMinutes"])).UtcDateTime
             );
 
-            return Result<string>.Ok(new JwtSecurityTokenHandler().WriteToken(token));
+            return ServiceResult<string>.Ok(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        return Result<string>.Fail(ResultStatus.Unauthorized, ["Invalid username or password"]);
+        return ServiceResult<string>.Fail(ServiceResultStatus.Unauthorized, ["Invalid username or password"]);
     }
 
-    public async Task<Result<Guid>> RegisterAsync(RegisterDataObject register)
+    public async Task<ServiceResult<Guid>> RegisterAsync(RegisterUser register)
     {
         var result = await this.userManager.CreateAsync(new AspNetUser()
         {
@@ -86,45 +86,45 @@ public class AspNetUserService : IAspNetUserService
 
         if (!result.Succeeded)
         {
-            return Result<Guid>.Fail(ResultStatus.ValidationError, result.Errors.Select(e => e.Description));
+            return ServiceResult<Guid>.Fail(ServiceResultStatus.ValidationError, result.Errors.Select(e => e.Description));
         }
 
         var aspNetUser = await this.userManager.FindByNameAsync(register.UserName);
 
         var config = new TypeAdapterConfig();
-        config.ForType<RegisterDataObject, AspNetUserProfileDataObjectForCreate>()
+        config.ForType<RegisterUser, CreateSecurityProfileDataObject>()
               .MapToConstructor(true)
-              .ConstructUsing(src => new AspNetUserProfileDataObjectForCreate(aspNetUser!.Id));
+              .ConstructUsing(src => new CreateSecurityProfileDataObject(aspNetUser!.Id));
 
-        var aspNetUserProfile = register.Adapt<AspNetUserProfileDataObjectForCreate>(config);
+        var aspNetUserProfile = register.Adapt<CreateSecurityProfileDataObject>(config);
         await this.aspNetUserProfileService.CreateAsync(aspNetUserProfile);
 
-        return Result<Guid>.Ok(aspNetUser!.Id);
+        return ServiceResult<Guid>.Ok(aspNetUser!.Id);
     }
 
-    public async Task<Result> AssignRoleAsync(UserRoleDataObject userRole)
+    public async Task<ServiceResult> AssignRoleAsync(UserRole userRole)
     {
         var user = await this.userManager.FindByNameAsync(userRole.UserName);
 
         if (user == null)
         {
-            return Result.Fail(ResultStatus.NotFound, ["User not found!"]);
+            return ServiceResult.Fail(ServiceResultStatus.NotFound, ["User not found!"]);
         }
 
         if (!await this.roleManager.RoleExistsAsync(userRole.RoleName))
         {
-            return Result.Fail(ResultStatus.NotFound, ["Role not found!"]);
+            return ServiceResult.Fail(ServiceResultStatus.NotFound, ["Role not found!"]);
         }
 
         if (await this.userManager.IsInRoleAsync(user, userRole.RoleName))
         {
             var errorMsg = $"User {userRole.UserName} is already assigned with role: {userRole.RoleName}!";
-            return Result.Fail(ResultStatus.ValidationError, [errorMsg]);
+            return ServiceResult.Fail(ServiceResultStatus.ValidationError, [errorMsg]);
         }
 
         var result = await this.userManager.AddToRoleAsync(user, userRole.RoleName);
         return result.Succeeded
-            ? Result.Ok()
-            : Result.Fail(ResultStatus.InternalError, result.Errors.Select(e => e.Description));
+            ? ServiceResult.Ok()
+            : ServiceResult.Fail(ServiceResultStatus.InternalError, result.Errors.Select(e => e.Description));
     }
 }

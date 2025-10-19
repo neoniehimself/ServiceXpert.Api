@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects.Security;
-using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Models.Auth;
+using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Enums.Security;
 
 namespace ServiceXpert.Presentation.Controllers;
@@ -9,16 +9,16 @@ namespace ServiceXpert.Presentation.Controllers;
 [ApiController]
 public class AccountController : SxpController
 {
-    private readonly IAspNetUserService aspNetUserService;
+    private readonly ISecurityUserService aspNetUserService;
 
-    public AccountController(IAspNetUserService aspNetUserService)
+    public AccountController(ISecurityUserService aspNetUserService)
     {
         this.aspNetUserService = aspNetUserService;
     }
 
     [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterAsync(RegisterDataObject register)
+    public async Task<IActionResult> RegisterAsync(RegisterUser register)
     {
         if (!this.ModelState.IsValid)
         {
@@ -31,7 +31,7 @@ public class AccountController : SxpController
 
     [AllowAnonymous]
     [HttpPost("Login")]
-    public async Task<IActionResult> LoginAsync(LoginDataObject login)
+    public async Task<IActionResult> LoginAsync(LoginUser login)
     {
         if (!this.ModelState.IsValid)
         {

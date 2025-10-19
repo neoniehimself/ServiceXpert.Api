@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Enums.Security;
 using ServiceXpert.Domain.Repositories.Issues;
 using ServiceXpert.Domain.Repositories.Security;
@@ -27,7 +27,7 @@ public static class ServiceContainer
         services.AddScoped<ISecurityProfileRepository, AspNetUserProfileRepository>();
 
         // Services
-        services.AddScoped<IAspNetUserService, AspNetUserService>();
+        services.AddScoped<ISecurityUserService, AspNetUserService>();
         services.AddScoped<IAspNetRoleService, AspNetRoleService>();
 
         #region Configure Identity, Authentication and Authorization

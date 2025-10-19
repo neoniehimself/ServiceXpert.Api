@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects.Comment;
-using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Application.Shared.Utils;
+using ServiceXpert.Application.DataObjects.Issues;
+using ServiceXpert.Application.Services.Contracts.Issues;
+using ServiceXpert.Application.Utils;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers;
@@ -9,24 +9,24 @@ namespace ServiceXpert.Presentation.Controllers;
 [ApiController]
 public class CommentController : SxpController
 {
-    private readonly ICommentService commentService;
+    private readonly IIssueCommentService commentService;
     private readonly IIssueService issueService;
 
-    public CommentController(ICommentService commentService, IIssueService issueService)
+    public CommentController(IIssueCommentService commentService, IIssueService issueService)
     {
         this.commentService = commentService;
         this.issueService = issueService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(string issueKey, CommentDataObjectForCreate commentForCreate)
+    public async Task<IActionResult> CreateAsync(string issueKey, CreateCommentDataObject commentForCreate)
     {
         if (!string.Equals(issueKey, commentForCreate.IssueKey))
         {
             return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
         }
 
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey));
 
         if (!resultOnExists.IsSuccess)
         {
@@ -45,7 +45,7 @@ public class CommentController : SxpController
     [HttpGet]
     public async Task<IActionResult> GetAllByIssueKeyAsync(string issueKey)
     {
-        var issueId = IssueUtil.GetIdFromIssueKey(issueKey);
+        var issueId = IssueUtil.GetIdFromKey(issueKey);
 
         var resultOnExists = await this.issueService.IsExistsByIdAsync(issueId);
 

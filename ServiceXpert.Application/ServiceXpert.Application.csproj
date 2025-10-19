@@ -16,10 +16,4 @@
     <ProjectReference Include="..\ServiceXpert.Domain\ServiceXpert.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="FluentBuilder.Core">
-      <HintPath>..\lib\FluentBuilder.Core.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -7,20 +6,19 @@ using Microsoft.Extensions.Options;
 using ServiceXpert.Domain.Audits;
 using ServiceXpert.Domain.Entities.Issues;
 using ServiceXpert.Domain.Entities.Security;
-using ServiceXpert.Infrastructure.SecurityModels;
 using System.Reflection;
 using System.Security.Claims;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
 public class SxpDbContext : IdentityDbContext<
-    AspNetUser,
-    AspNetRole,
+    SecurityUser,
+    SecurityRole,
     Guid,
-    IdentityUserClaim<Guid>,
-    AspNetUserRole,
-    IdentityUserLogin<Guid>,
-    IdentityRoleClaim<Guid>,
-    IdentityUserToken<Guid>>
+    SecurityUserClaim,
+    SecurityUserRole,
+    SecurityUserLogin,
+    SecurityRoleClaim,
+    SecurityUserToken>
 {
     private readonly ServiceXpertConfiguration serviceXpertConfiguration;
     private readonly IHttpContextAccessor httpContextAccessor;

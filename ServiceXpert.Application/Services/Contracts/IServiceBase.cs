@@ -1,23 +1,25 @@
-﻿using FluentBuilder.Core;
-using ServiceXpert.Application.DataObjects;
-using ServiceXpert.Application.Shared;
+﻿using ServiceXpert.Application.DataObjects;
+using ServiceXpert.Application.Models;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.ValueObjects;
+using ServiceXpert.Domain.Helpers.Persistence.Includes;
+using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Contracts;
-public interface IServiceBase<TId, TEntity, TDataObject> where TEntity : EntityBase<TId> where TDataObject : DataObjectBase<TId>
+public interface IServiceBase<TId, TEntity, TDataObject>
+    where TEntity : EntityBase<TId>
+    where TDataObject : DataObjectBase<TId>
 {
-    Task<Result<TId>> CreateAsync<TDataObjectForCreate>(TDataObjectForCreate dataObjectForCreate) where TDataObjectForCreate : DataObjectBaseForCreate;
+    Task<ServiceResult<TId>> CreateAsync<TCreateDataObject>(TCreateDataObject createDataObject) where TCreateDataObject : CreateDataObjectBase;
 
-    Task<Result> DeleteByIdAsync(TId id);
+    Task<ServiceResult> DeleteByIdAsync(TId id);
 
-    Task<Result<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null);
+    Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null);
 
-    Task<Result<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null);
+    Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null);
 
-    Task<Result<PagedResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null);
+    Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null);
 
-    Task<Result> IsExistsByIdAsync(TId id);
+    Task<ServiceResult> IsExistsByIdAsync(TId id);
 
-    Task<Result> UpdateByIdAsync<TDataObjectForUpdate>(TId id, TDataObjectForUpdate dataObjectForUpdate) where TDataObjectForUpdate : DataObjectBaseForUpdate;
+    Task<ServiceResult> UpdateByIdAsync<TUpdateDataObject>(TId id, TUpdateDataObject updateDataObject) where TUpdateDataObject : UpdateDataObjectBase;
 }

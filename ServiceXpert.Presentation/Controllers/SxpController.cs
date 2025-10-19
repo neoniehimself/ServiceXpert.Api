@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.Shared;
-using ServiceXpert.Application.Shared.Enums;
+using ServiceXpert.Application.Enums;
+using ServiceXpert.Application.Models;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers;
@@ -13,15 +13,15 @@ public class SxpController : ControllerBase
     protected IActionResult BadRequestInvalidModelState() => BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, GetModelStateErrors()));
 
     [NonAction]
-    protected IActionResult ApiResponse(Result result)
+    protected IActionResult ApiResponse(ServiceResult result)
     {
         if (!result.IsSuccess)
         {
             return result.Status switch
             {
-                ResultStatus.ValidationError => BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, result.Errors)),
-                ResultStatus.Unauthorized => Unauthorized(Models.ApiResponse.Fail(HttpStatusCode.Unauthorized, result.Errors)),
-                ResultStatus.NotFound => NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, result.Errors)),
+                ServiceResultStatus.ValidationError => BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, result.Errors)),
+                ServiceResultStatus.Unauthorized => Unauthorized(Models.ApiResponse.Fail(HttpStatusCode.Unauthorized, result.Errors)),
+                ServiceResultStatus.NotFound => NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, result.Errors)),
                 _ => InternalServerError(result.Errors)
             };
         }
@@ -30,15 +30,15 @@ public class SxpController : ControllerBase
     }
 
     [NonAction]
-    protected IActionResult ApiResponse<T>(Result<T> result)
+    protected IActionResult ApiResponse<T>(ServiceResult<T> result)
     {
         if (!result.IsSuccess)
         {
             return result.Status switch
             {
-                ResultStatus.ValidationError => BadRequest(Models.ApiResponse<T>.Fail(HttpStatusCode.BadRequest, result.Errors)),
-                ResultStatus.Unauthorized => Unauthorized(Models.ApiResponse<T>.Fail(HttpStatusCode.Unauthorized, result.Errors)),
-                ResultStatus.NotFound => NotFound(Models.ApiResponse<T>.Fail(HttpStatusCode.NotFound, result.Errors)),
+                ServiceResultStatus.ValidationError => BadRequest(Models.ApiResponse<T>.Fail(HttpStatusCode.BadRequest, result.Errors)),
+                ServiceResultStatus.Unauthorized => Unauthorized(Models.ApiResponse<T>.Fail(HttpStatusCode.Unauthorized, result.Errors)),
+                ServiceResultStatus.NotFound => NotFound(Models.ApiResponse<T>.Fail(HttpStatusCode.NotFound, result.Errors)),
                 _ => InternalServerError<T>(result.Errors)
             };
         }
