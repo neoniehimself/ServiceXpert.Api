@@ -1,41 +1,41 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects.Security;
-using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Application.Models.Auth;
+using ServiceXpert.Application.Services.Contracts.Security;
+using ServiceXpert.Domain.Enums.Security;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Users")]
 [ApiController]
 public class UserController : SxpController
 {
-    private readonly IAspNetUserService aspNetUserService;
-    private readonly IAspNetUserProfileService aspNetUserProfileService;
+    private readonly ISecurityUserService securityUserService;
+    private readonly ISecurityProfileService securityProfileService;
 
-    public UserController(IAspNetUserService aspNetUserService, IAspNetUserProfileService aspNetUserProfileService)
+    public UserController(ISecurityUserService securityUserService, ISecurityProfileService securityProfileService)
     {
-        this.aspNetUserService = aspNetUserService;
-        this.aspNetUserProfileService = aspNetUserProfileService;
+        this.securityUserService = securityUserService;
+        this.securityProfileService = securityProfileService;
     }
 
-    [Authorize(Policy = nameof(Policy.AdminOnly))]
+    [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
     [HttpPost("AssignRoleToUser")]
-    public async Task<IActionResult> AssignRoleToUserAsync(UserRoleDataObject userRole)
+    public async Task<IActionResult> AssignRoleToUserAsync(UserRole userRole)
     {
-        var resultOnAssign = await this.aspNetUserService.AssignRoleAsync(userRole);
+        var resultOnAssign = await this.securityUserService.AssignRoleAsync(userRole);
         return ApiResponse(resultOnAssign);
     }
 
     [HttpGet("SearchUserByName")]
-    public async Task<IActionResult> SearchUserByNameAsync(string searchQuery)
+    public async Task<IActionResult> SearchUserByNameAsync(string name)
     {
-        return ApiResponse(await this.aspNetUserProfileService.SearchUserByName(searchQuery));
+        return ApiResponse(await this.securityProfileService.SearchUserByName(name));
     }
 
     [HttpGet("{userId:guid}")]
     public async Task<IActionResult> GetUserProfileByIdAsync(Guid userId)
     {
-        var resultOnGet = await this.aspNetUserProfileService.GetByIdAsync(userId);
+        var resultOnGet = await this.securityProfileService.GetByIdAsync(userId);
         return ApiResponse(resultOnGet);
     }
 }

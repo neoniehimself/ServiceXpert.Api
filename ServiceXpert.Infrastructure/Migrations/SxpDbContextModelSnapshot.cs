@@ -22,165 +22,7 @@ namespace ServiceXpert.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AspNetRoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AspNetUserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.AspNetUserProfile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<Guid?>("ModifiedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset?>("ModifiedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.ToTable("AspNetUserProfiles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("e45acefa-74b0-4f28-b81f-fbc02d9778b5"),
-                            CreatedByUserId = new Guid("00000000-0000-0000-0000-000000000000"),
-                            CreatedDate = new DateTimeOffset(new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            FirstName = "Admin",
-                            LastName = "Admin"
-                        });
-                });
-
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.Comment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("IssueId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("ModifiedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset?>("ModifiedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issue", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issues.Issue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,10 +67,42 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
 
-                    b.ToTable("Issues");
+                    b.ToTable("Issue", (string)null);
                 });
 
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.IssuePriority", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issues.IssueComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("IssueId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.ToTable("IssueComment", (string)null);
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issues.IssuePriority", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,7 +131,7 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
 
-                    b.ToTable("IssuePriorities", (string)null);
+                    b.ToTable("IssuePriority", (string)null);
 
                     b.HasData(
                         new
@@ -302,7 +176,7 @@ namespace ServiceXpert.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.IssueStatus", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issues.IssueStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -331,7 +205,7 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
 
-                    b.ToTable("IssueStatuses", (string)null);
+                    b.ToTable("IssueStatus", (string)null);
 
                     b.HasData(
                         new
@@ -376,7 +250,101 @@ namespace ServiceXpert.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ServiceXpert.Infrastructure.SecurityModels.AspNetRole", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityPolicy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.ToTable("SecurityPolicy", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedByUserId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CreatedDate = new DateTimeOffset(new DateTime(2025, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            ModifiedDate = new DateTimeOffset(new DateTime(2025, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "AdminOnly"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedByUserId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CreatedDate = new DateTimeOffset(new DateTime(2025, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            ModifiedDate = new DateTimeOffset(new DateTime(2025, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "UserOnly"
+                        });
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.ToTable("SecurityProfile", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e45acefa-74b0-4f28-b81f-fbc02d9778b5"),
+                            CreatedByUserId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CreatedDate = new DateTimeOffset(new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            FirstName = "Admin",
+                            LastName = "Admin"
+                        });
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -413,7 +381,7 @@ namespace ServiceXpert.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("SecurityRole", (string)null);
 
                     b.HasData(
                         new
@@ -434,7 +402,29 @@ namespace ServiceXpert.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ServiceXpert.Infrastructure.SecurityModels.AspNetUser", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityRoleClaim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecurityRoleClaim", (string)null);
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -458,6 +448,9 @@ namespace ServiceXpert.Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -509,7 +502,7 @@ namespace ServiceXpert.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("SecurityUser", (string)null);
 
                     b.HasData(
                         new
@@ -521,6 +514,7 @@ namespace ServiceXpert.Infrastructure.Migrations
                             CreatedDate = new DateTimeOffset(new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "noemail@noemail.com",
                             EmailConfirmed = false,
+                            IsActive = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "NOEMAIL@NOEMAIL.COM",
                             NormalizedUserName = "ADMIN",
@@ -531,7 +525,48 @@ namespace ServiceXpert.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ServiceXpert.Infrastructure.SecurityModels.AspNetUserRole", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUserClaim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecurityUserClaim", (string)null);
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUserLogin", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.ToTable("SecurityUserLogin", (string)null);
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -553,7 +588,7 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     b.HasKey("UserId", "RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("SecurityUserRole", (string)null);
 
                     b.HasData(
                         new
@@ -565,99 +600,56 @@ namespace ServiceXpert.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUserToken", b =>
                 {
-                    b.HasOne("ServiceXpert.Infrastructure.SecurityModels.AspNetRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("SecurityUserToken", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issues.Issue", b =>
                 {
-                    b.HasOne("ServiceXpert.Infrastructure.SecurityModels.AspNetUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.HasOne("ServiceXpert.Infrastructure.SecurityModels.AspNetUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
-                    b.HasOne("ServiceXpert.Infrastructure.SecurityModels.AspNetUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.AspNetUserProfile", b =>
-                {
-                    b.HasOne("ServiceXpert.Infrastructure.SecurityModels.AspNetUser", null)
-                        .WithOne()
-                        .HasForeignKey("ServiceXpert.Domain.Entities.AspNetUserProfile", "Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.Comment", b =>
-                {
-                    b.HasOne("ServiceXpert.Domain.Entities.AspNetUserProfile", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ServiceXpert.Domain.Entities.Issue", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("IssueId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-                });
-
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issue", b =>
-                {
-                    b.HasOne("ServiceXpert.Domain.Entities.AspNetUserProfile", "Assignee")
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", "Assignee")
                         .WithMany()
                         .HasForeignKey("AssigneeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ServiceXpert.Domain.Entities.AspNetUserProfile", "CreatedByUser")
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedByUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ServiceXpert.Domain.Entities.IssuePriority", "IssuePriority")
+                    b.HasOne("ServiceXpert.Domain.Entities.Issues.IssuePriority", "IssuePriority")
                         .WithOne()
-                        .HasForeignKey("ServiceXpert.Domain.Entities.Issue", "IssuePriorityId")
+                        .HasForeignKey("ServiceXpert.Domain.Entities.Issues.Issue", "IssuePriorityId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ServiceXpert.Domain.Entities.IssueStatus", "IssueStatus")
+                    b.HasOne("ServiceXpert.Domain.Entities.Issues.IssueStatus", "IssueStatus")
                         .WithOne()
-                        .HasForeignKey("ServiceXpert.Domain.Entities.Issue", "IssueStatusId")
+                        .HasForeignKey("ServiceXpert.Domain.Entities.Issues.Issue", "IssueStatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ServiceXpert.Domain.Entities.AspNetUserProfile", "ModifiedByUser")
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", "ModifiedByUser")
                         .WithMany()
                         .HasForeignKey("ModifiedByUserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ServiceXpert.Domain.Entities.AspNetUserProfile", "Reporter")
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", "Reporter")
                         .WithMany()
                         .HasForeignKey("ReporterId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -675,24 +667,93 @@ namespace ServiceXpert.Infrastructure.Migrations
                     b.Navigation("Reporter");
                 });
 
-            modelBuilder.Entity("ServiceXpert.Infrastructure.SecurityModels.AspNetUserRole", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issues.IssueComment", b =>
                 {
-                    b.HasOne("ServiceXpert.Infrastructure.SecurityModels.AspNetRole", null)
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ServiceXpert.Domain.Entities.Issues.Issue", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("IssueId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityProfile", b =>
+                {
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", "SecurityUser")
+                        .WithOne("SecurityProfile")
+                        .HasForeignKey("ServiceXpert.Domain.Entities.Security.SecurityProfile", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SecurityUser");
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityRoleClaim", b =>
+                {
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
 
-                    b.HasOne("ServiceXpert.Infrastructure.SecurityModels.AspNetUser", null)
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUserClaim", b =>
+                {
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issue", b =>
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUserLogin", b =>
+                {
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUserRole", b =>
+                {
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUserToken", b =>
+                {
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Issues.Issue", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityUser", b =>
+                {
+                    b.Navigation("SecurityProfile");
                 });
 #pragma warning restore 612, 618
         }

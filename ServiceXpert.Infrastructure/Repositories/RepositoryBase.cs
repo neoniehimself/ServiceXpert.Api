@@ -1,14 +1,14 @@
-﻿using FluentBuilder.Core;
-using FluentBuilder.Persistence;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ServiceXpert.Domain.Entities;
+using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.Repositories;
-using ServiceXpert.Domain.Shared.ValueObjects;
+using ServiceXpert.Domain.ValueObjects.Pagination;
 using ServiceXpert.Infrastructure.DbContexts;
+using ServiceXpert.Infrastructure.Extensions;
 using System.Linq.Expressions;
 
 namespace ServiceXpert.Infrastructure.Repositories;
-public abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEntity> where TEntity : EntityBase<TId>
+internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEntity> where TEntity : EntityBase<TId>
 {
     private readonly SxpDbContext dbContext;
 
@@ -32,40 +32,41 @@ public abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEntit
         await this.dbContext.Set<TEntity>().Where(e => e.Id!.Equals(id)).ExecuteDeleteAsync();
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filters = null, IncludeOptions<TEntity>? includeOptions = null)
     {
-        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
+        IQueryable<TEntity> query = this.dbContext.Set<TEntity>().ApplyIncludeOptions(includeOptions);
 
-        if (filter != null)
+        if (filters != null)
         {
-            query = query.Where(filter);
+            query = query.Where(filters);
         }
 
         return await query.ToListAsync();
     }
 
-    public Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filters, IncludeOptions<TEntity>? includeOptions = null)
     {
-        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
-        return query.Where(filter).SingleOrDefaultAsync();
+        return await this.dbContext.Set<TEntity>().ApplyIncludeOptions(includeOptions).Where(filters).SingleOrDefaultAsync();
     }
 
     public async Task<TEntity?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
     {
-        IQueryable<TEntity> query = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
-        return await query.SingleOrDefaultAsync(e => e.Id!.Equals(id));
+        return await this.dbContext.Set<TEntity>().ApplyIncludeOptions(includeOptions).SingleOrDefaultAsync(e => e.Id!.Equals(id));
     }
 
-    public async Task<PagedResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize,
-        Expression<Func<TEntity, bool>>? filter = null, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<PaginationResult<TEntity>> GetPagedAllAsync(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<TEntity, bool>>? filters = null,
+        IncludeOptions<TEntity>? includeOptions = null)
     {
-        IQueryable<TEntity> selectQuery = QueryBuilder.Build(this.dbContext.Set<TEntity>(), includeOptions);
+        IQueryable<TEntity> selectQuery = this.dbContext.Set<TEntity>().ApplyIncludeOptions(includeOptions);
         IQueryable<TEntity> totalCountQuery = this.dbContext.Set<TEntity>();
 
-        if (filter != null)
+        if (filters != null)
         {
-            selectQuery = selectQuery.Where(filter);
-            totalCountQuery = totalCountQuery.Where(filter);
+            selectQuery = selectQuery.Where(filters);
+            totalCountQuery = totalCountQuery.Where(filters);
         }
 
         if (IsNumericType())
@@ -78,7 +79,7 @@ public abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEntit
             .Take(pageSize)
             .ToListAsync();
 
-        return new PagedResult<TEntity>(entities, new Pagination(await totalCountQuery.CountAsync(), pageSize, pageNumber));
+        return new PaginationResult<TEntity>(entities, new Pagination(await totalCountQuery.CountAsync(), pageSize, pageNumber));
     }
 
     public async Task<bool> IsExistsByIdAsync(TId id)

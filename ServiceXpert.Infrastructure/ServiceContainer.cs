@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Repositories;
-using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Application.Services.Contracts.Security;
+using ServiceXpert.Domain.Entities.Security;
+using ServiceXpert.Domain.Repositories.Issues;
+using ServiceXpert.Domain.Repositories.Security;
 using ServiceXpert.Infrastructure.DbContexts;
-using ServiceXpert.Infrastructure.Repositories;
-using ServiceXpert.Infrastructure.SecurityModels;
-using ServiceXpert.Infrastructure.Services;
+using ServiceXpert.Infrastructure.Repositories.Issues;
+using ServiceXpert.Infrastructure.Repositories.Security;
+using ServiceXpert.Infrastructure.Services.Security;
 using System.Text;
 
 namespace ServiceXpert.Infrastructure;
@@ -22,46 +23,46 @@ public static class ServiceContainer
 
         // Repositories
         services.AddScoped<IIssueRepository, IssueRepository>();
-        services.AddScoped<ICommentRepository, CommentRepository>();
-        services.AddScoped<IAspNetUserProfileRepository, AspNetUserProfileRepository>();
+        services.AddScoped<IIssueCommentRepository, IssueCommentRepository>();
+        services.AddScoped<ISecurityProfileRepository, SecurityProfileRepository>();
 
         // Services
-        services.AddScoped<IAspNetUserService, AspNetUserService>();
-        services.AddScoped<IAspNetRoleService, AspNetRoleService>();
+        services.AddScoped<ISecurityUserService, SecurityUserService>();
 
         #region Configure Identity, Authentication and Authorization
         services.AddHttpContextAccessor();
 
-        services
-            .AddIdentity<AspNetUser, AspNetRole>()
+        services.AddIdentity<SecurityUser, SecurityRole>()
             .AddEntityFrameworkStores<SxpDbContext>()
             .AddDefaultTokenProviders();
 
-        services
-            .AddAuthentication(options =>
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new()
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new()
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateAudience = false,
-                    ValidIssuer = configuration["Jwt:Issuer"],
-                    ClockSkew = TimeSpan.Zero,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration.GetSection(
-                            nameof(ServiceXpertConfiguration)).Get<ServiceXpertConfiguration>()!.JwtSecretKey)
-                    )
-                };
-            });
+                ValidateIssuerSigningKey = true,
+                ValidateAudience = false,
+                ValidIssuer = configuration["Jwt:Issuer"],
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection(
+                        nameof(SxpConfiguration)).Get<SxpConfiguration>()!.JwtSecretKey)
+                )
+            };
+        });
 
         var authBuilder = services.AddAuthorizationBuilder();
-        authBuilder.AddPolicy(nameof(Policy.AdminOnly), policy => policy.RequireRole(nameof(Role.Admin)));
-        authBuilder.AddPolicy(nameof(Policy.UserOnly), policy => policy.RequireRole(nameof(Role.User)));
+
+        authBuilder.AddPolicy(nameof(Domain.Enums.Security.SecurityPolicy.AdminOnly),
+            policy => policy.RequireRole(nameof(Domain.Enums.Security.SecurityRole.Admin)));
+
+        authBuilder.AddPolicy(nameof(Domain.Enums.Security.SecurityPolicy.UserOnly),
+            policy => policy.RequireRole(nameof(Domain.Enums.Security.SecurityRole.User)));
         #endregion
 
         return services;

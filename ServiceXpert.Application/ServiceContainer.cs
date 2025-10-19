@@ -1,7 +1,9 @@
 ﻿using Mapster;
 using Microsoft.Extensions.DependencyInjection;
-using ServiceXpert.Application.Services;
-using ServiceXpert.Application.Services.Contracts;
+using ServiceXpert.Application.Services.Concretes.Issues;
+using ServiceXpert.Application.Services.Concretes.Security;
+using ServiceXpert.Application.Services.Contracts.Issues;
+using ServiceXpert.Application.Services.Contracts.Security;
 
 namespace ServiceXpert.Application;
 public static class ServiceContainer
@@ -13,8 +15,8 @@ public static class ServiceContainer
 
         // Services
         services.AddScoped<IIssueService, IssueService>();
-        services.AddScoped<ICommentService, CommentService>();
-        services.AddScoped<IAspNetUserProfileService, AspNetUserProfileService>();
+        services.AddScoped<IIssueCommentService, CommentService>();
+        services.AddScoped<ISecurityProfileService, SecurityProfileService>();
 
         return services;
     }

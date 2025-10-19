@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServiceXpert.Application.DataObjects.Issue;
-using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Application.Shared.Utils;
+using ServiceXpert.Application.DataObjects.Issues;
+using ServiceXpert.Application.Services.Contracts.Issues;
+using ServiceXpert.Application.Utils;
 using ServiceXpert.Presentation.Models.QueryOptions;
 using System.Net;
 
@@ -18,21 +18,21 @@ public class IssueController : SxpController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(IssueDataObjectForCreate issueForCreate)
+    public async Task<IActionResult> CreateAsync(CreateIssueDataObject createIssue)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequestInvalidModelState();
         }
 
-        var resultOnCreate = await this.issueService.CreateAsync(issueForCreate);
+        var resultOnCreate = await this.issueService.CreateAsync(createIssue);
         return ApiResponse(resultOnCreate);
     }
 
     [HttpGet("{issueKey}")]
     public async Task<IActionResult> GetByIssueKeyAsync(string issueKey)
     {
-        var resultOnGet = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+        var resultOnGet = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromKey(issueKey));
         return ApiResponse(resultOnGet);
     }
 
@@ -44,9 +44,9 @@ public class IssueController : SxpController
     }
 
     [HttpPut("{issueKey}")]
-    public async Task<IActionResult> UpdateAsync(string issueKey, IssueDataObjectForUpdate issueForUpdate)
+    public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueDataObject updateIssue)
     {
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey));
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey));
 
         if (!resultOnExists.IsSuccess)
         {
@@ -58,7 +58,7 @@ public class IssueController : SxpController
             return BadRequestInvalidModelState();
         }
 
-        var resultOnUpdate = await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromIssueKey(issueKey), issueForUpdate);
+        var resultOnUpdate = await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromKey(issueKey), updateIssue);
         return ApiResponse(resultOnUpdate);
     }
 }
