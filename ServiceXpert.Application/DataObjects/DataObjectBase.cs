@@ -1,4 +1,4 @@
-﻿using ServiceXpert.Domain.Shared.Audits;
+﻿using ServiceXpert.Domain.Audits;
 
 namespace ServiceXpert.Application.DataObjects;
 public abstract class DataObjectBase<TId> : IAudit

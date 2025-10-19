@@ -4,16 +4,16 @@ using ServiceXpert.Application.DataObjects.AspNetUserProfile;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Shared;
 using ServiceXpert.Application.Shared.Enums;
-using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories;
+using ServiceXpert.Domain.Entities.Security;
+using ServiceXpert.Domain.Repositories.Security;
 
 namespace ServiceXpert.Application.Services;
-public class AspNetUserProfileService : ServiceBase<Guid, AspNetUserProfile, AspNetUserProfileDataObject>, IAspNetUserProfileService
+public class AspNetUserProfileService : ServiceBase<Guid, SecurityProfile, AspNetUserProfileDataObject>, IAspNetUserProfileService
 {
-    private readonly IAspNetUserProfileRepository userProfileRepository;
+    private readonly ISecurityProfileRepository userProfileRepository;
     private readonly IMapper mapper;
 
-    public AspNetUserProfileService(IAspNetUserProfileRepository userProfileRepository, IMapper mapper) : base(userProfileRepository, mapper)
+    public AspNetUserProfileService(ISecurityProfileRepository userProfileRepository, IMapper mapper) : base(userProfileRepository, mapper)
     {
         this.userProfileRepository = userProfileRepository;
         this.mapper = mapper;
@@ -26,7 +26,7 @@ public class AspNetUserProfileService : ServiceBase<Guid, AspNetUserProfile, Asp
             return Result<Guid>.Fail(ResultStatus.ValidationError, ["The data object must be of type " + nameof(AspNetUserProfileDataObjectForCreate)]);
         }
 
-        var userProfile = this.mapper.Map<AspNetUserProfile>(dataObjectForCreate);
+        var userProfile = this.mapper.Map<SecurityProfile>(dataObjectForCreate);
 
         await this.userProfileRepository.CreateAsync(userProfile);
         await this.userProfileRepository.SaveChangesAsync();

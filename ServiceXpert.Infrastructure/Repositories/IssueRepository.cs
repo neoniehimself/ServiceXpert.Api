@@ -1,5 +1,5 @@
-﻿using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories;
+﻿using ServiceXpert.Domain.Entities.Issues;
+using ServiceXpert.Domain.Repositories.Issues;
 using ServiceXpert.Infrastructure.DbContexts;
 
 namespace ServiceXpert.Infrastructure.Repositories;

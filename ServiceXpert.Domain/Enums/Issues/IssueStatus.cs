@@ -1,4 +1,4 @@
-﻿namespace ServiceXpert.Domain.Shared.Enums;
+﻿namespace ServiceXpert.Domain.Enums.Issues;
 public enum IssueStatus
 {
     New = 1,

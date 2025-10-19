@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ServiceXpert.Domain.Entities;
+using ServiceXpert.Domain.Entities.Issues;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
-internal class CommentDbContext : DbContextBase, IEntityTypeConfiguration<Comment>
+internal class CommentDbContext : DbContextBase, IEntityTypeConfiguration<IssueComment>
 {
-    public void Configure(EntityTypeBuilder<Comment> comment)
+    public void Configure(EntityTypeBuilder<IssueComment> comment)
     {
         comment.HasKey(c => c.Id).IsClustered(false);
         comment.Property(c => c.Content);

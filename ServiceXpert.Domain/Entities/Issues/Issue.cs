@@ -1,4 +1,6 @@
-﻿namespace ServiceXpert.Domain.Entities;
+﻿using ServiceXpert.Domain.Entities.Security;
+
+namespace ServiceXpert.Domain.Entities.Issues;
 public class Issue : EntityBase<int>
 {
     public string Name { get; set; } = string.Empty;
@@ -13,19 +15,19 @@ public class Issue : EntityBase<int>
 
     public virtual IssuePriority? IssuePriority { get; set; }
 
-    public virtual ICollection<Comment> Comments { get; set; }
+    public virtual ICollection<IssueComment> Comments { get; set; }
 
     public Guid? ReporterId { get; set; }
 
-    public virtual AspNetUserProfile? Reporter { get; set; }
+    public virtual SecurityUser? Reporter { get; set; }
 
     public Guid? AssigneeId { get; set; }
 
-    public virtual AspNetUserProfile? Assignee { get; set; }
+    public virtual SecurityUser? Assignee { get; set; }
 
-    public virtual AspNetUserProfile? CreatedByUser { get; set; }
+    public virtual SecurityUser? CreatedByUser { get; set; }
 
-    public virtual AspNetUserProfile? ModifiedByUser { get; set; }
+    public virtual SecurityUser? ModifiedByUser { get; set; }
 
     public Issue()
     {

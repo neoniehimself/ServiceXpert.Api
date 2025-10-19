@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ServiceXpert.Domain.Entities;
+using ServiceXpert.Domain.Entities.Security;
 using ServiceXpert.Infrastructure.SecurityModels;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
@@ -10,7 +10,7 @@ internal class AspNetUserDbContext : IEntityTypeConfiguration<AspNetUser>
 
     public void Configure(EntityTypeBuilder<AspNetUser> user)
     {
-        user.HasOne<AspNetUserProfile>().WithOne().HasForeignKey<AspNetUserProfile>(p => p.Id);
+        user.HasOne<SecurityProfile>().WithOne().HasForeignKey<SecurityProfile>(p => p.Id);
         user.HasData(new AspNetUser
         {
             Id = Guid.Parse("{E45ACEFA-74B0-4F28-B81F-FBC02D9778B5}"),

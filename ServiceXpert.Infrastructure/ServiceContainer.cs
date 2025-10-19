@@ -4,8 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Repositories;
-using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Domain.Enums.Security;
+using ServiceXpert.Domain.Repositories.Issues;
+using ServiceXpert.Domain.Repositories.Security;
 using ServiceXpert.Infrastructure.DbContexts;
 using ServiceXpert.Infrastructure.Repositories;
 using ServiceXpert.Infrastructure.SecurityModels;
@@ -22,8 +23,8 @@ public static class ServiceContainer
 
         // Repositories
         services.AddScoped<IIssueRepository, IssueRepository>();
-        services.AddScoped<ICommentRepository, CommentRepository>();
-        services.AddScoped<IAspNetUserProfileRepository, AspNetUserProfileRepository>();
+        services.AddScoped<IIssueCommentRepository, CommentRepository>();
+        services.AddScoped<ISecurityProfileRepository, AspNetUserProfileRepository>();
 
         // Services
         services.AddScoped<IAspNetUserService, AspNetUserService>();
@@ -60,8 +61,8 @@ public static class ServiceContainer
             });
 
         var authBuilder = services.AddAuthorizationBuilder();
-        authBuilder.AddPolicy(nameof(Policy.AdminOnly), policy => policy.RequireRole(nameof(Role.Admin)));
-        authBuilder.AddPolicy(nameof(Policy.UserOnly), policy => policy.RequireRole(nameof(Role.User)));
+        authBuilder.AddPolicy(nameof(SecurityPolicy.AdminOnly), policy => policy.RequireRole(nameof(SecurityRole.Admin)));
+        authBuilder.AddPolicy(nameof(SecurityPolicy.UserOnly), policy => policy.RequireRole(nameof(SecurityRole.User)));
         #endregion
 
         return services;

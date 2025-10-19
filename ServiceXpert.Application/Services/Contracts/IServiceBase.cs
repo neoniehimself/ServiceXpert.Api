@@ -2,7 +2,7 @@
 using ServiceXpert.Application.DataObjects;
 using ServiceXpert.Application.Shared;
 using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Shared.ValueObjects;
+using ServiceXpert.Domain.ValueObjects;
 
 namespace ServiceXpert.Application.Services.Contracts;
 public interface IServiceBase<TId, TEntity, TDataObject> where TEntity : EntityBase<TId> where TDataObject : DataObjectBase<TId>

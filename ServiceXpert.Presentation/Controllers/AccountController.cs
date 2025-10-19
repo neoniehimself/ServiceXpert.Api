@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Domain.Enums.Security;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Accounts")]
@@ -16,7 +16,7 @@ public class AccountController : SxpController
         this.aspNetUserService = aspNetUserService;
     }
 
-    [Authorize(Policy = nameof(Policy.AdminOnly))]
+    [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
     [HttpPost("Register")]
     public async Task<IActionResult> RegisterAsync(RegisterDataObject register)
     {

@@ -1,5 +1,5 @@
 ﻿using ServiceXpert.Application.DataObjects.AspNetUserProfile;
-using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Domain.Enums.Issues;
 
 namespace ServiceXpert.Application.DataObjects.Comment;
 public class CommentDataObject : DataObjectBase<Guid>

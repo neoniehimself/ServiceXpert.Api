@@ -5,9 +5,9 @@ using ServiceXpert.Application.DataObjects.Issue;
 using ServiceXpert.Application.Services.Contracts;
 using ServiceXpert.Application.Shared;
 using ServiceXpert.Application.Shared.Enums;
-using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories;
-using ServiceXpert.Domain.Shared.ValueObjects;
+using ServiceXpert.Domain.Entities.Issues;
+using ServiceXpert.Domain.Repositories.Issues;
+using ServiceXpert.Domain.ValueObjects;
 using DomainEnums = ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Application.Services;
@@ -34,16 +34,16 @@ public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueServ
                     break;
                 case IssueStatusCategory.Open:
                     pagedResult = await this.issueRepository.GetPagedAllAsync(
-                        pageNumber, pageSize, i => i.IssueStatusId != (int)DomainEnums.IssueStatus.Resolved
-                            && i.IssueStatusId != (int)DomainEnums.IssueStatus.Closed, includeOptions);
+                        pageNumber, pageSize, i => i.IssueStatusId != (int)Domain.Enums.Issues.IssueStatus.Resolved
+                            && i.IssueStatusId != (int)Domain.Enums.Issues.IssueStatus.Closed, includeOptions);
                     break;
                 case IssueStatusCategory.Resolved:
                     pagedResult = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
-                        i => i.IssueStatusId == (int)DomainEnums.IssueStatus.Resolved, includeOptions);
+                        i => i.IssueStatusId == (int)Domain.Enums.Issues.IssueStatus.Resolved, includeOptions);
                     break;
                 case IssueStatusCategory.Closed:
                     pagedResult = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
-                        i => i.IssueStatusId == (int)DomainEnums.IssueStatus.Closed, includeOptions);
+                        i => i.IssueStatusId == (int)Domain.Enums.Issues.IssueStatus.Closed, includeOptions);
                     break;
             }
 

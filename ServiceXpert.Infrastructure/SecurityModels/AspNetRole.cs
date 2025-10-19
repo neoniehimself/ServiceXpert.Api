@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ServiceXpert.Domain.Shared.Audits;
+using ServiceXpert.Domain.Audits;
 
 namespace ServiceXpert.Infrastructure.SecurityModels;
 public class AspNetRole : IdentityRole<Guid>, IAudit

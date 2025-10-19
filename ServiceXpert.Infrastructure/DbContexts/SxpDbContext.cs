@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Options;
-using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Shared.Audits;
+using ServiceXpert.Domain.Audits;
+using ServiceXpert.Domain.Entities.Issues;
+using ServiceXpert.Domain.Entities.Security;
 using ServiceXpert.Infrastructure.SecurityModels;
 using System.Reflection;
 using System.Security.Claims;
@@ -26,9 +27,9 @@ public class SxpDbContext : IdentityDbContext<
 
     public DbSet<Issue> Issues { get; set; }
 
-    public DbSet<Comment> Comments { get; set; }
+    public DbSet<IssueComment> Comments { get; set; }
 
-    public DbSet<AspNetUserProfile> AspNetUserProfiles { get; set; }
+    public DbSet<SecurityProfile> AspNetUserProfiles { get; set; }
 
     public SxpDbContext(IOptions<ServiceXpertConfiguration> options, IHttpContextAccessor httpContextAccessor)
     {

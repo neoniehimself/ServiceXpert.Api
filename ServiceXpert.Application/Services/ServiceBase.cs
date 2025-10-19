@@ -7,7 +7,7 @@ using ServiceXpert.Application.Shared;
 using ServiceXpert.Application.Shared.Enums;
 using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Repositories;
-using ServiceXpert.Domain.Shared.ValueObjects;
+using ServiceXpert.Domain.ValueObjects;
 
 namespace ServiceXpert.Application.Services;
 public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId, TEntity, TDataObject> where TEntity : EntityBase<TId> where TDataObject : DataObjectBase<TId>

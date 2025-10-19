@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ServiceXpert.Domain.Entities;
-using ServiceXpert.Domain.Repositories;
+using ServiceXpert.Domain.Entities.Security;
+using ServiceXpert.Domain.Repositories.Security;
 using ServiceXpert.Infrastructure.DbContexts;
 
 namespace ServiceXpert.Infrastructure.Repositories;
-public class AspNetUserProfileRepository : RepositoryBase<Guid, AspNetUserProfile>, IAspNetUserProfileRepository
+public class AspNetUserProfileRepository : RepositoryBase<Guid, SecurityProfile>, ISecurityProfileRepository
 {
     private readonly SxpDbContext dbContext;
 
@@ -13,7 +13,7 @@ public class AspNetUserProfileRepository : RepositoryBase<Guid, AspNetUserProfil
         this.dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<AspNetUserProfile>> SearchUserByName(string searchQuery)
+    public async Task<IEnumerable<SecurityProfile>> SearchUserByName(string searchQuery)
     {
         searchQuery = searchQuery.Trim().Replace(' ', '%');
         searchQuery = $"%{searchQuery}%";

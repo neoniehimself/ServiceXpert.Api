@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ServiceXpert.Domain.Entities;
+using ServiceXpert.Domain.Entities.Issues;
+using ServiceXpert.Domain.Enums.Issues;
 using DomainEnums = ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
@@ -16,35 +17,35 @@ internal class IssueStatusDbContext : DbContextBase, IEntityTypeConfiguration<Is
         issueStatus.HasData(
             new IssueStatus()
             {
-                Id = (int)DomainEnums.IssueStatus.New,
+                Id = (int)Domain.Enums.Issues.IssueStatus.New,
                 Name = "New",
                 CreatedDate = this.dateTimeOffset,
                 ModifiedDate = this.dateTimeOffset
             },
             new IssueStatus()
             {
-                Id = (int)DomainEnums.IssueStatus.ForAnalysis,
+                Id = (int)Domain.Enums.Issues.IssueStatus.ForAnalysis,
                 Name = "For Analysis",
                 CreatedDate = this.dateTimeOffset,
                 ModifiedDate = this.dateTimeOffset
             },
             new IssueStatus()
             {
-                Id = (int)DomainEnums.IssueStatus.InProgress,
+                Id = (int)Domain.Enums.Issues.IssueStatus.InProgress,
                 Name = "In Progress",
                 CreatedDate = this.dateTimeOffset,
                 ModifiedDate = this.dateTimeOffset
             },
             new IssueStatus()
             {
-                Id = (int)DomainEnums.IssueStatus.Resolved,
+                Id = (int)Domain.Enums.Issues.IssueStatus.Resolved,
                 Name = "Resolved",
                 CreatedDate = this.dateTimeOffset,
                 ModifiedDate = this.dateTimeOffset
             },
             new IssueStatus()
             {
-                Id = (int)DomainEnums.IssueStatus.Closed,
+                Id = (int)Domain.Enums.Issues.IssueStatus.Closed,
                 Name = "Closed",
                 CreatedDate = this.dateTimeOffset,
                 ModifiedDate = this.dateTimeOffset

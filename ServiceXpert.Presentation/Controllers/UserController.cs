@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Domain.Enums.Security;
 
 namespace ServiceXpert.Presentation.Controllers;
 [Route("Users")]
@@ -18,7 +18,7 @@ public class UserController : SxpController
         this.aspNetUserProfileService = aspNetUserProfileService;
     }
 
-    [Authorize(Policy = nameof(Policy.AdminOnly))]
+    [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
     [HttpPost("AssignRoleToUser")]
     public async Task<IActionResult> AssignRoleToUserAsync(UserRoleDataObject userRole)
     {

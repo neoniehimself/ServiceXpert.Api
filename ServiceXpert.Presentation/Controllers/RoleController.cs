@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.Services.Contracts;
-using ServiceXpert.Domain.Shared.Enums;
+using ServiceXpert.Domain.Enums.Security;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Authorize(Policy = nameof(Policy.AdminOnly))]
+[Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
 [Route("Roles")]
 [ApiController]
 public class RoleController : SxpController
