@@ -13,13 +13,6 @@ internal class SecurityProfileDbContext : DbContextBase, IEntityTypeConfiguratio
         profile.HasKey(p => p.Id).IsClustered(false);
         profile.Property(p => p.FirstName).HasMaxLength(256);
         profile.Property(p => p.LastName).HasMaxLength(256);
-
-        profile.HasOne(p => p.SecurityUser)
-            .WithOne(u => u.SecurityProfile)
-            .HasPrincipalKey<SecurityUser>(u => u.Id)
-            .HasForeignKey<SecurityProfile>(p => p.Id)
-            .IsRequired();
-
         profile.HasData(
             new SecurityProfile
             {

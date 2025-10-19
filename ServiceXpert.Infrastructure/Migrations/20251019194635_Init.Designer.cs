@@ -12,7 +12,7 @@ using ServiceXpert.Infrastructure.DbContexts;
 namespace ServiceXpert.Infrastructure.Migrations
 {
     [DbContext(typeof(SxpDbContext))]
-    [Migration("20251019173334_Init")]
+    [Migration("20251019194635_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -689,13 +689,11 @@ namespace ServiceXpert.Infrastructure.Migrations
 
             modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityProfile", b =>
                 {
-                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", "SecurityUser")
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", null)
                         .WithOne("SecurityProfile")
                         .HasForeignKey("ServiceXpert.Domain.Entities.Security.SecurityProfile", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("SecurityUser");
                 });
 
             modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityRoleClaim", b =>

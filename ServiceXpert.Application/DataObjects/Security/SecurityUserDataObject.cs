@@ -1,5 +1,5 @@
 ﻿namespace ServiceXpert.Application.DataObjects.Security;
-public class SecurityUserDataObject : DataObjectBase<Guid>
+public class SecurityUserDataObject : AuditableDataObjectBase<Guid>
 {
     public string UserName { get; set; } = string.Empty;
 

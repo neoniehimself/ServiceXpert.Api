@@ -15,4 +15,14 @@ public class IncludeOptions<T> where T : EntityBase
     {
         this.Includes = [.. includes];
     }
+
+    public void AddRange(IncludeExpressions<T> expressions)
+    {
+        this.Includes.AddRange(expressions);
+    }
+
+    public void AddRange(params Expression<Func<T, object>>[] expressions)
+    {
+        this.Includes.AddRange(expressions);
+    }
 }

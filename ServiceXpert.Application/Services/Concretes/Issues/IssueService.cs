@@ -19,8 +19,38 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
         this.issueRepository = issueRepository;
     }
 
+    private static IncludeExpressions<Issue> GetRequiredNavigations()
+    {
+        return
+        [
+            i => i.Reporter!,
+            i => i.Reporter!.SecurityProfile!,
+            i => i.Assignee!,
+            i => i.Assignee!.SecurityProfile!
+        ];
+    }
+
+    public override Task<ServiceResult<IEnumerable<IssueDataObject>>> GetAllAsync(IncludeOptions<Issue>? includeOptions = null)
+    {
+        includeOptions ??= new IncludeOptions<Issue>();
+        includeOptions.AddRange(GetRequiredNavigations());
+
+        return base.GetAllAsync(includeOptions);
+    }
+
+    public override Task<ServiceResult<IssueDataObject>> GetByIdAsync(int id, IncludeOptions<Issue>? includeOptions = null)
+    {
+        includeOptions ??= new IncludeOptions<Issue>();
+        includeOptions.AddRange(GetRequiredNavigations());
+
+        return base.GetByIdAsync(id, includeOptions);
+    }
+
     public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null)
     {
+        includeOptions ??= new IncludeOptions<Issue>();
+        includeOptions.AddRange(GetRequiredNavigations());
+
         var paginationResult = new PaginationResult<Issue>();
 
         if (Enum.TryParse(statusCategory, ignoreCase: true, out IssueStatusCategory statusCategoryEnum))

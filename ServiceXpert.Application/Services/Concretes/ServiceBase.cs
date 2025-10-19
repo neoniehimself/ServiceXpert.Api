@@ -33,7 +33,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
         return ServiceResult<TId>.Ok(entity.Id);
     }
 
-    public async Task<ServiceResult> DeleteByIdAsync(TId id)
+    public virtual async Task<ServiceResult> DeleteByIdAsync(TId id)
     {
         await this.repositoryBase.DeleteByIdAsync(id);
         await this.repositoryBase.SaveChangesAsync();
@@ -41,7 +41,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
         return ServiceResult.Ok();
     }
 
-    public async Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null)
+    public virtual async Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null)
     {
         IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(includeOptions: includeOptions);
         ICollection<TDataObject> dataObjects = entities.Adapt<ICollection<TDataObject>>();
@@ -49,16 +49,16 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
         return ServiceResult<IEnumerable<TDataObject>>.Ok(dataObjects);
     }
 
-    public async Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
+    public virtual async Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
     {
         TEntity? entity = await this.repositoryBase.GetByIdAsync(id, includeOptions);
 
         return entity != null
             ? ServiceResult<TDataObject>.Ok(entity.Adapt<TDataObject>())
-            : ServiceResult<TDataObject>.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
+            : ServiceResult<TDataObject>.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity).Name} not found. Id: {id}"]);
     }
 
-    public async Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null)
+    public virtual async Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null)
     {
         PaginationResult<TEntity> paginationResult = await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions);
         PaginationResult<TDataObject> paginationResultToReturn = new(paginationResult.Items.Adapt<ICollection<TDataObject>>(), paginationResult.Pagination);
@@ -66,14 +66,14 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
         return ServiceResult<PaginationResult<TDataObject>>.Ok(paginationResultToReturn);
     }
 
-    public async Task<ServiceResult> IsExistsByIdAsync(TId id)
+    public virtual async Task<ServiceResult> IsExistsByIdAsync(TId id)
     {
         return await this.repositoryBase.IsExistsByIdAsync(id)
             ? ServiceResult.Ok()
-            : ServiceResult.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
+            : ServiceResult.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity).Name} not found. Id: {id}"]);
     }
 
-    public async Task<ServiceResult> UpdateByIdAsync<TUpdateDataObject>(TId id, TUpdateDataObject updateDataObject) where TUpdateDataObject : UpdateDataObjectBase
+    public virtual async Task<ServiceResult> UpdateByIdAsync<TUpdateDataObject>(TId id, TUpdateDataObject updateDataObject) where TUpdateDataObject : UpdateDataObjectBase
     {
         TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id);
 
@@ -88,6 +88,6 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
             return ServiceResult.Ok();
         }
 
-        return ServiceResult.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity)} not found. Id: {id}"]);
+        return ServiceResult.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity).Name} not found. Id: {id}"]);
     }
 }

@@ -2,7 +2,7 @@
 using ServiceXpert.Domain.Enums.Issues;
 
 namespace ServiceXpert.Application.DataObjects.Issues;
-public class IssueDataObject : DataObjectBase<int>
+public class IssueDataObject : AuditableDataObjectBase<int>
 {
     public string IssueKey { get => string.Concat(nameof(IssuePreFix.SXP), '-', this.Id); }
 

@@ -20,7 +20,5 @@ internal class IssueDbContext : DbContextBase, IEntityTypeConfiguration<Issue>
         issue.HasOne(i => i.ModifiedByUser).WithMany().HasForeignKey(i => i.ModifiedByUserId);
         issue.Navigation(i => i.IssueStatus).AutoInclude();
         issue.Navigation(i => i.IssuePriority).AutoInclude();
-        issue.Navigation(i => i.Reporter).AutoInclude();
-        issue.Navigation(i => i.Assignee).AutoInclude();
     }
 }

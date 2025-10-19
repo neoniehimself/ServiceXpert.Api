@@ -686,13 +686,11 @@ namespace ServiceXpert.Infrastructure.Migrations
 
             modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityProfile", b =>
                 {
-                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", "SecurityUser")
+                    b.HasOne("ServiceXpert.Domain.Entities.Security.SecurityUser", null)
                         .WithOne("SecurityProfile")
                         .HasForeignKey("ServiceXpert.Domain.Entities.Security.SecurityProfile", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("SecurityUser");
                 });
 
             modelBuilder.Entity("ServiceXpert.Domain.Entities.Security.SecurityRoleClaim", b =>

@@ -10,6 +10,13 @@ internal class SecurityUserDbContext : DbContextBase, IEntityTypeConfiguration<S
     public void Configure(EntityTypeBuilder<SecurityUser> user)
     {
         user.ToTable(nameof(SecurityUser));
+
+        user.HasOne(u => u.SecurityProfile)
+            .WithOne()
+            .HasPrincipalKey<SecurityUser>(u => u.Id)
+            .HasForeignKey<SecurityProfile>(p => p.Id)
+            .IsRequired();
+
         user.HasData(new SecurityUser
         {
             Id = Guid.Parse("{E45ACEFA-74B0-4F28-B81F-FBC02D9778B5}"),
