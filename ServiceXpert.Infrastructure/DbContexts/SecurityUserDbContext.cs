@@ -1,17 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Security;
-using ServiceXpert.Infrastructure.SecurityModels;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
-internal class AspNetUserDbContext : IEntityTypeConfiguration<AspNetUser>
+internal class SecurityUserDbContext : IEntityTypeConfiguration<SecurityUser>
 {
     private readonly DateTimeOffset dateTimeOffset = new(2025, 9, 12, 0, 0, 0, 0, TimeSpan.Zero);
 
-    public void Configure(EntityTypeBuilder<AspNetUser> user)
+    public void Configure(EntityTypeBuilder<SecurityUser> user)
     {
+        user.ToTable(nameof(SecurityUser));
         user.HasOne<SecurityProfile>().WithOne().HasForeignKey<SecurityProfile>(p => p.Id);
-        user.HasData(new AspNetUser
+        user.HasData(new SecurityUser
         {
             Id = Guid.Parse("{E45ACEFA-74B0-4F28-B81F-FBC02D9778B5}"),
             UserName = "admin",

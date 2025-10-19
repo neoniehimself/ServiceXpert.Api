@@ -1,0 +1,12 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ServiceXpert.Domain.Entities.Security;
+
+namespace ServiceXpert.Infrastructure.DbContexts;
+internal class SecurityUserTokenDbContext : IEntityTypeConfiguration<SecurityUserToken>
+{
+    public void Configure(EntityTypeBuilder<SecurityUserToken> userToken)
+    {
+        userToken.ToTable(nameof(SecurityUserToken));
+    }
+}

@@ -4,9 +4,9 @@ using ServiceXpert.Application.Models.Auth;
 namespace ServiceXpert.Application.Services.Contracts.Security;
 public interface ISecurityUserService
 {
-    Task<ServiceResult<string>> LoginAsync(LoginUser login);
+    Task<ServiceResult<string>> LoginAsync(LoginUser loginUser);
 
-    Task<ServiceResult<Guid>> RegisterAsync(RegisterUser register);
+    Task<ServiceResult<Guid>> RegisterAsync(RegisterUser registerUser);
 
     Task<ServiceResult> AssignRoleAsync(UserRole userRole);
 }

@@ -1,20 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Issues;
-using ServiceXpert.Domain.Enums.Issues;
-using DomainEnums = ServiceXpert.Domain.Shared.Enums;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
 internal class IssuePriorityDbContext : DbContextBase, IEntityTypeConfiguration<IssuePriority>
 {
     private readonly DateTimeOffset dateTimeOffset = new(2025, 3, 3, 0, 0, 0, 0, TimeSpan.Zero);
 
-    public void Configure(EntityTypeBuilder<IssuePriority> issuePriority)
+    public void Configure(EntityTypeBuilder<IssuePriority> priority)
     {
-        issuePriority.ToTable("IssuePriorities");
-        issuePriority.HasKey(i => i.Id).IsClustered();
-        issuePriority.Property(i => i.Name).HasMaxLength(64);
-        issuePriority.HasData(
+        priority.ToTable(nameof(IssuePriority));
+        priority.HasKey(i => i.Id).IsClustered();
+        priority.Property(i => i.Name).HasMaxLength(64);
+        priority.HasData(
             new IssuePriority()
             {
                 Id = (int)Domain.Enums.Issues.IssuePriority.Outage,

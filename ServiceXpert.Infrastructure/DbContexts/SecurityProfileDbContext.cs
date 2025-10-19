@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Security;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
-internal class AspNetUserProfileDbContext : DbContextBase, IEntityTypeConfiguration<SecurityProfile>
+internal class SecurityProfileDbContext : DbContextBase, IEntityTypeConfiguration<SecurityProfile>
 {
     private readonly DateTimeOffset dateTimeOffset = new(2025, 9, 12, 0, 0, 0, 0, TimeSpan.Zero);
 
     public void Configure(EntityTypeBuilder<SecurityProfile> profile)
     {
+        profile.ToTable(nameof(SecurityProfile));
         profile.HasKey(p => p.Id).IsClustered(false);
         profile.Property(p => p.FirstName).HasMaxLength(256);
         profile.Property(p => p.LastName).HasMaxLength(256);

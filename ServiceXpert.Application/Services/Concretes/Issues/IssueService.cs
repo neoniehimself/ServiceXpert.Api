@@ -3,7 +3,6 @@ using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Issues;
 using ServiceXpert.Application.Enums;
 using ServiceXpert.Application.Models;
-using ServiceXpert.Application.Services.Concretes;
 using ServiceXpert.Application.Services.Contracts.Issues;
 using ServiceXpert.Domain.Entities.Issues;
 using ServiceXpert.Domain.Helpers.Persistence.Includes;
@@ -11,7 +10,7 @@ using ServiceXpert.Domain.Repositories.Issues;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Concretes.Issues;
-public class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueService
+internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueService
 {
     private readonly IIssueRepository issueRepository;
 

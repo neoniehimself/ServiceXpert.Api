@@ -7,6 +7,7 @@ internal class IssueDbContext : DbContextBase, IEntityTypeConfiguration<Issue>
 {
     public void Configure(EntityTypeBuilder<Issue> issue)
     {
+        issue.ToTable(nameof(Issue));
         issue.HasKey(i => i.Id).IsClustered();
         issue.Property(i => i.Name).HasMaxLength(256);
         issue.Property(i => i.Description).HasMaxLength(4096);
@@ -17,7 +18,6 @@ internal class IssueDbContext : DbContextBase, IEntityTypeConfiguration<Issue>
         issue.HasOne(i => i.Assignee).WithMany().HasForeignKey(i => i.AssigneeId);
         issue.HasOne(i => i.CreatedByUser).WithMany().HasForeignKey(i => i.CreatedByUserId);
         issue.HasOne(i => i.ModifiedByUser).WithMany().HasForeignKey(i => i.ModifiedByUserId);
-
         issue.Navigation(i => i.IssueStatus).AutoInclude();
         issue.Navigation(i => i.IssuePriority).AutoInclude();
         issue.Navigation(i => i.Reporter).AutoInclude();

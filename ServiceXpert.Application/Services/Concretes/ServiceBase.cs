@@ -10,7 +10,7 @@ using ServiceXpert.Domain.Repositories;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Concretes;
-public abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId, TEntity, TDataObject>
+internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TId, TEntity, TDataObject>
     where TEntity : EntityBase<TId>
     where TDataObject : DataObjectBase<TId>
 {

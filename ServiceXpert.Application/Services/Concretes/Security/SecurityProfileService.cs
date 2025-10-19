@@ -3,13 +3,12 @@ using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Enums;
 using ServiceXpert.Application.Models;
-using ServiceXpert.Application.Services.Concretes;
 using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Entities.Security;
 using ServiceXpert.Domain.Repositories.Security;
 
 namespace ServiceXpert.Application.Services.Concretes.Security;
-public class SecurityProfileService : ServiceBase<Guid, SecurityProfile, SecurityProfileDataObject>, ISecurityProfileService
+internal class SecurityProfileService : ServiceBase<Guid, SecurityProfile, SecurityProfileDataObject>, ISecurityProfileService
 {
     private readonly IMapper mapper;
     private readonly ISecurityProfileRepository userProfileRepository;
