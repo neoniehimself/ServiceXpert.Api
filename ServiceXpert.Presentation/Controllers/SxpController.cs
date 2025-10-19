@@ -49,14 +49,12 @@ public class SxpController : ControllerBase
     [NonAction]
     protected IActionResult InternalServerError(IEnumerable<string> errors)
     {
-        return base.StatusCode((int)HttpStatusCode.InternalServerError,
-            Models.ApiResponse.Fail(HttpStatusCode.InternalServerError, errors));
+        return base.StatusCode((int)HttpStatusCode.InternalServerError, Models.ApiResponse.Fail(HttpStatusCode.InternalServerError, errors));
     }
 
     [NonAction]
     protected IActionResult InternalServerError<T>(IEnumerable<string> errors)
     {
-        return base.StatusCode((int)HttpStatusCode.InternalServerError,
-            Models.ApiResponse<T>.Fail(HttpStatusCode.InternalServerError, errors));
+        return base.StatusCode((int)HttpStatusCode.InternalServerError, Models.ApiResponse<T>.Fail(HttpStatusCode.InternalServerError, errors));
     }
 }

@@ -5,23 +5,23 @@ using ServiceXpert.Application.Utils;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers;
-[Route("Issues/{issueKey}/Comments")]
+[Route("Issues/{issueKey}/IssueComments")]
 [ApiController]
-public class CommentController : SxpController
+public class IssueCommentController : SxpController
 {
-    private readonly IIssueCommentService commentService;
     private readonly IIssueService issueService;
+    private readonly IIssueCommentService commentService;
 
-    public CommentController(IIssueCommentService commentService, IIssueService issueService)
+    public IssueCommentController(IIssueService issueService, IIssueCommentService commentService)
     {
-        this.commentService = commentService;
         this.issueService = issueService;
+        this.commentService = commentService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(string issueKey, CreateCommentDataObject commentForCreate)
+    public async Task<IActionResult> CreateAsync(string issueKey, CreateCommentDataObject createComment)
     {
-        if (!string.Equals(issueKey, commentForCreate.IssueKey))
+        if (!string.Equals(issueKey, createComment.IssueKey))
         {
             return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
         }
@@ -38,23 +38,21 @@ public class CommentController : SxpController
             return BadRequestInvalidModelState();
         }
 
-        var resultOnCreate = await this.commentService.CreateAsync(commentForCreate);
+        var resultOnCreate = await this.commentService.CreateAsync(createComment);
         return ApiResponse(resultOnCreate);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllByIssueKeyAsync(string issueKey)
     {
-        var issueId = IssueUtil.GetIdFromKey(issueKey);
-
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(issueId);
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey));
 
         if (!resultOnExists.IsSuccess)
         {
             return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
         }
 
-        var resultOnGet = await this.commentService.GetAllByIssueKeyAsync(issueId);
+        var resultOnGet = await this.commentService.GetAllByIssueKeyAsync(issueKey);
         return ApiResponse(resultOnGet);
     }
 }

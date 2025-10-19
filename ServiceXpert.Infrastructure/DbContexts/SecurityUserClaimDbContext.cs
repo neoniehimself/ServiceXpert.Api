@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Security;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
-internal class SecurityUserClaimDbContext : IEntityTypeConfiguration<SecurityUserClaim>
+internal class SecurityUserClaimDbContext : DbContextBase, IEntityTypeConfiguration<SecurityUserClaim>
 {
     public void Configure(EntityTypeBuilder<SecurityUserClaim> userClaim)
     {

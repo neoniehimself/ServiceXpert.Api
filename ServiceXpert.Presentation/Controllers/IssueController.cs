@@ -18,14 +18,14 @@ public class IssueController : SxpController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(CreateIssueDataObject issueForCreate)
+    public async Task<IActionResult> CreateAsync(CreateIssueDataObject createIssue)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequestInvalidModelState();
         }
 
-        var resultOnCreate = await this.issueService.CreateAsync(issueForCreate);
+        var resultOnCreate = await this.issueService.CreateAsync(createIssue);
         return ApiResponse(resultOnCreate);
     }
 
@@ -44,7 +44,7 @@ public class IssueController : SxpController
     }
 
     [HttpPut("{issueKey}")]
-    public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueDataObject issueForUpdate)
+    public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueDataObject updateIssue)
     {
         var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey));
 
@@ -58,7 +58,7 @@ public class IssueController : SxpController
             return BadRequestInvalidModelState();
         }
 
-        var resultOnUpdate = await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromKey(issueKey), issueForUpdate);
+        var resultOnUpdate = await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromKey(issueKey), updateIssue);
         return ApiResponse(resultOnUpdate);
     }
 }

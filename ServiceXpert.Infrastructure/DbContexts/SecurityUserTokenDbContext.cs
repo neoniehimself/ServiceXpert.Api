@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Security;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
-internal class SecurityUserTokenDbContext : IEntityTypeConfiguration<SecurityUserToken>
+internal class SecurityUserTokenDbContext : DbContextBase, IEntityTypeConfiguration<SecurityUserToken>
 {
     public void Configure(EntityTypeBuilder<SecurityUserToken> userToken)
     {

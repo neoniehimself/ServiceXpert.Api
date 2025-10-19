@@ -82,7 +82,8 @@ internal class SecurityUserService : ISecurityUserService
         var result = await this.userManager.CreateAsync(new SecurityUser()
         {
             UserName = registerUser.UserName,
-            Email = registerUser.Email
+            Email = registerUser.Email,
+            IsActive = true
         }, registerUser.Password);
 
         if (!result.Succeeded)

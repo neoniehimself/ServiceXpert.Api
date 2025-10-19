@@ -12,6 +12,8 @@ public class SecurityUser : IdentityUser<Guid>, IAudit
 
     public DateTimeOffset? ModifiedDate { get; set; }
 
+    public bool IsActive { get; set; }
+
     public SecurityProfile? SecurityProfile { get; set; }
 
     public SecurityUser()

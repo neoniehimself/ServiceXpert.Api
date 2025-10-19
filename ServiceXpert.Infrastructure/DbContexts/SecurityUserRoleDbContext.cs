@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Security;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
-internal class SecurityUserRoleDbContext : IEntityTypeConfiguration<SecurityUserRole>
+internal class SecurityUserRoleDbContext : DbContextBase, IEntityTypeConfiguration<SecurityUserRole>
 {
     private readonly DateTimeOffset dateTimeOffset = new(2025, 9, 12, 0, 0, 0, 0, TimeSpan.Zero);
 

@@ -1,6 +1,6 @@
 ﻿namespace ServiceXpert.Domain.Enums.Security;
 public enum SecurityRole
 {
-    Admin,
-    User
+    Admin = 1,
+    User = 2
 }

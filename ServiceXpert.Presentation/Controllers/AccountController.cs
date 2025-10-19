@@ -9,36 +9,36 @@ namespace ServiceXpert.Presentation.Controllers;
 [ApiController]
 public class AccountController : SxpController
 {
-    private readonly ISecurityUserService aspNetUserService;
+    private readonly ISecurityUserService securityUserService;
 
-    public AccountController(ISecurityUserService aspNetUserService)
+    public AccountController(ISecurityUserService securityUserService)
     {
-        this.aspNetUserService = aspNetUserService;
+        this.securityUserService = securityUserService;
     }
 
     [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterAsync(RegisterUser register)
+    public async Task<IActionResult> RegisterAsync(RegisterUser registerUser)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequestInvalidModelState();
         }
 
-        var result = await this.aspNetUserService.RegisterAsync(register);
+        var result = await this.securityUserService.RegisterAsync(registerUser);
         return ApiResponse(result);
     }
 
     [AllowAnonymous]
     [HttpPost("Login")]
-    public async Task<IActionResult> LoginAsync(LoginUser login)
+    public async Task<IActionResult> LoginAsync(LoginUser loginUser)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequestInvalidModelState();
         }
 
-        var result = await this.aspNetUserService.LoginAsync(login);
+        var result = await this.securityUserService.LoginAsync(loginUser);
         return ApiResponse(result);
     }
 }

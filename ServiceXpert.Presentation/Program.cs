@@ -8,13 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddOptions<ServiceXpertConfiguration>()
-    .Bind(builder.Configuration.GetSection(nameof(ServiceXpertConfiguration)))
+builder.Services.AddOptions<SxpConfiguration>()
+    .Bind(builder.Configuration.GetSection(nameof(SxpConfiguration)))
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
-builder.Services
-    .AddApplicationServices()
+builder.Services.AddApplicationServices()
     .AddInfrastructureServices(builder.Configuration);
 
 builder.Services.AddControllers(options =>
