@@ -12,6 +12,8 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
 {
     private readonly SxpDbContext dbContext;
 
+    public string ClassName { get => nameof(RepositoryBase<TId, TEntity>); }
+
     public RepositoryBase(SxpDbContext dbContext)
     {
         this.dbContext = dbContext;
@@ -29,12 +31,12 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
 
     public async Task DeleteByIdAsync(TId id)
     {
-        await this.dbContext.Set<TEntity>().Where(e => e.Id!.Equals(id)).ExecuteDeleteAsync();
+        await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(DeleteByIdAsync)}").Where(e => e.Id!.Equals(id)).ExecuteDeleteAsync();
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filters = null, IncludeOptions<TEntity>? includeOptions = null)
     {
-        IQueryable<TEntity> query = this.dbContext.Set<TEntity>().ApplyIncludeOptions(includeOptions);
+        IQueryable<TEntity> query = this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetAllAsync)}").ApplyIncludeOptions(includeOptions);
 
         if (filters != null)
         {
@@ -46,12 +48,12 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
 
     public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filters, IncludeOptions<TEntity>? includeOptions = null)
     {
-        return await this.dbContext.Set<TEntity>().ApplyIncludeOptions(includeOptions).Where(filters).SingleOrDefaultAsync();
+        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetAsync)}").ApplyIncludeOptions(includeOptions).Where(filters).SingleOrDefaultAsync();
     }
 
     public async Task<TEntity?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
     {
-        return await this.dbContext.Set<TEntity>().ApplyIncludeOptions(includeOptions).SingleOrDefaultAsync(e => e.Id!.Equals(id));
+        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetByIdAsync)}").ApplyIncludeOptions(includeOptions).SingleOrDefaultAsync(e => e.Id!.Equals(id));
     }
 
     public async Task<PaginationResult<TEntity>> GetPagedAllAsync(
@@ -60,8 +62,8 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
         Expression<Func<TEntity, bool>>? filters = null,
         IncludeOptions<TEntity>? includeOptions = null)
     {
-        IQueryable<TEntity> selectQuery = this.dbContext.Set<TEntity>().ApplyIncludeOptions(includeOptions);
-        IQueryable<TEntity> totalCountQuery = this.dbContext.Set<TEntity>();
+        IQueryable<TEntity> selectQuery = this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetPagedAllAsync)}.{nameof(selectQuery)}").ApplyIncludeOptions(includeOptions);
+        IQueryable<TEntity> totalCountQuery = this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetPagedAllAsync)}.{nameof(totalCountQuery)}");
 
         if (filters != null)
         {
@@ -84,7 +86,7 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
 
     public async Task<bool> IsExistsByIdAsync(TId id)
     {
-        return await this.dbContext.Set<TEntity>().AnyAsync(e => e.Id!.Equals(id));
+        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(IsExistsByIdAsync)}").AnyAsync(e => e.Id!.Equals(id));
     }
 
     public async Task<int> SaveChangesAsync()
