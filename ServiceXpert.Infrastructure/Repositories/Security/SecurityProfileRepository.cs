@@ -13,7 +13,7 @@ internal class SecurityProfileRepository : RepositoryBase<Guid, SecurityProfile>
         this.dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<SecurityProfile>> SearchUserByName(string name)
+    public async Task<IEnumerable<SecurityProfile>> SearchProfileByName(string name)
     {
         name = name.Trim().Replace(' ', '%');
         name = $"%{name}%";
@@ -21,7 +21,7 @@ internal class SecurityProfileRepository : RepositoryBase<Guid, SecurityProfile>
         return await this.dbContext.Set<SecurityProfile>()
             .FromSqlInterpolated(@$"SELECT TOP 5 * FROM [AspNetUserProfiles]
                                     WHERE CONCAT([FirstName], ' ', [LastName]) LIKE {name}")
-            .TagWith($"{nameof(SecurityProfileRepository)}.{nameof(SearchUserByName)}")
+            .TagWith($"{nameof(SecurityProfileRepository)}.{nameof(SearchProfileByName)}")
             .ToListAsync();
     }
 }
