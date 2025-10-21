@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Application.DataObjects.Issues;
-public class CreateCommentDataObject : CreateDataObjectBase
+public class CreateIssueCommentDataObject : CreateDataObjectBase
 {
     [Required]
     public required string Content { get; set; } = string.Empty;

@@ -15,7 +15,7 @@ public static class ServiceContainer
 
         // Services
         services.AddScoped<IIssueService, IssueService>();
-        services.AddScoped<IIssueCommentService, CommentService>();
+        services.AddScoped<IIssueCommentService, IssueCommentService>();
         services.AddScoped<ISecurityProfileService, SecurityProfileService>();
 
         return services;

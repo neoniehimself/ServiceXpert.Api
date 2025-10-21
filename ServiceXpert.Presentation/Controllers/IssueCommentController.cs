@@ -10,18 +10,18 @@ namespace ServiceXpert.Presentation.Controllers;
 public class IssueCommentController : SxpController
 {
     private readonly IIssueService issueService;
-    private readonly IIssueCommentService commentService;
+    private readonly IIssueCommentService issueCommentService;
 
-    public IssueCommentController(IIssueService issueService, IIssueCommentService commentService)
+    public IssueCommentController(IIssueService issueService, IIssueCommentService issueCommentService)
     {
         this.issueService = issueService;
-        this.commentService = commentService;
+        this.issueCommentService = issueCommentService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(string issueKey, CreateCommentDataObject createComment)
+    public async Task<IActionResult> CreateAsync(string issueKey, CreateIssueCommentDataObject createIssueComment)
     {
-        if (!string.Equals(issueKey, createComment.IssueKey))
+        if (!string.Equals(issueKey, createIssueComment.IssueKey))
         {
             return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
         }
@@ -38,7 +38,7 @@ public class IssueCommentController : SxpController
             return BadRequestInvalidModelState();
         }
 
-        var resultOnCreate = await this.commentService.CreateAsync(createComment);
+        var resultOnCreate = await this.issueCommentService.CreateAsync(createIssueComment);
         return ApiResponse(resultOnCreate);
     }
 
@@ -52,7 +52,7 @@ public class IssueCommentController : SxpController
             return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
         }
 
-        var resultOnGet = await this.commentService.GetAllByIssueKeyAsync(issueKey);
+        var resultOnGet = await this.issueCommentService.GetAllByIssueKeyAsync(issueKey);
         return ApiResponse(resultOnGet);
     }
 }
