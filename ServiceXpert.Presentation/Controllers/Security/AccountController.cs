@@ -4,8 +4,8 @@ using ServiceXpert.Application.Models.Auth;
 using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Enums.Security;
 
-namespace ServiceXpert.Presentation.Controllers;
-[Route("Accounts")]
+namespace ServiceXpert.Presentation.Controllers.Security;
+[Route("Security/Accounts")]
 [ApiController]
 public class AccountController : SxpController
 {

@@ -4,8 +4,8 @@ using ServiceXpert.Application.Services.Contracts.Issues;
 using ServiceXpert.Application.Utils;
 using System.Net;
 
-namespace ServiceXpert.Presentation.Controllers;
-[Route("Issues/{issueKey}/IssueComments")]
+namespace ServiceXpert.Presentation.Controllers.Issues;
+[Route("Issues/{issueKey}/Comments")]
 [ApiController]
 public class IssueCommentController : SxpController
 {

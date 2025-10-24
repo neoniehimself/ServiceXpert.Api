@@ -19,7 +19,7 @@ internal class SecurityProfileRepository : RepositoryBase<Guid, SecurityProfile>
         name = $"%{name}%";
 
         return await this.dbContext.Set<SecurityProfile>()
-            .FromSqlInterpolated(@$"SELECT TOP 5 * FROM [AspNetUserProfiles]
+            .FromSqlInterpolated(@$"SELECT TOP 5 * FROM [SecurityProfile]
                                     WHERE CONCAT([FirstName], ' ', [LastName]) LIKE {name}")
             .TagWith($"{nameof(SecurityProfileRepository)}.{nameof(SearchProfileByName)}")
             .ToListAsync();

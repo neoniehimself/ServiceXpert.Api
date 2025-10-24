@@ -4,8 +4,8 @@ using ServiceXpert.Application.Models.Auth;
 using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Enums.Security;
 
-namespace ServiceXpert.Presentation.Controllers;
-[Route("SecurityUsers")]
+namespace ServiceXpert.Presentation.Controllers.Security;
+[Route("Security/Users")]
 [ApiController]
 public class SecurityUserController : SxpController
 {
@@ -17,7 +17,7 @@ public class SecurityUserController : SxpController
     }
 
     [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
-    [HttpPost("AssignRoleToSecurityUser")]
+    [HttpPost("AssignRoleToUser")]
     public async Task<IActionResult> AssignRoleToSecurityUserAsync(UserRole userRole)
     {
         var resultOnAssign = await this.securityUserService.AssignRoleAsync(userRole);

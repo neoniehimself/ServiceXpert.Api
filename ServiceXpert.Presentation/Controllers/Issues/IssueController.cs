@@ -5,7 +5,7 @@ using ServiceXpert.Application.Utils;
 using ServiceXpert.Presentation.Models.QueryOptions;
 using System.Net;
 
-namespace ServiceXpert.Presentation.Controllers;
+namespace ServiceXpert.Presentation.Controllers.Issues;
 [Route("Issues")]
 [ApiController]
 public class IssueController : SxpController

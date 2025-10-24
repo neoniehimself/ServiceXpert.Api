@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.Services.Contracts.Security;
 
-namespace ServiceXpert.Presentation.Controllers;
-[Route("SecurityProfiles")]
+namespace ServiceXpert.Presentation.Controllers.Security;
+[Route("Security/Users/Profiles")]
 [ApiController]
 public class SecurityProfileController : SxpController
 {

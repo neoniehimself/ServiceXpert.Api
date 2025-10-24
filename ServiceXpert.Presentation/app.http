@@ -1,6 +1,7 @@
 @Presentation_HostAddress = http://localhost/ServiceXpertApi
+@BearerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDVhY2VmYS03NGIwLTRmMjgtYjgxZi1mYmMwMmQ5Nzc4YjUiLCJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiMDc5MDRkNjAtODZhYy00MTQ1LWI5OTItOWRkZjhmNDM3ZjliIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NjEzMzk2NjcsImlzcyI6IlNlcnZpY2VYcGVydC5BcGkiLCJhdWQiOiJTZXJ2aWNlWHBlcnQuV2ViIn0.wliPeB4CvhE7ZxNBbqjCRpgYL4pJGmJTnLHi2DopUHE
 
-POST {{Presentation_HostAddress}}/accounts/login
+POST {{Presentation_HostAddress}}/Security/Accounts/Login
 Content-Type: application/json
 Accept: application/json
 
@@ -11,10 +12,10 @@ Accept: application/json
 
 ###
 
-POST {{Presentation_HostAddress}}/accounts/register
+POST {{Presentation_HostAddress}}/Security/Accounts/Register
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDVhY2VmYS03NGIwLTRmMjgtYjgxZi1mYmMwMmQ5Nzc4YjUiLCJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiNDE4NTQwM2QtMDQzNy00MWUxLTk5NGEtZDYwY2Y1ZGFhMGRiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NjEzMzAzMTEsImlzcyI6IlNlcnZpY2VYcGVydC5BcGkiLCJhdWQiOiJTZXJ2aWNlWHBlcnQuV2ViIn0.SfmzO-ptNGXF_JbdFT3F24JaAgCv_cTC0R9b6ZW4oc8
+Authorization: Bearer {{BearerToken}}
 
 {
   "username": "jdoe",
@@ -26,12 +27,81 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDVhY2VmY
 
 ###
 
-POST {{Presentation_HostAddress}}/securityusers/assignroletosecurityuser
+POST {{Presentation_HostAddress}}/Security/Users/AssignRoleToUser
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDVhY2VmYS03NGIwLTRmMjgtYjgxZi1mYmMwMmQ5Nzc4YjUiLCJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiNDE4NTQwM2QtMDQzNy00MWUxLTk5NGEtZDYwY2Y1ZGFhMGRiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NjEzMzAzMTEsImlzcyI6IlNlcnZpY2VYcGVydC5BcGkiLCJhdWQiOiJTZXJ2aWNlWHBlcnQuV2ViIn0.SfmzO-ptNGXF_JbdFT3F24JaAgCv_cTC0R9b6ZW4oc8
+Authorization: Bearer {{BearerToken}}
 
 {
   "username": "jdoe",
   "roleName": "User"
 }
+
+###
+
+GET {{Presentation_HostAddress}}/Security/Users/Profiles/SearchProfileByName?Name=N
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+###
+
+GET {{Presentation_HostAddress}}/Security/Users/Profiles/e45acefa-74b0-4f28-b81f-fbc02d9778b5
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+###
+
+POST {{Presentation_HostAddress}}/Issues
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "name": "Request timed out",
+  "reporterid": "{E45ACEFA-74B0-4F28-B81F-FBC02D9778B5}"
+}
+
+###
+
+GET {{Presentation_HostAddress}}/Issues/SXP-1
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+###
+
+GET {{Presentation_HostAddress}}/Issues
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+###
+
+PUT {{Presentation_HostAddress}}/Issues/SXP-1
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "name": "Request timed out - Updated",
+  "issuestatusid": "1",
+  "issuepriorityid": "3",
+  "reporterid": "E45ACEFA-74B0-4F28-B81F-FBC02D9778B5"
+}
+
+###
+
+POST {{Presentation_HostAddress}}/Issues/SXP-1/Comments
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "content": "This is a comment"
+}
+
+###
+
+GET {{Presentation_HostAddress}}/Issues/SXP-1/Comments
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+###
