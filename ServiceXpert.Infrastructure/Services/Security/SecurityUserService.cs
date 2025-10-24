@@ -120,7 +120,7 @@ internal class SecurityUserService : ISecurityUserService
 
         if (await this.userManager.IsInRoleAsync(securityUser, userRole.RoleName))
         {
-            var errorMsg = $"User {userRole.UserName} is already assigned with role: {userRole.RoleName}!";
+            var errorMsg = $"User {userRole.UserName} is already assigned with role: {userRole.RoleName}";
             return ServiceResult.Fail(ServiceResultStatus.ValidationError, [errorMsg]);
         }
 

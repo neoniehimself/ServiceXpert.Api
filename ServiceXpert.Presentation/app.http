@@ -1,0 +1,37 @@
+@Presentation_HostAddress = http://localhost/ServiceXpertApi
+
+POST {{Presentation_HostAddress}}/accounts/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+###
+
+POST {{Presentation_HostAddress}}/accounts/register
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDVhY2VmYS03NGIwLTRmMjgtYjgxZi1mYmMwMmQ5Nzc4YjUiLCJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiNDE4NTQwM2QtMDQzNy00MWUxLTk5NGEtZDYwY2Y1ZGFhMGRiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NjEzMzAzMTEsImlzcyI6IlNlcnZpY2VYcGVydC5BcGkiLCJhdWQiOiJTZXJ2aWNlWHBlcnQuV2ViIn0.SfmzO-ptNGXF_JbdFT3F24JaAgCv_cTC0R9b6ZW4oc8
+
+{
+  "username": "jdoe",
+  "password": "P@ssw0rd123!",
+  "email": "noemail@noemail.com",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+
+###
+
+POST {{Presentation_HostAddress}}/securityusers/assignroletosecurityuser
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDVhY2VmYS03NGIwLTRmMjgtYjgxZi1mYmMwMmQ5Nzc4YjUiLCJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiNDE4NTQwM2QtMDQzNy00MWUxLTk5NGEtZDYwY2Y1ZGFhMGRiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NjEzMzAzMTEsImlzcyI6IlNlcnZpY2VYcGVydC5BcGkiLCJhdWQiOiJTZXJ2aWNlWHBlcnQuV2ViIn0.SfmzO-ptNGXF_JbdFT3F24JaAgCv_cTC0R9b6ZW4oc8
+
+{
+  "username": "jdoe",
+  "roleName": "User"
+}
