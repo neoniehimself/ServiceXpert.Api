@@ -376,6 +376,8 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex")
@@ -494,13 +496,21 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
                     b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
+                        .IsUnique()
+                        .HasDatabaseName("EmailIndex")
+                        .HasFilter("[NormalizedEmail] IS NOT NULL");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("NormalizedEmail"), false);
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("NormalizedUserName"), false);
 
                     b.ToTable("SecurityUser", (string)null);
 
@@ -563,6 +573,8 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("LoginProvider", "ProviderKey"), false);
+
                     b.ToTable("SecurityUserLogin", (string)null);
                 });
 
@@ -587,6 +599,8 @@ namespace ServiceXpert.Infrastructure.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("UserId", "RoleId");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("UserId", "RoleId"), false);
 
                     b.ToTable("SecurityUserRole", (string)null);
 
@@ -615,6 +629,8 @@ namespace ServiceXpert.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("UserId", "LoginProvider", "Name"), false);
 
                     b.ToTable("SecurityUserToken", (string)null);
                 });

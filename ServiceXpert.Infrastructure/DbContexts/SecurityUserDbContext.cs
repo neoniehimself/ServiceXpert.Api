@@ -10,6 +10,9 @@ internal class SecurityUserDbContext : DbContextBase, IEntityTypeConfiguration<S
     public void Configure(EntityTypeBuilder<SecurityUser> user)
     {
         user.ToTable(nameof(SecurityUser));
+        user.HasKey(u => u.Id).IsClustered(false);
+        user.HasIndex(u => u.NormalizedUserName).IsClustered(false).IsUnique();
+        user.HasIndex(u => u.NormalizedEmail).IsClustered(false).IsUnique();
 
         user.HasOne(u => u.SecurityProfile)
             .WithOne()

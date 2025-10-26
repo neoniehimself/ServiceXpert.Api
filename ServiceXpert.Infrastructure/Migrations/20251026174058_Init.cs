@@ -82,7 +82,8 @@ namespace ServiceXpert.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SecurityRole", x => x.Id);
+                    table.PrimaryKey("PK_SecurityRole", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,7 +113,8 @@ namespace ServiceXpert.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SecurityUser", x => x.Id);
+                    table.PrimaryKey("PK_SecurityUser", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,7 +253,8 @@ namespace ServiceXpert.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SecurityUserLogin", x => new { x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_SecurityUserLogin", x => new { x.LoginProvider, x.ProviderKey })
+                        .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
                         name: "FK_SecurityUserLogin_SecurityUser_UserId",
                         column: x => x.UserId,
@@ -273,7 +276,8 @@ namespace ServiceXpert.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SecurityUserRole", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_SecurityUserRole", x => new { x.UserId, x.RoleId })
+                        .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
                         name: "FK_SecurityUserRole_SecurityRole_RoleId",
                         column: x => x.RoleId,
@@ -299,7 +303,8 @@ namespace ServiceXpert.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SecurityUserToken", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_SecurityUserToken", x => new { x.UserId, x.LoginProvider, x.Name })
+                        .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
                         name: "FK_SecurityUserToken_SecurityUser_UserId",
                         column: x => x.UserId,
@@ -405,14 +410,18 @@ namespace ServiceXpert.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "SecurityUser",
-                column: "NormalizedEmail");
+                column: "NormalizedEmail",
+                unique: true,
+                filter: "[NormalizedEmail] IS NOT NULL")
+                .Annotation("SqlServer:Clustered", false);
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "SecurityUser",
                 column: "NormalizedUserName",
                 unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                filter: "[NormalizedUserName] IS NOT NULL")
+                .Annotation("SqlServer:Clustered", false);
         }
 
         /// <inheritdoc />

@@ -10,6 +10,7 @@ internal class SecurityUserRoleDbContext : DbContextBase, IEntityTypeConfigurati
     public void Configure(EntityTypeBuilder<SecurityUserRole> userRole)
     {
         userRole.ToTable(nameof(SecurityUserRole));
+        userRole.HasKey(ur => new { ur.UserId, ur.RoleId }).IsClustered(false);
         userRole.HasData(
             new SecurityUserRole
             {

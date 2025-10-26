@@ -8,5 +8,6 @@ internal class SecurityUserTokenDbContext : DbContextBase, IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<SecurityUserToken> userToken)
     {
         userToken.ToTable(nameof(SecurityUserToken));
+        userToken.HasKey(ut => new { ut.UserId, ut.LoginProvider, ut.Name }).IsClustered(false);
     }
 }

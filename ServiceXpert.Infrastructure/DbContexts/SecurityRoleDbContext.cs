@@ -10,6 +10,7 @@ internal class SecurityRoleDbContext : DbContextBase, IEntityTypeConfiguration<S
     public void Configure(EntityTypeBuilder<SecurityRole> role)
     {
         role.ToTable(nameof(SecurityRole));
+        role.HasKey(r => r.Id).IsClustered(false);
         role.HasData(
             new SecurityRole
             {

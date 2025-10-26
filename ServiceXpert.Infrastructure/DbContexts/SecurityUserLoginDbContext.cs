@@ -8,5 +8,6 @@ internal class SecurityUserLoginDbContext : DbContextBase, IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<SecurityUserLogin> userLogin)
     {
         userLogin.ToTable(nameof(SecurityUserLogin));
+        userLogin.HasKey(ul => new { ul.LoginProvider, ul.ProviderKey }).IsClustered(false);
     }
 }
