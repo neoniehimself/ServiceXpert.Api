@@ -20,7 +20,13 @@ internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommen
 
     public async Task<ServiceResult<IEnumerable<IssueCommentDataObject>>> GetAllByIssueKeyAsync(string issueKey)
     {
-        var comments = await this.issueCommentRepository.GetAllAsync(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey), new IncludeOptions<IssueComment>(c => c.CreatedByUser!));
+        var includeExpressions = new IncludeExpressions<IssueComment>()
+        {
+            c => c.CreatedByUser!,
+            c => c.CreatedByUser!.SecurityProfile!
+        };
+
+        var comments = await this.issueCommentRepository.GetAllAsync(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey), new IncludeOptions<IssueComment>(includeExpressions));
         var commentsToReturn = comments.Adapt<ICollection<IssueCommentDataObject>>();
 
         return ServiceResult<IEnumerable<IssueCommentDataObject>>.Ok(commentsToReturn);
