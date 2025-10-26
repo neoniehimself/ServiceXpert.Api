@@ -30,23 +30,23 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
         ];
     }
 
-    public override Task<ServiceResult<IEnumerable<IssueDataObject>>> GetAllAsync(IncludeOptions<Issue>? includeOptions = null)
+    public override Task<ServiceResult<IEnumerable<IssueDataObject>>> GetAllAsync(IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         includeOptions ??= new IncludeOptions<Issue>();
         includeOptions.AddRange(GetRequiredNavigations());
 
-        return base.GetAllAsync(includeOptions);
+        return base.GetAllAsync(includeOptions, cancellationToken);
     }
 
-    public override Task<ServiceResult<IssueDataObject>> GetByIdAsync(int id, IncludeOptions<Issue>? includeOptions = null)
+    public override Task<ServiceResult<IssueDataObject>> GetByIdAsync(int id, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         includeOptions ??= new IncludeOptions<Issue>();
         includeOptions.AddRange(GetRequiredNavigations());
 
-        return base.GetByIdAsync(id, includeOptions);
+        return base.GetByIdAsync(id, includeOptions, cancellationToken);
     }
 
-    public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null)
+    public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         includeOptions ??= new IncludeOptions<Issue>();
         includeOptions.AddRange(GetRequiredNavigations());
@@ -59,20 +59,20 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
             {
                 case IssueStatusCategory.All:
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
-                        pageNumber, pageSize, includeOptions: includeOptions);
+                        pageNumber, pageSize, includeOptions: includeOptions, cancellationToken: cancellationToken);
                     break;
                 case IssueStatusCategory.Open:
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         pageNumber, pageSize, i => i.IssueStatusId != (int)Domain.Enums.Issues.IssueStatus.Resolved
-                            && i.IssueStatusId != (int)Domain.Enums.Issues.IssueStatus.Closed, includeOptions);
+                            && i.IssueStatusId != (int)Domain.Enums.Issues.IssueStatus.Closed, includeOptions, cancellationToken: cancellationToken);
                     break;
                 case IssueStatusCategory.Resolved:
                     paginationResult = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
-                        i => i.IssueStatusId == (int)Domain.Enums.Issues.IssueStatus.Resolved, includeOptions);
+                        i => i.IssueStatusId == (int)Domain.Enums.Issues.IssueStatus.Resolved, includeOptions, cancellationToken: cancellationToken);
                     break;
                 case IssueStatusCategory.Closed:
                     paginationResult = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
-                        i => i.IssueStatusId == (int)Domain.Enums.Issues.IssueStatus.Closed, includeOptions);
+                        i => i.IssueStatusId == (int)Domain.Enums.Issues.IssueStatus.Closed, includeOptions, cancellationToken: cancellationToken);
                     break;
             }
 

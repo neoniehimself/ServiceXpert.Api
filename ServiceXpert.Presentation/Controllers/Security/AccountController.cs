@@ -18,14 +18,14 @@ public class AccountController : SxpController
 
     [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterAsync(RegisterUser registerUser)
+    public async Task<IActionResult> RegisterAsync(RegisterUser registerUser, CancellationToken cancellationToken = default)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequestInvalidModelState();
         }
 
-        var result = await this.securityUserService.RegisterAsync(registerUser);
+        var result = await this.securityUserService.RegisterAsync(registerUser, cancellationToken);
         return ApiResponse(result);
     }
 

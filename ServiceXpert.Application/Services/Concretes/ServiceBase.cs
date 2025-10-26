@@ -23,59 +23,59 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
         this.repositoryBase = repositoryBase;
     }
 
-    public virtual async Task<ServiceResult<TId>> CreateAsync<TCreateDataObject>(TCreateDataObject createDataObject) where TCreateDataObject : CreateDataObjectBase
+    public virtual async Task<ServiceResult<TId>> CreateAsync<TCreateDataObject>(TCreateDataObject createDataObject, CancellationToken cancellationToken = default) where TCreateDataObject : CreateDataObjectBase
     {
         TEntity entity = createDataObject.Adapt<TEntity>();
 
-        await this.repositoryBase.CreateAsync(entity);
-        await this.repositoryBase.SaveChangesAsync();
+        await this.repositoryBase.CreateAsync(entity, cancellationToken);
+        await this.repositoryBase.SaveChangesAsync(cancellationToken);
 
         return ServiceResult<TId>.Ok(entity.Id);
     }
 
-    public virtual async Task<ServiceResult> DeleteByIdAsync(TId id)
+    public virtual async Task<ServiceResult> DeleteByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
-        await this.repositoryBase.DeleteByIdAsync(id);
-        await this.repositoryBase.SaveChangesAsync();
+        await this.repositoryBase.DeleteByIdAsync(id, cancellationToken);
+        await this.repositoryBase.SaveChangesAsync(cancellationToken);
 
         return ServiceResult.Ok();
     }
 
-    public virtual async Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null)
+    public virtual async Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(includeOptions: includeOptions);
+        IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(includeOptions: includeOptions, cancellationToken: cancellationToken);
         ICollection<TDataObject> dataObjects = entities.Adapt<ICollection<TDataObject>>();
 
         return ServiceResult<IEnumerable<TDataObject>>.Ok(dataObjects);
     }
 
-    public virtual async Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
+    public virtual async Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        TEntity? entity = await this.repositoryBase.GetByIdAsync(id, includeOptions);
+        TEntity? entity = await this.repositoryBase.GetByIdAsync(id, includeOptions, cancellationToken);
 
         return entity != null
             ? ServiceResult<TDataObject>.Ok(entity.Adapt<TDataObject>())
             : ServiceResult<TDataObject>.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity).Name} not found. Id: {id}"]);
     }
 
-    public virtual async Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null)
+    public virtual async Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        PaginationResult<TEntity> paginationResult = await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions);
+        PaginationResult<TEntity> paginationResult = await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions, cancellationToken: cancellationToken);
         PaginationResult<TDataObject> paginationResultToReturn = new(paginationResult.Items.Adapt<ICollection<TDataObject>>(), paginationResult.Pagination);
 
         return ServiceResult<PaginationResult<TDataObject>>.Ok(paginationResultToReturn);
     }
 
-    public virtual async Task<ServiceResult> IsExistsByIdAsync(TId id)
+    public virtual async Task<ServiceResult> IsExistsByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
-        return await this.repositoryBase.IsExistsByIdAsync(id)
+        return await this.repositoryBase.IsExistsByIdAsync(id, cancellationToken)
             ? ServiceResult.Ok()
             : ServiceResult.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity).Name} not found. Id: {id}"]);
     }
 
-    public virtual async Task<ServiceResult> UpdateByIdAsync<TUpdateDataObject>(TId id, TUpdateDataObject updateDataObject) where TUpdateDataObject : UpdateDataObjectBase
+    public virtual async Task<ServiceResult> UpdateByIdAsync<TUpdateDataObject>(TId id, TUpdateDataObject updateDataObject, CancellationToken cancellationToken = default) where TUpdateDataObject : UpdateDataObjectBase
     {
-        TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id);
+        TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id, cancellationToken: cancellationToken);
 
         if (entityToUpdate != null)
         {
@@ -83,7 +83,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
              * to ensure that only modified values are persisted. */
             this.repositoryBase.Attach(entityToUpdate);
             this.mapper.Map(updateDataObject, entityToUpdate);
-            await this.repositoryBase.SaveChangesAsync();
+            await this.repositoryBase.SaveChangesAsync(cancellationToken);
 
             return ServiceResult.Ok();
         }

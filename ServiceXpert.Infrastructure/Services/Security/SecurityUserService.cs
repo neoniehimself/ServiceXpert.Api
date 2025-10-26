@@ -19,21 +19,21 @@ internal class SecurityUserService : ISecurityUserService
     private readonly UserManager<SecurityUser> userManager;
     private readonly IConfiguration configuration;
     private readonly SxpConfiguration sxpConfiguration;
-    private readonly ISecurityProfileService aspNetUserProfileService;
+    private readonly ISecurityProfileService securityProfileService;
     private readonly RoleManager<SecurityRole> roleManager;
 
     public SecurityUserService(
         UserManager<SecurityUser> userManager,
         IConfiguration configuration,
         IOptions<SxpConfiguration> options,
-        ISecurityProfileService aspNetUserProfileService,
+        ISecurityProfileService securityProfileService,
         RoleManager<SecurityRole> roleManager
         )
     {
         this.userManager = userManager;
         this.configuration = configuration;
         this.sxpConfiguration = options.Value;
-        this.aspNetUserProfileService = aspNetUserProfileService;
+        this.securityProfileService = securityProfileService;
         this.roleManager = roleManager;
     }
 
@@ -77,7 +77,7 @@ internal class SecurityUserService : ISecurityUserService
         return ServiceResult<string>.Fail(ServiceResultStatus.Unauthorized, ["Invalid username or password!"]);
     }
 
-    public async Task<ServiceResult<Guid>> RegisterAsync(RegisterUser registerUser)
+    public async Task<ServiceResult<Guid>> RegisterAsync(RegisterUser registerUser, CancellationToken cancellationToken = default)
     {
         var result = await this.userManager.CreateAsync(new SecurityUser()
         {
@@ -99,7 +99,7 @@ internal class SecurityUserService : ISecurityUserService
               .ConstructUsing(src => new CreateSecurityProfileDataObject(securityUser!.Id));
 
         var securityProfile = registerUser.Adapt<CreateSecurityProfileDataObject>(config);
-        await this.aspNetUserProfileService.CreateAsync(securityProfile);
+        await this.securityProfileService.CreateAsync(securityProfile, cancellationToken);
 
         return ServiceResult<Guid>.Ok(securityUser!.Id);
     }

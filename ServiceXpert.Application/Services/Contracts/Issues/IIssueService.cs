@@ -7,5 +7,5 @@ using ServiceXpert.Domain.ValueObjects.Pagination;
 namespace ServiceXpert.Application.Services.Contracts.Issues;
 public interface IIssueService : IServiceBase<int, Issue, IssueDataObject>
 {
-    Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null);
+    Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default);
 }

@@ -19,14 +19,14 @@ public class IssueCommentController : SxpController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(string issueKey, CreateIssueCommentDataObject createIssueComment)
+    public async Task<IActionResult> CreateAsync(string issueKey, CreateIssueCommentDataObject createIssueComment, CancellationToken cancellationToken = default)
     {
         if (!string.Equals(issueKey, createIssueComment.IssueKey))
         {
             return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
         }
 
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey));
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
 
         if (!resultOnExists.IsSuccess)
         {
@@ -38,21 +38,21 @@ public class IssueCommentController : SxpController
             return BadRequestInvalidModelState();
         }
 
-        var resultOnCreate = await this.issueCommentService.CreateAsync(createIssueComment);
+        var resultOnCreate = await this.issueCommentService.CreateAsync(createIssueComment, cancellationToken);
         return ApiResponse(resultOnCreate);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllByIssueKeyAsync(string issueKey)
+    public async Task<IActionResult> GetAllByIssueKeyAsync(string issueKey, CancellationToken cancellationToken = default)
     {
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey));
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
 
         if (!resultOnExists.IsSuccess)
         {
             return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
         }
 
-        var resultOnGet = await this.issueCommentService.GetAllByIssueKeyAsync(issueKey);
+        var resultOnGet = await this.issueCommentService.GetAllByIssueKeyAsync(issueKey, cancellationToken);
         return ApiResponse(resultOnGet);
     }
 }

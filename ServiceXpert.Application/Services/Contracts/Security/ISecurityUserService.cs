@@ -6,7 +6,7 @@ public interface ISecurityUserService
 {
     Task<ServiceResult<string>> LoginAsync(LoginUser loginUser);
 
-    Task<ServiceResult<Guid>> RegisterAsync(RegisterUser registerUser);
+    Task<ServiceResult<Guid>> RegisterAsync(RegisterUser registerUser, CancellationToken cancellationToken = default);
 
     Task<ServiceResult> AssignRoleAsync(UserRole userRole);
 }

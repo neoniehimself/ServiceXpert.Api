@@ -18,7 +18,7 @@ internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommen
         this.issueCommentRepository = issueCommentRepository;
     }
 
-    public async Task<ServiceResult<IEnumerable<IssueCommentDataObject>>> GetAllByIssueKeyAsync(string issueKey)
+    public async Task<ServiceResult<IEnumerable<IssueCommentDataObject>>> GetAllByIssueKeyAsync(string issueKey, CancellationToken cancellationToken = default)
     {
         var includeExpressions = new IncludeExpressions<IssueComment>()
         {
@@ -26,7 +26,7 @@ internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommen
             c => c.CreatedByUser!.SecurityProfile!
         };
 
-        var comments = await this.issueCommentRepository.GetAllAsync(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey), new IncludeOptions<IssueComment>(includeExpressions));
+        var comments = await this.issueCommentRepository.GetAllAsync(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey), new IncludeOptions<IssueComment>(includeExpressions), cancellationToken);
         var commentsToReturn = comments.Adapt<ICollection<IssueCommentDataObject>>();
 
         return ServiceResult<IEnumerable<IssueCommentDataObject>>.Ok(commentsToReturn);

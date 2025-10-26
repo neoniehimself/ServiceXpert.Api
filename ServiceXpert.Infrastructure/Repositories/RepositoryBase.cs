@@ -24,17 +24,17 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
         this.dbContext.Set<TEntity>().Attach(entity);
     }
 
-    public async Task CreateAsync(TEntity entity)
+    public async Task CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await this.dbContext.Set<TEntity>().AddAsync(entity);
+        await this.dbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
     }
 
-    public async Task DeleteByIdAsync(TId id)
+    public async Task DeleteByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
-        await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(DeleteByIdAsync)}").Where(e => e.Id!.Equals(id)).ExecuteDeleteAsync();
+        await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(DeleteByIdAsync)}").Where(e => e.Id!.Equals(id)).ExecuteDeleteAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filters = null, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filters = null, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> query = this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetAllAsync)}").ApplyIncludeOptions(includeOptions);
 
@@ -43,24 +43,25 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
             query = query.Where(filters);
         }
 
-        return await query.ToListAsync();
+        return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filters, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filters, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetAsync)}").ApplyIncludeOptions(includeOptions).Where(filters).SingleOrDefaultAsync();
+        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetAsync)}").ApplyIncludeOptions(includeOptions).Where(filters).SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null)
+    public async Task<TEntity?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetByIdAsync)}").ApplyIncludeOptions(includeOptions).SingleOrDefaultAsync(e => e.Id!.Equals(id));
+        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetByIdAsync)}").ApplyIncludeOptions(includeOptions).SingleOrDefaultAsync(e => e.Id!.Equals(id), cancellationToken);
     }
 
     public async Task<PaginationResult<TEntity>> GetPagedAllAsync(
         int pageNumber,
         int pageSize,
         Expression<Func<TEntity, bool>>? filters = null,
-        IncludeOptions<TEntity>? includeOptions = null)
+        IncludeOptions<TEntity>? includeOptions = null,
+        CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> selectQuery = this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetPagedAllAsync)}.{nameof(selectQuery)}").ApplyIncludeOptions(includeOptions);
         IQueryable<TEntity> totalCountQuery = this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetPagedAllAsync)}.{nameof(totalCountQuery)}");
@@ -79,19 +80,19 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
         var entities = await selectQuery
             .Skip(pageSize * (pageNumber - 1))
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        return new PaginationResult<TEntity>(entities, new Pagination(await totalCountQuery.CountAsync(), pageSize, pageNumber));
+        return new PaginationResult<TEntity>(entities, new Pagination(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber));
     }
 
-    public async Task<bool> IsExistsByIdAsync(TId id)
+    public async Task<bool> IsExistsByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
-        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(IsExistsByIdAsync)}").AnyAsync(e => e.Id!.Equals(id));
+        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(IsExistsByIdAsync)}").AnyAsync(e => e.Id!.Equals(id), cancellationToken);
     }
 
-    public async Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await this.dbContext.SaveChangesAsync();
+        return await this.dbContext.SaveChangesAsync(cancellationToken);
     }
 
     private static bool IsNumericType()

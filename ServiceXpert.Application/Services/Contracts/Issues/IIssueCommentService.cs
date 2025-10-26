@@ -5,5 +5,5 @@ using ServiceXpert.Domain.Entities.Issues;
 namespace ServiceXpert.Application.Services.Contracts.Issues;
 public interface IIssueCommentService : IServiceBase<Guid, IssueComment, IssueCommentDataObject>
 {
-    Task<ServiceResult<IEnumerable<IssueCommentDataObject>>> GetAllByIssueKeyAsync(string issueKey);
+    Task<ServiceResult<IEnumerable<IssueCommentDataObject>>> GetAllByIssueKeyAsync(string issueKey, CancellationToken cancellationToken = default);
 }

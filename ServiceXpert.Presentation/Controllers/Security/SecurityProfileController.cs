@@ -14,15 +14,15 @@ public class SecurityProfileController : SxpController
     }
 
     [HttpGet("SearchProfileByName")]
-    public async Task<IActionResult> SearchProfileByNameAsync(string name)
+    public async Task<IActionResult> SearchProfileByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return ApiResponse(await this.securityProfileService.SearchProfileByName(name));
+        return ApiResponse(await this.securityProfileService.SearchProfileByName(name, cancellationToken));
     }
 
     [HttpGet("{profileId:guid}")]
-    public async Task<IActionResult> GetProfileByIdAsync(Guid profileId)
+    public async Task<IActionResult> GetProfileByIdAsync(Guid profileId, CancellationToken cancellationToken = default)
     {
-        var resultOnGet = await this.securityProfileService.GetByIdAsync(profileId);
+        var resultOnGet = await this.securityProfileService.GetByIdAsync(profileId, cancellationToken: cancellationToken);
         return ApiResponse(resultOnGet);
     }
 }
