@@ -3,13 +3,43 @@
 namespace ServiceXpert.Application.Models.Issues.QueryOptions;
 public class GetPagedIssuesQueryOption
 {
-    public string IssueKey { get; set; } = string.Empty;
+    private int? pageNumber;
 
-    public string Name { get; set; } = string.Empty;
+    public int? PageNumber
+    {
+        get => this.pageNumber ?? 1;
+        set => this.pageNumber = value;
+    }
 
-    public string StatusCategory { get; set; } = IssueStatusCategory.All.ToString();
+    private int? pageSize;
 
-    public int PageNumber { get; set; } = 1;
+    public int? PageSize
+    {
+        get => this.pageSize ?? 10;
+        set => this.pageSize = value;
+    }
 
-    public int PageSize { get; set; } = 10;
+    private string? issueKey;
+
+    public string? IssueKey
+    {
+        get => this.issueKey ?? string.Empty;
+        set => this.issueKey = value;
+    }
+
+    private string? name;
+
+    public string? Name
+    {
+        get => this.name ?? string.Empty;
+        set => this.name = value;
+    }
+
+    private string? statusCategory;
+
+    public string? StatusCategory
+    {
+        get => this.statusCategory ?? IssueStatusCategory.All.ToString();
+        set => this.statusCategory = value;
+    }
 }

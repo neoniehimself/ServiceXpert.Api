@@ -50,7 +50,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
         return base.GetByIdAsync(id, includeOptions, cancellationToken);
     }
 
-    private ExpressionStarter<Issue> ConfigureGetPagedIssuesQueryOptionFilters(GetPagedIssuesQueryOption queryOption)
+    private static ExpressionStarter<Issue> ConfigureGetPagedIssuesQueryOptionFilters(GetPagedIssuesQueryOption queryOption)
     {
         var filters = PredicateBuilder.New<Issue>(true);
 
@@ -62,30 +62,29 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
 
         if (!string.IsNullOrEmpty(queryOption.Name))
         {
-            filters = filters.And(i => i.Name.ToLower() == queryOption.Name.ToLower());
+            filters = filters.And(i => i.Name.Contains(queryOption.Name));
         }
 
         return filters;
     }
 
-    public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesAsync(GetPagedIssuesQueryOption? queryOption = null, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
+    public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesAsync(GetPagedIssuesQueryOption queryOption, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        queryOption ??= new GetPagedIssuesQueryOption();
-        includeOptions ??= new IncludeOptions<Issue>();
-        includeOptions.AddRange(GetRequiredNavigations());
-
         var paginationResult = new PaginationResult<Issue>();
         var filters = ConfigureGetPagedIssuesQueryOptionFilters(queryOption);
 
+        includeOptions ??= new IncludeOptions<Issue>();
+        includeOptions.AddRange(GetRequiredNavigations());
+
         try
         {
-            var statusCategory = queryOption.StatusCategory.ToEnum<IssueStatusCategory>();
+            var statusCategory = queryOption.StatusCategory?.ToEnum<IssueStatusCategory>();
             switch (statusCategory)
             {
                 case IssueStatusCategory.All:
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
-                        queryOption.PageNumber,
-                        queryOption.PageSize,
+                        (int)queryOption.PageNumber!,
+                        (int)queryOption.PageSize!,
                         filters,
                         includeOptions,
                         cancellationToken);
@@ -96,8 +95,8 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                         && i.IssueStatusId != Domain.Enums.Issues.IssueStatus.Closed.ToInt());
 
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
-                        queryOption.PageNumber,
-                        queryOption.PageSize,
+                        (int)queryOption.PageNumber!,
+                        (int)queryOption.PageSize!,
                         filters,
                         includeOptions,
                         cancellationToken);
@@ -106,8 +105,8 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     filters = filters.And(i => i.IssueStatusId == Domain.Enums.Issues.IssueStatus.Resolved.ToInt());
 
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
-                        queryOption.PageNumber,
-                        queryOption.PageSize,
+                        (int)queryOption.PageNumber!,
+                        (int)queryOption.PageSize!,
                         filters,
                         includeOptions,
                         cancellationToken);
@@ -116,8 +115,8 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     filters = filters.And(i => i.IssueStatusId == Domain.Enums.Issues.IssueStatus.Closed.ToInt());
 
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
-                        queryOption.PageNumber,
-                        queryOption.PageSize,
+                        (int)queryOption.PageNumber!,
+                        (int)queryOption.PageSize!,
                         filters,
                         includeOptions,
                         cancellationToken);
