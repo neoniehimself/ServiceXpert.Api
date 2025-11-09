@@ -54,13 +54,13 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
     {
         var filters = PredicateBuilder.New<Issue>(true);
 
-        if (!string.IsNullOrEmpty(queryOption.IssueKey))
+        if (!string.IsNullOrEmpty(queryOption.IssueKey?.Trim()))
         {
             var issueId = IssueUtil.GetIdFromKey(queryOption.IssueKey);
             filters = filters.And(i => i.Id == issueId);
         }
 
-        if (!string.IsNullOrEmpty(queryOption.Name))
+        if (!string.IsNullOrEmpty(queryOption.Name?.Trim()))
         {
             filters = filters.And(i => i.Name.Contains(queryOption.Name));
         }
