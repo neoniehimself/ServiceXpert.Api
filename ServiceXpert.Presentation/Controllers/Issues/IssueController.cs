@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issues;
+using ServiceXpert.Application.Models.Issues.QueryOptions;
 using ServiceXpert.Application.Services.Contracts.Issues;
 using ServiceXpert.Application.Utils;
-using ServiceXpert.Presentation.Models.QueryOptions;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers.Issues;
@@ -37,9 +37,9 @@ public class IssueController : SxpController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPagedIssuesByStatusAsync([FromQuery] GetPagedIssuesByStatusQueryOption queryOption, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetPagedIssuesAsync([FromQuery] GetPagedIssuesQueryOption queryOption, CancellationToken cancellationToken = default)
     {
-        var resultOnGet = await this.issueService.GetPagedIssuesByStatusAsync(queryOption.StatusCategory, queryOption.PageNumber, queryOption.PageSize, cancellationToken: cancellationToken);
+        var resultOnGet = await this.issueService.GetPagedIssuesAsync(queryOption, cancellationToken: cancellationToken);
         return ApiResponse(resultOnGet);
     }
 

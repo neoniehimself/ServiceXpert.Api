@@ -35,5 +35,5 @@ public static class EnumExtensions
     /// <summary>
     /// Gets the integer value of an enum.
     /// </summary>
-    public static int ToInt<TEnum>(this TEnum value) where TEnum : struct, Enum => Convert.ToInt32(value)
+    public static int ToInt<TEnum>(this TEnum value) where TEnum : struct, Enum => Convert.ToInt32(value);
 }
