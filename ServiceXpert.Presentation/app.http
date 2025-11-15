@@ -1,5 +1,7 @@
-@Presentation_HostAddress = http://localhost/ServiceXpertApi
-@BearerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDVhY2VmYS03NGIwLTRmMjgtYjgxZi1mYmMwMmQ5Nzc4YjUiLCJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiMDc5MDRkNjAtODZhYy00MTQ1LWI5OTItOWRkZjhmNDM3ZjliIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NjEzMzk2NjcsImlzcyI6IlNlcnZpY2VYcGVydC5BcGkiLCJhdWQiOiJTZXJ2aWNlWHBlcnQuV2ViIn0.wliPeB4CvhE7ZxNBbqjCRpgYL4pJGmJTnLHi2DopUHE
+@Presentation_HostAddress = http://localhost:8081
+@BearerToken = 
+
+###
 
 POST {{Presentation_HostAddress}}/Security/Accounts/Login
 Content-Type: application/json
@@ -58,7 +60,7 @@ Authorization: Bearer {{BearerToken}}
 
 {
   "name": "Request timed out",
-  "reporterid": "{E45ACEFA-74B0-4F28-B81F-FBC02D9778B5}"
+  "reporterid": "E45ACEFA-74B0-4F28-B81F-FBC02D9778B5"
 }
 
 ###

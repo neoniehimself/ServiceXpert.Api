@@ -1,9 +1,13 @@
-﻿using Mapster;
+﻿using LinqKit;
+using Mapster;
 using MapsterMapper;
 using ServiceXpert.Application.DataObjects.Issues;
 using ServiceXpert.Application.Enums;
+using ServiceXpert.Application.Extensions;
 using ServiceXpert.Application.Models;
+using ServiceXpert.Application.Models.Issues.QueryOptions;
 using ServiceXpert.Application.Services.Contracts.Issues;
+using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities.Issues;
 using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.Repositories.Issues;
@@ -46,40 +50,85 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
         return base.GetByIdAsync(id, includeOptions, cancellationToken);
     }
 
-    public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesByStatusAsync(string statusCategory, int pageNumber, int pageSize, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
+    private static ExpressionStarter<Issue> ConfigureGetPagedIssuesQueryOptionFilters(GetPagedIssuesQueryOption queryOption)
     {
+        var filters = PredicateBuilder.New<Issue>(true);
+
+        if (!string.IsNullOrEmpty(queryOption.IssueKey?.Trim()))
+        {
+            var issueId = IssueUtil.GetIdFromKey(queryOption.IssueKey);
+            filters = filters.And(i => i.Id == issueId);
+        }
+
+        if (!string.IsNullOrEmpty(queryOption.Name?.Trim()))
+        {
+            filters = filters.And(i => i.Name.Contains(queryOption.Name));
+        }
+
+        return filters;
+    }
+
+    public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesAsync(GetPagedIssuesQueryOption queryOption, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
+    {
+        var paginationResult = new PaginationResult<Issue>();
+        var filters = ConfigureGetPagedIssuesQueryOptionFilters(queryOption);
+
         includeOptions ??= new IncludeOptions<Issue>();
         includeOptions.AddRange(GetRequiredNavigations());
 
-        var paginationResult = new PaginationResult<Issue>();
-
-        if (Enum.TryParse(statusCategory, ignoreCase: true, out IssueStatusCategory statusCategoryEnum))
+        try
         {
-            switch (statusCategoryEnum)
+            var statusCategory = queryOption.StatusCategory?.ToEnum<IssueStatusCategory>();
+            switch (statusCategory)
             {
                 case IssueStatusCategory.All:
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
-                        pageNumber, pageSize, includeOptions: includeOptions, cancellationToken: cancellationToken);
+                        (int)queryOption.PageNumber!,
+                        (int)queryOption.PageSize!,
+                        filters,
+                        includeOptions,
+                        cancellationToken);
                     break;
                 case IssueStatusCategory.Open:
+                    filters = filters.And(i =>
+                        i.IssueStatusId != Domain.Enums.Issues.IssueStatus.Resolved.ToInt()
+                        && i.IssueStatusId != Domain.Enums.Issues.IssueStatus.Closed.ToInt());
+
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
-                        pageNumber, pageSize, i => i.IssueStatusId != (int)Domain.Enums.Issues.IssueStatus.Resolved
-                            && i.IssueStatusId != (int)Domain.Enums.Issues.IssueStatus.Closed, includeOptions, cancellationToken: cancellationToken);
+                        (int)queryOption.PageNumber!,
+                        (int)queryOption.PageSize!,
+                        filters,
+                        includeOptions,
+                        cancellationToken);
                     break;
                 case IssueStatusCategory.Resolved:
-                    paginationResult = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
-                        i => i.IssueStatusId == (int)Domain.Enums.Issues.IssueStatus.Resolved, includeOptions, cancellationToken: cancellationToken);
+                    filters = filters.And(i => i.IssueStatusId == Domain.Enums.Issues.IssueStatus.Resolved.ToInt());
+
+                    paginationResult = await this.issueRepository.GetPagedAllAsync(
+                        (int)queryOption.PageNumber!,
+                        (int)queryOption.PageSize!,
+                        filters,
+                        includeOptions,
+                        cancellationToken);
                     break;
                 case IssueStatusCategory.Closed:
-                    paginationResult = await this.issueRepository.GetPagedAllAsync(pageNumber, pageSize,
-                        i => i.IssueStatusId == (int)Domain.Enums.Issues.IssueStatus.Closed, includeOptions, cancellationToken: cancellationToken);
+                    filters = filters.And(i => i.IssueStatusId == Domain.Enums.Issues.IssueStatus.Closed.ToInt());
+
+                    paginationResult = await this.issueRepository.GetPagedAllAsync(
+                        (int)queryOption.PageNumber!,
+                        (int)queryOption.PageSize!,
+                        filters,
+                        includeOptions,
+                        cancellationToken);
                     break;
             }
 
             var paginationResultToReturn = new PaginationResult<IssueDataObject>(paginationResult.Items.Adapt<ICollection<IssueDataObject>>(), paginationResult.Pagination);
             return ServiceResult<PaginationResult<IssueDataObject>>.Ok(paginationResultToReturn);
         }
-
-        return ServiceResult<PaginationResult<IssueDataObject>>.Fail(ServiceResultStatus.InternalError, [$"Invalid cast of string to enum. {nameof(statusCategory)}"]);
+        catch (Exception e)
+        {
+            return ServiceResult<PaginationResult<IssueDataObject>>.Fail(ServiceResultStatus.InternalError, [e.Message]);
+        }
     }
 }
