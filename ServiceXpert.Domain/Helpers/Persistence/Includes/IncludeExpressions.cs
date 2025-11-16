@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 
 namespace ServiceXpert.Domain.Helpers.Persistence.Includes;
-public class IncludeExpressions<T> : List<Expression<Func<T, object>>> where T : EntityBase
+public class IncludeExpressions<T> : List<Expression<Func<T, object>>> where T : class, IEntityBase
 {
     public IncludeExpressions() { }
 

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ServiceXpert.Domain.Audits;
 
 namespace ServiceXpert.Domain.Entities.Security;
-public class SecurityUser : IdentityUser<Guid>, IAudit
+public class SecurityUser : IdentityUser<Guid>, IEntityBase
 {
     public Guid CreatedByUserId { get; set; }
 

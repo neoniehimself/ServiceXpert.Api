@@ -123,6 +123,10 @@ namespace ServiceXpert.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModifiedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -227,6 +231,10 @@ namespace ServiceXpert.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModifiedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -248,6 +256,10 @@ namespace ServiceXpert.Infrastructure.Migrations
                 {
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModifiedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -299,6 +311,10 @@ namespace ServiceXpert.Infrastructure.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ModifiedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 
 namespace ServiceXpert.Domain.Helpers.Persistence.Includes;
-public class IncludeOptions<T> where T : EntityBase
+public class IncludeOptions<T> where T : class, IEntityBase
 {
     public IncludeExpressions<T> Includes { get; }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.Models.Auth;
+using ServiceXpert.Application.Models.Security.QueryOptions;
 using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Enums.Security;
 
@@ -22,5 +23,11 @@ public class SecurityUserController : SxpController
     {
         var resultOnAssign = await this.securityUserService.AssignRoleAsync(userRole);
         return ApiResponse(resultOnAssign);
+    }
+
+    [HttpGet]
+    public Task<IActionResult> GetPagedUsersAsync([FromQuery] GetPagedUsersQueryOption queryOption, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }

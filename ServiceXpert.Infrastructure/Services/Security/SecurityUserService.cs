@@ -7,8 +7,11 @@ using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Enums;
 using ServiceXpert.Application.Models;
 using ServiceXpert.Application.Models.Auth;
+using ServiceXpert.Application.Models.Security.QueryOptions;
 using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Entities.Security;
+using ServiceXpert.Domain.Helpers.Persistence.Includes;
+using ServiceXpert.Domain.ValueObjects.Pagination;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -128,5 +131,10 @@ internal class SecurityUserService : ISecurityUserService
         return result.Succeeded
             ? ServiceResult.Ok()
             : ServiceResult.Fail(ServiceResultStatus.InternalError, result.Errors.Select(e => e.Description));
+    }
+
+    public Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOptions<SecurityUser>? includeOptions = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }
