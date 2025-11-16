@@ -26,8 +26,9 @@ public class SecurityUserController : SxpController
     }
 
     [HttpGet]
-    public Task<IActionResult> GetPagedUsersAsync([FromQuery] GetPagedUsersQueryOption queryOption, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetPagedUsersAsync([FromQuery] GetPagedUsersQueryOption queryOption, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var resultOnGet = await this.securityUserService.GetPagedUsersAsync(queryOption, cancellationToken: cancellationToken);
+        return ApiResponse(resultOnGet);
     }
 }
