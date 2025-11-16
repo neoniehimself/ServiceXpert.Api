@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ServiceXpert.Domain.Audits;
 
 namespace ServiceXpert.Domain.Entities.Security;
-public class SecurityUserRole : IdentityUserRole<Guid>, IAudit
+public class SecurityUserRole : IdentityUserRole<Guid>, IEntityBase
 {
     public Guid CreatedByUserId { get; set; }
 

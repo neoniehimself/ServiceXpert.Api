@@ -12,7 +12,7 @@ using ServiceXpert.Infrastructure.DbContexts;
 namespace ServiceXpert.Infrastructure.Migrations
 {
     [DbContext(typeof(SxpDbContext))]
-    [Migration("20251026174058_Init")]
+    [Migration("20251116164752_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -421,6 +421,18 @@ namespace ServiceXpert.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
@@ -552,6 +564,18 @@ namespace ServiceXpert.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -567,6 +591,18 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     b.Property<string>("ProviderKey")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -627,6 +663,18 @@ namespace ServiceXpert.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");

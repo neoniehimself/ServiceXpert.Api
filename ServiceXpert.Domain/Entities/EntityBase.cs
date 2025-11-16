@@ -1,11 +1,5 @@
-﻿using ServiceXpert.Domain.Audits;
-
-namespace ServiceXpert.Domain.Entities;
-public abstract class EntityBase
-{
-}
-
-public abstract class EntityBase<TId> : EntityBase, IAudit
+﻿namespace ServiceXpert.Domain.Entities;
+public abstract class EntityBase<TId> : IEntityBase
 {
     public TId Id { get; set; } = default!;
 

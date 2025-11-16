@@ -1,5 +1,7 @@
-﻿using Mapster;
+﻿using LinqKit;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -7,8 +9,12 @@ using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Enums;
 using ServiceXpert.Application.Models;
 using ServiceXpert.Application.Models.Auth;
+using ServiceXpert.Application.Models.Security.QueryOptions;
 using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Entities.Security;
+using ServiceXpert.Domain.Helpers.Persistence.Includes;
+using ServiceXpert.Domain.ValueObjects.Pagination;
+using ServiceXpert.Infrastructure.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -27,8 +33,7 @@ internal class SecurityUserService : ISecurityUserService
         IConfiguration configuration,
         IOptions<SxpConfiguration> options,
         ISecurityProfileService securityProfileService,
-        RoleManager<SecurityRole> roleManager
-        )
+        RoleManager<SecurityRole> roleManager)
     {
         this.userManager = userManager;
         this.configuration = configuration;
@@ -128,5 +133,56 @@ internal class SecurityUserService : ISecurityUserService
         return result.Succeeded
             ? ServiceResult.Ok()
             : ServiceResult.Fail(ServiceResultStatus.InternalError, result.Errors.Select(e => e.Description));
+    }
+
+    private static ExpressionStarter<SecurityUser> ConfigureGetPagedUsersQueryOptionFilters(GetPagedUsersQueryOption queryOption)
+    {
+        var filters = PredicateBuilder.New<SecurityUser>(true);
+
+        if (!string.IsNullOrEmpty(queryOption.UserName?.Trim()))
+        {
+            filters = filters.And(u => u.UserName!.Contains(queryOption.UserName));
+        }
+
+        if (!string.IsNullOrEmpty(queryOption.FirstName?.Trim()))
+        {
+            filters = filters.And(u => u.SecurityProfile!.FirstName!.Contains(queryOption.FirstName));
+        }
+
+        if (!string.IsNullOrEmpty(queryOption.LastName?.Trim()))
+        {
+            filters = filters.And(u => u.SecurityProfile!.LastName!.Contains(queryOption.LastName));
+        }
+
+        return filters;
+    }
+
+    public async Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOptions<SecurityUser>? includeOptions = null, CancellationToken cancellationToken = default)
+    {
+        int pageSize = (int)queryOption.PageSize!;
+        int pageNumber = (int)queryOption.PageNumber!;
+        var filters = ConfigureGetPagedUsersQueryOptionFilters(queryOption);
+
+        var selectQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.selectQuery").ApplyIncludeOptions(includeOptions);
+        var totalCountQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.totalCountQuery");
+
+        // Check if any filters are applied
+        if (filters.IsStarted)
+        {
+            selectQuery = selectQuery.Where(filters);
+            totalCountQuery = totalCountQuery.Where(filters);
+        }
+
+        var securityUsers = await selectQuery
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        var paginationResult = new PaginationResult<SecurityUserDataObject>(
+            securityUsers.Adapt<ICollection<SecurityUserDataObject>>(),
+            new Pagination(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber)
+        );
+
+        return ServiceResult<PaginationResult<SecurityUserDataObject>>.Ok(paginationResult);
     }
 }
