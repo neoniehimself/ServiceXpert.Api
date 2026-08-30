@@ -1,3 +1,7 @@
+### IIS 
+### @Presentation_HostAddress = http://localhost:8081
+
+### Kestrel
 @Presentation_HostAddress = https://localhost:7090
 @BearerToken = 
 
@@ -22,7 +26,7 @@ Authorization: Bearer {{BearerToken}}
 {
   "username": "jdoe",
   "password": "P@ssw0rd123!",
-  "email": "noemail@noemail.com",
+  "email": "j.doe@noemail.com",
   "firstName": "John",
   "lastName": "Doe"
 }
@@ -97,7 +101,8 @@ Application-Json: application/json
 Authorization: Bearer {{BearerToken}}
 
 {
-  "content": "This is a comment"
+  "content": "This is a comment",
+  "issueKey": "SXP-1"
 }
 
 ###
