@@ -7,7 +7,10 @@ namespace ServiceXpert.Presentation.Controllers;
 public class SxpController : ControllerBase
 {
     [NonAction]
-    protected IEnumerable<string> GetModelStateErrors() => this.ModelState.Values.SelectMany(modelStateEntry => modelStateEntry.Errors).Select(modelError => modelError.ErrorMessage);
+    protected IEnumerable<string> GetModelStateErrors() => 
+        this.ModelState.Values
+        .SelectMany(modelStateEntry => modelStateEntry.Errors)
+        .Select(modelError => modelError.ErrorMessage);
 
     [NonAction]
     protected IActionResult BadRequestInvalidModelState() => BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, GetModelStateErrors()));
