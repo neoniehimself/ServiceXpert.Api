@@ -1,7 +1,7 @@
 ﻿using ServiceXpert.Domain.Entities;
+using ServiceXpert.Domain.Helpers.Persistence;
 using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.ValueObjects.Pagination;
-using System.Linq.Expressions;
 
 namespace ServiceXpert.Domain.Repositories;
 /// <summary>
@@ -40,7 +40,7 @@ public interface IRepositoryBase<TId, TEntity> where TEntity : EntityBase<TId>
     /// <param name="includeOptions">Optional include options for related entities.</param>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the collection of entities.</returns>
-    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filters = null, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> GetAllAsync(Filters<TEntity>? filters = null, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves a single entity that matches the specified filters and include options.
@@ -49,7 +49,7 @@ public interface IRepositoryBase<TId, TEntity> where TEntity : EntityBase<TId>
     /// <param name="includeOptions">Optional include options for related entities.</param>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the entity if found; otherwise, <c>null</c>.</returns>
-    Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filters, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<TEntity?> GetAsync(Filters<TEntity> filters, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves an entity by its identifier, with optional related data inclusion.
@@ -69,7 +69,7 @@ public interface IRepositoryBase<TId, TEntity> where TEntity : EntityBase<TId>
     /// <param name="includeOptions">Optional include options for related entities.</param>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="PaginationResult{TEntity}"/> with the paged data.</returns>
-    Task<PaginationResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize, Expression<Func<TEntity, bool>>? filters = null, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<PaginationResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize, Filters<TEntity>? filters = null, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously checks whether an entity exists with the specified identifier.

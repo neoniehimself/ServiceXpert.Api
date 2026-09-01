@@ -9,6 +9,7 @@ using ServiceXpert.Application.Models.Issues.QueryOptions;
 using ServiceXpert.Application.Services.Contracts.Issues;
 using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities.Issues;
+using ServiceXpert.Domain.Helpers.Persistence;
 using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.Repositories.Issues;
 using ServiceXpert.Domain.ValueObjects.Pagination;
@@ -85,7 +86,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         (int)queryOption.PageNumber!,
                         (int)queryOption.PageSize!,
-                        filters,
+                        new Filters<Issue>(filters),
                         includeOptions,
                         cancellationToken);
                     break;
@@ -97,7 +98,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         (int)queryOption.PageNumber!,
                         (int)queryOption.PageSize!,
-                        filters,
+                        new Filters<Issue>(filters),
                         includeOptions,
                         cancellationToken);
                     break;
@@ -107,7 +108,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         (int)queryOption.PageNumber!,
                         (int)queryOption.PageSize!,
-                        filters,
+                        new Filters<Issue>(filters),
                         includeOptions,
                         cancellationToken);
                     break;
@@ -117,7 +118,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         (int)queryOption.PageNumber!,
                         (int)queryOption.PageSize!,
-                        filters,
+                        new Filters<Issue>(filters),
                         includeOptions,
                         cancellationToken);
                     break;

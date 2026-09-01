@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ServiceXpert.Domain.Entities;
+using ServiceXpert.Domain.Helpers.Persistence;
 using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.Repositories;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 using ServiceXpert.Infrastructure.DbContexts;
 using ServiceXpert.Infrastructure.Extensions;
-using System.Linq.Expressions;
 
 namespace ServiceXpert.Infrastructure.Repositories;
 internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEntity> where TEntity : EntityBase<TId>
@@ -34,21 +34,21 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
         await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(DeleteByIdAsync)}").Where(e => e.Id!.Equals(id)).ExecuteDeleteAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filters = null, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> GetAllAsync(Filters<TEntity>? filters = null, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> query = this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetAllAsync)}").ApplyIncludeOptions(includeOptions);
 
         if (filters != null)
         {
-            query = query.Where(filters);
+            query = query.Where(filters.Criteria);
         }
 
         return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filters, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
+    public async Task<TEntity?> GetAsync(Filters<TEntity> filters, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetAsync)}").ApplyIncludeOptions(includeOptions).Where(filters).SingleOrDefaultAsync(cancellationToken);
+        return await this.dbContext.Set<TEntity>().TagWith($"{this.ClassName}.{nameof(GetAsync)}").ApplyIncludeOptions(includeOptions).Where(filters.Criteria).SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<TEntity?> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
@@ -59,7 +59,7 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
     public async Task<PaginationResult<TEntity>> GetPagedAllAsync(
         int pageNumber,
         int pageSize,
-        Expression<Func<TEntity, bool>>? filters = null,
+        Filters<TEntity>? filters = null,
         IncludeOptions<TEntity>? includeOptions = null,
         CancellationToken cancellationToken = default)
     {
@@ -68,8 +68,8 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
 
         if (filters != null)
         {
-            selectQuery = selectQuery.Where(filters);
-            totalCountQuery = totalCountQuery.Where(filters);
+            selectQuery = selectQuery.Where(filters.Criteria);
+            totalCountQuery = totalCountQuery.Where(filters.Criteria);
         }
 
         if (IsNumericType())

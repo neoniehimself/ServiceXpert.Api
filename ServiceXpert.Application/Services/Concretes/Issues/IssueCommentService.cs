@@ -5,6 +5,7 @@ using ServiceXpert.Application.Models;
 using ServiceXpert.Application.Services.Contracts.Issues;
 using ServiceXpert.Application.Utils;
 using ServiceXpert.Domain.Entities.Issues;
+using ServiceXpert.Domain.Helpers.Persistence;
 using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.Repositories.Issues;
 
@@ -26,7 +27,11 @@ internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommen
             c => c.CreatedByUser!.SecurityProfile!
         };
 
-        var comments = await this.issueCommentRepository.GetAllAsync(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey), new IncludeOptions<IssueComment>(includeExpressions), cancellationToken);
+        var comments = await this.issueCommentRepository.GetAllAsync(
+            new Filters<IssueComment>(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey)),
+            new IncludeOptions<IssueComment>(includeExpressions),
+            cancellationToken);
+
         var commentsToReturn = comments.Adapt<ICollection<IssueCommentDataObject>>();
 
         return ServiceResult<IEnumerable<IssueCommentDataObject>>.Ok(commentsToReturn);
