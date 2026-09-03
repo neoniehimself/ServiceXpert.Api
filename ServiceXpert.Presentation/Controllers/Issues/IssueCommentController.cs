@@ -55,4 +55,28 @@ public class IssueCommentController : SxpController
         var resultOnGet = await this.issueCommentService.GetAllByIssueKeyAsync(issueKey, cancellationToken);
         return ApiResponse(resultOnGet);
     }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueCommentDataObject updateIssueComment, CancellationToken cancellationToken = default)
+    {
+        if (!string.Equals(issueKey, updateIssueComment.IssueKey))
+        {
+            return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
+        }
+
+        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
+
+        if (!resultOnExists.IsSuccess)
+        {
+            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
+        }
+
+        if (!this.ModelState.IsValid)
+        {
+            return BadRequestInvalidModelState();
+        }
+
+        var resultOnUpdate = await this.issueCommentService.UpdateByIdAsync(updateIssueComment.Id, updateIssueComment, cancellationToken);
+        return ApiResponse(resultOnUpdate);
+    }
 }

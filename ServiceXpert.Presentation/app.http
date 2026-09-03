@@ -3,7 +3,7 @@
 
 ### Kestrel
 @Presentation_HostAddress = https://localhost:7090
-@BearerToken = 
+@BearerToken =
 
 ###
 
@@ -110,5 +110,18 @@ Authorization: Bearer {{BearerToken}}
 GET {{Presentation_HostAddress}}/Issues/SXP-1/Comments
 Content-Type: application/json
 Authorization: Bearer {{BearerToken}}
+
+###
+
+PUT {{Presentation_HostAddress}}/Issues/SXP-1/Comments
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "id": "",
+  "content": "This is a comment - Updated",
+  "issueKey": "SXP-1"
+}
 
 ###
