@@ -18,24 +18,35 @@ public class IssueCommentController : SxpController
         this.issueCommentService = issueCommentService;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateAsync(string issueKey, CreateIssueCommentDataObject createIssueComment, CancellationToken cancellationToken = default)
+    [NonAction]
+    private async Task<(bool IsSuccess, IActionResult Result)> ValidateIssueKey(string issueKey, string dataObjectIssueKey, CancellationToken cancellationToken = default)
     {
-        if (!string.Equals(issueKey, createIssueComment.IssueKey))
+        if (!string.Equals(issueKey, dataObjectIssueKey))
         {
-            return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
+            return (false, BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"])));
         }
 
         var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
-
         if (!resultOnExists.IsSuccess)
         {
-            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
+            return (false, NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors)));
         }
 
         if (!this.ModelState.IsValid)
         {
-            return BadRequestInvalidModelState();
+            return (false, BadRequestInvalidModelState());
+        }
+
+        return (true, Ok());
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync(string issueKey, CreateIssueCommentDataObject createIssueComment, CancellationToken cancellationToken = default)
+    {
+        var validationResult = await ValidateIssueKey(issueKey, createIssueComment.IssueKey, cancellationToken);
+        if (!validationResult.IsSuccess)
+        {
+            return validationResult.Result;
         }
 
         var resultOnCreate = await this.issueCommentService.CreateAsync(createIssueComment, cancellationToken);
@@ -59,24 +70,26 @@ public class IssueCommentController : SxpController
     [HttpPut]
     public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueCommentDataObject updateIssueComment, CancellationToken cancellationToken = default)
     {
-        if (!string.Equals(issueKey, updateIssueComment.IssueKey))
+        var validationResult = await ValidateIssueKey(issueKey, updateIssueComment.IssueKey, cancellationToken);
+        if (!validationResult.IsSuccess)
         {
-            return BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"]));
-        }
-
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
-
-        if (!resultOnExists.IsSuccess)
-        {
-            return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
-        }
-
-        if (!this.ModelState.IsValid)
-        {
-            return BadRequestInvalidModelState();
+            return validationResult.Result;
         }
 
         var resultOnUpdate = await this.issueCommentService.UpdateByIdAsync(updateIssueComment.Id, updateIssueComment, cancellationToken);
         return ApiResponse(resultOnUpdate);
+    }
+
+    [HttpDelete("{issueCommentId}")]
+    public async Task<IActionResult> DeleteByIdAsync(string issueKey, Guid issueCommentId, CancellationToken cancellationToken = default)
+    {
+        var validationResult = await ValidateIssueKey(issueKey, issueKey, cancellationToken);
+        if (!validationResult.IsSuccess)
+        {
+            return validationResult.Result;
+        }
+
+        var resultOnDelete = await this.issueCommentService.DeleteByIdAsync(issueCommentId, cancellationToken);
+        return ApiResponse(resultOnDelete);
     }
 }

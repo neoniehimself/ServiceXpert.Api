@@ -119,9 +119,16 @@ Application-Json: application/json
 Authorization: Bearer {{BearerToken}}
 
 {
-  "id": "",
+  "id": "{{id}}",
   "content": "This is a comment - Updated",
   "issueKey": "SXP-1"
 }
+
+###
+
+DELETE {{Presentation_HostAddress}}/Issues/SXP-1/Comments/{{Id}}
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
 
 ###
