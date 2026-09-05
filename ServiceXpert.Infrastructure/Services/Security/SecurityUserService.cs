@@ -158,7 +158,7 @@ internal class SecurityUserService : ISecurityUserService
         return filters;
     }
 
-    public async Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOptions<SecurityUser>? includeOptions = null, CancellationToken cancellationToken = default)
+    public async Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOption<SecurityUser>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         int pageSize = (int)queryOption.PageSize!;
         int pageNumber = (int)queryOption.PageNumber!;

@@ -29,8 +29,8 @@ internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommen
         };
 
         var comments = await this.issueCommentRepository.GetAllAsync(
-            new Filters<IssueComment>(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey)),
-            new IncludeOptions<IssueComment>(includeExpressions),
+            new FilterOption<IssueComment>(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey)),
+            new IncludeOption<IssueComment>(includeExpressions),
             cancellationToken);
 
         var commentsToReturn = comments.Adapt<ICollection<IssueCommentDataObject>>();

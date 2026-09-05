@@ -36,17 +36,17 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
         ];
     }
 
-    public override Task<ServiceResult<IEnumerable<IssueDataObject>>> GetAllAsync(IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
+    public override Task<ServiceResult<IEnumerable<IssueDataObject>>> GetAllAsync(IncludeOption<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        includeOptions ??= new IncludeOptions<Issue>();
+        includeOptions ??= new IncludeOption<Issue>();
         includeOptions.AddRange(GetRequiredNavigations());
 
         return base.GetAllAsync(includeOptions, cancellationToken);
     }
 
-    public override Task<ServiceResult<IssueDataObject>> GetByIdAsync(int id, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
+    public override Task<ServiceResult<IssueDataObject>> GetByIdAsync(int id, IncludeOption<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
     {
-        includeOptions ??= new IncludeOptions<Issue>();
+        includeOptions ??= new IncludeOption<Issue>();
         includeOptions.AddRange(GetRequiredNavigations());
 
         return base.GetByIdAsync(id, includeOptions, cancellationToken);
@@ -70,12 +70,12 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
         return filters;
     }
 
-    public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesAsync(GetPagedIssuesQueryOption queryOption, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
+    public async Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesAsync(GetPagedIssuesQueryOption queryOption, IncludeOption<Issue>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         var paginationResult = new PaginationResult<Issue>();
         var filters = ConfigureGetPagedIssuesQueryOptionFilters(queryOption);
 
-        includeOptions ??= new IncludeOptions<Issue>();
+        includeOptions ??= new IncludeOption<Issue>();
         includeOptions.AddRange(GetRequiredNavigations());
 
         try
@@ -87,7 +87,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         (int)queryOption.PageNumber!,
                         (int)queryOption.PageSize!,
-                        new Filters<Issue>(filters),
+                        new FilterOption<Issue>(filters),
                         includeOptions,
                         cancellationToken);
                     break;
@@ -99,7 +99,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         (int)queryOption.PageNumber!,
                         (int)queryOption.PageSize!,
-                        new Filters<Issue>(filters),
+                        new FilterOption<Issue>(filters),
                         includeOptions,
                         cancellationToken);
                     break;
@@ -109,7 +109,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         (int)queryOption.PageNumber!,
                         (int)queryOption.PageSize!,
-                        new Filters<Issue>(filters),
+                        new FilterOption<Issue>(filters),
                         includeOptions,
                         cancellationToken);
                     break;
@@ -119,7 +119,7 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
                     paginationResult = await this.issueRepository.GetPagedAllAsync(
                         (int)queryOption.PageNumber!,
                         (int)queryOption.PageSize!,
-                        new Filters<Issue>(filters),
+                        new FilterOption<Issue>(filters),
                         includeOptions,
                         cancellationToken);
                     break;

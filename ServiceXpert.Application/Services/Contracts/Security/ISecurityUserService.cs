@@ -16,6 +16,6 @@ public interface ISecurityUserService
 
     Task<ServiceResult> AssignRoleAsync(UserRole userRole);
 
-    Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOptions<SecurityUser>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOption<SecurityUser>? includeOptions = null, CancellationToken cancellationToken = default);
 
 }

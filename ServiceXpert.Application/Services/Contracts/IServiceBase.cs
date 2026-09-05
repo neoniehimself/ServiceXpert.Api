@@ -14,11 +14,11 @@ public interface IServiceBase<TId, TEntity, TDataObject>
 
     Task<ServiceResult> DeleteByIdAsync(TId id, CancellationToken cancellationToken = default);
 
-    Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
 
-    Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
 
-    Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
 
     Task<ServiceResult> IsExistsByIdAsync(TId id, CancellationToken cancellationToken = default);
 

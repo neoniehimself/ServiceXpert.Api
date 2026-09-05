@@ -42,7 +42,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
         return ServiceResult.Ok();
     }
 
-    public virtual async Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
+    public virtual async Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         IEnumerable<TEntity> entities = await this.repositoryBase.GetAllAsync(includeOptions: includeOptions, cancellationToken: cancellationToken);
         ICollection<TDataObject> dataObjects = entities.Adapt<ICollection<TDataObject>>();
@@ -50,7 +50,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
         return ServiceResult<IEnumerable<TDataObject>>.Ok(dataObjects);
     }
 
-    public virtual async Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
+    public virtual async Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         TEntity? entity = await this.repositoryBase.GetByIdAsync(id, includeOptions, cancellationToken);
 
@@ -59,7 +59,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
             : ServiceResult<TDataObject>.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity).Name} not found. Id: {id}"]);
     }
 
-    public virtual async Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOptions<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
+    public virtual async Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default)
     {
         PaginationResult<TEntity> paginationResult = await this.repositoryBase.GetPagedAllAsync(pageNumber, pageSize, includeOptions: includeOptions, cancellationToken: cancellationToken);
         PaginationResult<TDataObject> paginationResultToReturn = new(paginationResult.Items.Adapt<ICollection<TDataObject>>(), paginationResult.Pagination);
