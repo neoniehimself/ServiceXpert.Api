@@ -35,46 +35,12 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
             .ExecuteDeleteAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        return await GetQueryBase(nameof(GetAllAsync)).ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<TEntity>> GetAllAsync(FilterOption<TEntity> filterOption, CancellationToken cancellationToken = default)
-    {
-        return await GetQueryBase(nameof(GetAllAsync))
-            .Where(filterOption.Filters)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<TEntity>> GetAllAsync(IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default)
-    {
-        return await GetQueryBase(nameof(GetAllAsync))
-            .ApplyIncludeOption(includeOption)
-            .ToListAsync(cancellationToken);
-    }
-
     public async Task<IEnumerable<TEntity>> GetAllAsync(FilterOption<TEntity> filterOption, IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default)
     {
         return await GetQueryBase(nameof(GetAllAsync))
             .Where(filterOption.Filters)
             .ApplyIncludeOption(includeOption)
             .ToListAsync(cancellationToken);
-    }
-
-    public async Task<TEntity?> GetAsync(FilterOption<TEntity> filterOption, CancellationToken cancellationToken = default)
-    {
-        return await GetQueryBase(nameof(GetAsync))
-            .Where(filterOption.Filters)
-            .SingleOrDefaultAsync(cancellationToken);
-    }
-
-    public async Task<TEntity?> GetAsync(FilterOption<TEntity> filterOption, IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default)
-    {
-        return await GetQueryBase(nameof(GetAsync))
-            .Where(filterOption.Filters)
-            .ApplyIncludeOption(includeOption)
-            .SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
@@ -89,77 +55,11 @@ internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEnt
             .SingleOrDefaultAsync(e => e.Id!.Equals(id), cancellationToken);
     }
 
-    public async Task<PaginationResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
-    {
-        IQueryable<TEntity> selectQuery = GetQueryBase($"{nameof(GetPagedAllAsync)}.{nameof(selectQuery)}");
-        IQueryable<TEntity> totalCountQuery = GetQueryBase($"{nameof(GetPagedAllAsync)}.{nameof(totalCountQuery)}");
-
-        if (IsNumericType())
-        {
-            selectQuery = selectQuery.OrderBy(e => e.Id);
-        }
-
-        List<TEntity> entities = await selectQuery
-            .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
-
-        Pagination pagination = new(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber);
-        return new PaginationResult<TEntity>(entities, pagination);
-    }
-
     public async Task<PaginationResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize, FilterOption<TEntity> filterOption, CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> selectQuery =
             GetQueryBase($"{nameof(GetPagedAllAsync)}.{nameof(selectQuery)}")
             .Where(filterOption.Filters);
-
-        IQueryable<TEntity> totalCountQuery =
-            GetQueryBase($"{nameof(GetPagedAllAsync)}.{nameof(totalCountQuery)}")
-            .Where(filterOption.Filters);
-
-        if (IsNumericType())
-        {
-            selectQuery = selectQuery.OrderBy(e => e.Id);
-        }
-
-        List<TEntity> entities = await selectQuery
-            .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
-
-        Pagination pagination = new(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber);
-        return new PaginationResult<TEntity>(entities, pagination);
-    }
-
-    public async Task<PaginationResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default)
-    {
-        IQueryable<TEntity> selectQuery =
-            GetQueryBase($"{nameof(GetPagedAllAsync)}.{nameof(selectQuery)}")
-            .ApplyIncludeOption(includeOption);
-
-        IQueryable<TEntity> totalCountQuery = GetQueryBase($"{nameof(GetPagedAllAsync)}.{nameof(totalCountQuery)}");
-
-        if (IsNumericType())
-        {
-            selectQuery = selectQuery.OrderBy(e => e.Id);
-        }
-
-        List<TEntity> entities = await selectQuery
-            .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
-
-        Pagination pagination = new(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber);
-        return new PaginationResult<TEntity>(entities, pagination);
-    }
-
-    public async Task<PaginationResult<TEntity>> GetPagedAllAsync(int pageNumber, int pageSize, FilterOption<TEntity> filterOption, IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default)
-    {
-        IQueryable<TEntity> selectQuery =
-            GetQueryBase($"{nameof(GetPagedAllAsync)}.{nameof(selectQuery)}")
-            .Where(filterOption.Filters)
-            .ApplyIncludeOption(includeOption);
 
         IQueryable<TEntity> totalCountQuery =
             GetQueryBase($"{nameof(GetPagedAllAsync)}.{nameof(totalCountQuery)}")

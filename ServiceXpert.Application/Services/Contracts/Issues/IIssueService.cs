@@ -2,7 +2,6 @@
 using ServiceXpert.Application.Models;
 using ServiceXpert.Application.Models.Issues.QueryOptions;
 using ServiceXpert.Domain.Entities.Issues;
-using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Contracts.Issues;
@@ -10,6 +9,4 @@ namespace ServiceXpert.Application.Services.Contracts.Issues;
 public interface IIssueService : IServiceBase<int, Issue, IssueDataObject>
 {
     Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesAsync(GetPagedIssuesQueryOption queryOption, CancellationToken cancellationToken = default);
-
-    Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesAsync(GetPagedIssuesQueryOption queryOption, IncludeOption<Issue> includeOption, CancellationToken cancellationToken = default);
 }
