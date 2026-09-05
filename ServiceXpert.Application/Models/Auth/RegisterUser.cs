@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Application.Models.Auth;
+
 public class RegisterUser
 {
     [Required]

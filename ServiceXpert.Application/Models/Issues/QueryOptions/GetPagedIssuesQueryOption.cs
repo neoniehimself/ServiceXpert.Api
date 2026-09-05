@@ -1,6 +1,7 @@
 ﻿using ServiceXpert.Application.Enums;
 
 namespace ServiceXpert.Application.Models.Issues.QueryOptions;
+
 public class GetPagedIssuesQueryOption
 {
     private int? pageNumber;

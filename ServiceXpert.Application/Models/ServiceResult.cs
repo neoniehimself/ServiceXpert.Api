@@ -1,6 +1,7 @@
 ﻿using ServiceXpert.Application.Enums;
 
 namespace ServiceXpert.Application.Models;
+
 public class ServiceResult
 {
     public ServiceResultStatus Status { get; init; }

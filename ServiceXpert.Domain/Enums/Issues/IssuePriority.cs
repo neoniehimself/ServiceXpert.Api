@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Domain.Enums.Issues;
+
 public enum IssuePriority
 {
     Outage = 1,

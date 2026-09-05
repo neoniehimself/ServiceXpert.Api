@@ -3,6 +3,7 @@ using ServiceXpert.Domain.Entities;
 using ServiceXpert.Domain.Helpers.Persistence.Includes;
 
 namespace ServiceXpert.Infrastructure.Extensions;
+
 internal static class QueryableExtensions
 {
     internal static IQueryable<T> ApplyIncludeOptions<T>(this IQueryable<T> query, IncludeOptions<T>? includeOptions = null) where T : class, IEntityBase

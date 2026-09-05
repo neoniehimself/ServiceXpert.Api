@@ -5,6 +5,7 @@ using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Contracts;
+
 public interface IServiceBase<TId, TEntity, TDataObject>
     where TEntity : EntityBase<TId>
     where TDataObject : DataObjectBase<TId>

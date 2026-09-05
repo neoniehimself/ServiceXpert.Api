@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Security.Claims;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
+
 public class SxpDbContext : IdentityDbContext<
     SecurityUser,
     SecurityRole,

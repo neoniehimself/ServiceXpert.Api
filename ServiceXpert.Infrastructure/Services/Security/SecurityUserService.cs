@@ -20,6 +20,7 @@ using System.Security.Claims;
 using System.Text;
 
 namespace ServiceXpert.Infrastructure.Services.Security;
+
 internal class SecurityUserService : ISecurityUserService
 {
     private readonly UserManager<SecurityUser> userManager;

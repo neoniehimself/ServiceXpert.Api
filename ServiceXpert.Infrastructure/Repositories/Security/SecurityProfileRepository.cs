@@ -4,6 +4,7 @@ using ServiceXpert.Domain.Repositories.Security;
 using ServiceXpert.Infrastructure.DbContexts;
 
 namespace ServiceXpert.Infrastructure.Repositories.Security;
+
 internal class SecurityProfileRepository : RepositoryBase<Guid, SecurityProfile>, ISecurityProfileRepository
 {
     private readonly SxpDbContext dbContext;

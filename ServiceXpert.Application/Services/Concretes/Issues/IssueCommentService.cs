@@ -10,6 +10,7 @@ using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.Repositories.Issues;
 
 namespace ServiceXpert.Application.Services.Concretes.Issues;
+
 internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommentDataObject>, IIssueCommentService
 {
     private readonly IIssueCommentRepository issueCommentRepository;

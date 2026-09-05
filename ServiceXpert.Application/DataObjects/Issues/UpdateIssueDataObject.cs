@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Application.DataObjects.Issues;
+
 public class UpdateIssueDataObject : UpdateDataObjectBase
 {
     [Required]

@@ -14,6 +14,7 @@ using ServiceXpert.Infrastructure.Services.Security;
 using System.Text;
 
 namespace ServiceXpert.Infrastructure;
+
 public static class ServiceContainer
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)

@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Application.Enums;
+
 public enum ServiceResultStatus
 {
     Success = 200,

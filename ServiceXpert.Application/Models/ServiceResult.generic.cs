@@ -1,6 +1,7 @@
 ﻿using ServiceXpert.Application.Enums;
 
 namespace ServiceXpert.Application.Models;
+
 public class ServiceResult<T> : ServiceResult
 {
     public T Value { get; set; } = default!;

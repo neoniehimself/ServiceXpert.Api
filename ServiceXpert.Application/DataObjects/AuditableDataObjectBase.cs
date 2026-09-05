@@ -1,6 +1,7 @@
 ﻿using ServiceXpert.Domain.Audits;
 
 namespace ServiceXpert.Application.DataObjects;
+
 public abstract class AuditableDataObjectBase<TId> : DataObjectBase<TId>, IAudit
 {
     public Guid CreatedByUserId { get; set; }

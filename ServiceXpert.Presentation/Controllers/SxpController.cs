@@ -4,6 +4,7 @@ using ServiceXpert.Application.Models;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers;
+
 public class SxpController : ControllerBase
 {
     [NonAction]

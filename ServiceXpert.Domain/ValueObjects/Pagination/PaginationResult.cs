@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Domain.ValueObjects.Pagination;
+
 public class PaginationResult<T>
 {
     public ICollection<T> Items { get; }

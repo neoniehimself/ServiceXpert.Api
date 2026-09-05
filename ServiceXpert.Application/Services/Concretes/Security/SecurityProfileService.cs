@@ -8,6 +8,7 @@ using ServiceXpert.Domain.Entities.Security;
 using ServiceXpert.Domain.Repositories.Security;
 
 namespace ServiceXpert.Application.Services.Concretes.Security;
+
 internal class SecurityProfileService : ServiceBase<Guid, SecurityProfile, SecurityProfileDataObject>, ISecurityProfileService
 {
     private readonly IMapper mapper;

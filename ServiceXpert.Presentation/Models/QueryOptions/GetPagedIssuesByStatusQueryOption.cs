@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Presentation.Models.QueryOptions;
+
 public class GetPagedIssuesByStatusQueryOption
 {
     public string StatusCategory { get; set; } = "All";

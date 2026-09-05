@@ -3,6 +3,7 @@ using ServiceXpert.Domain.Enums.Issues;
 using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Application.DataObjects.Issues;
+
 public class CreateIssueDataObject : CreateDataObjectBase
 {
     [Required]

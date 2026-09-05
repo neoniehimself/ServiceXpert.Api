@@ -6,6 +6,7 @@ using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Contracts.Issues;
+
 public interface IIssueService : IServiceBase<int, Issue, IssueDataObject>
 {
     Task<ServiceResult<PaginationResult<IssueDataObject>>> GetPagedIssuesAsync(GetPagedIssuesQueryOption queryOption, IncludeOptions<Issue>? includeOptions = null, CancellationToken cancellationToken = default);

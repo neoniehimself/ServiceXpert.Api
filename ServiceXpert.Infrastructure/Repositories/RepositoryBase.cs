@@ -8,6 +8,7 @@ using ServiceXpert.Infrastructure.DbContexts;
 using ServiceXpert.Infrastructure.Extensions;
 
 namespace ServiceXpert.Infrastructure.Repositories;
+
 internal abstract class RepositoryBase<TId, TEntity> : IRepositoryBase<TId, TEntity> where TEntity : EntityBase<TId>
 {
     private readonly SxpDbContext dbContext;

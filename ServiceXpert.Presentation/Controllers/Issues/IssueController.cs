@@ -6,6 +6,7 @@ using ServiceXpert.Application.Utils;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers.Issues;
+
 [Route("Issues")]
 [ApiController]
 public class IssueController : SxpController

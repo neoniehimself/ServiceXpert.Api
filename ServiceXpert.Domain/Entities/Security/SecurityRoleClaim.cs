@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
 namespace ServiceXpert.Domain.Entities.Security;
+
 public class SecurityRoleClaim : IdentityRoleClaim<Guid>, IEntityBase
 {
     public Guid CreatedByUserId { get; set; }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Security;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
+
 internal class SecurityPolicyDbContext : DbContextBase, IEntityTypeConfiguration<SecurityPolicy>
 {
     private readonly DateTimeOffset dateTimeOffset = new(2025, 10, 20, 0, 0, 0, 0, TimeSpan.Zero);

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Issues;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
+
 internal class IssueCommentDbContext : DbContextBase, IEntityTypeConfiguration<IssueComment>
 {
     public void Configure(EntityTypeBuilder<IssueComment> comment)

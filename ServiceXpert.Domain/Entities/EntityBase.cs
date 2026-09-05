@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Domain.Entities;
+
 public abstract class EntityBase<TId> : IEntityBase
 {
     public TId Id { get; set; } = default!;

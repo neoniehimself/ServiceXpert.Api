@@ -6,6 +6,7 @@ using ServiceXpert.Application.Services.Contracts.Issues;
 using ServiceXpert.Application.Services.Contracts.Security;
 
 namespace ServiceXpert.Application;
+
 public static class ServiceContainer
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)

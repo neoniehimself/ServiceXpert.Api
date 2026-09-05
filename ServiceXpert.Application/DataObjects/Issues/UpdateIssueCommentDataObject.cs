@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Application.DataObjects.Issues;
+
 public class UpdateIssueCommentDataObject : UpdateDataObjectBase
 {
     public Guid Id { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Application.DataObjects.Security;
+
 public class CreateSecurityProfileDataObject : CreateDataObjectBase
 {
     [Required]

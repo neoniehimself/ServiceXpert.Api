@@ -2,6 +2,7 @@
 using ServiceXpert.Domain.Enums.Issues;
 
 namespace ServiceXpert.Application.DataObjects.Issues;
+
 public class IssueCommentDataObject : AuditableDataObjectBase<Guid>
 {
     public string Content { get; set; } = string.Empty;

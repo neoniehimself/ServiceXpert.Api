@@ -1,6 +1,7 @@
 ﻿using System.Net;
 
 namespace ServiceXpert.Presentation.Models;
+
 public class ApiResponse
 {
     public HttpStatusCode StatusCode { get; set; }

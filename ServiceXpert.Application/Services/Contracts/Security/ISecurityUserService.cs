@@ -7,6 +7,7 @@ using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Contracts.Security;
+
 public interface ISecurityUserService
 {
     Task<ServiceResult<string>> LoginAsync(LoginUser loginUser);

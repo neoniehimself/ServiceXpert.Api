@@ -15,6 +15,7 @@ using ServiceXpert.Domain.Repositories.Issues;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Concretes.Issues;
+
 internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueService
 {
     private readonly IIssueRepository issueRepository;

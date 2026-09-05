@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Application.DataObjects.Security;
+
 public class SecurityUserDataObject : DataObjectBase<Guid>
 {
     public string? UserName { get; set; }

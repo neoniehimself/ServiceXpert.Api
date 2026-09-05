@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ServiceXpert.Domain.Entities.Issues;
 
 namespace ServiceXpert.Infrastructure.DbContexts;
+
 internal class IssueStatusDbContext : DbContextBase, IEntityTypeConfiguration<IssueStatus>
 {
     private readonly DateTimeOffset dateTimeOffset = new(2025, 2, 24, 0, 0, 0, 0, TimeSpan.Zero);

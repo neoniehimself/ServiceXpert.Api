@@ -1,4 +1,5 @@
 ﻿namespace ServiceXpert.Application.Models.Security.QueryOptions;
+
 public class GetPagedUsersQueryOption
 {
     private int? pageNumber;

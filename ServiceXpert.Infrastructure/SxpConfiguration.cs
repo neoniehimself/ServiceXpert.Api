@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace ServiceXpert.Infrastructure;
+
 public class SxpConfiguration
 {
     [Required(ErrorMessage = "Fatal: Missing connection string")]

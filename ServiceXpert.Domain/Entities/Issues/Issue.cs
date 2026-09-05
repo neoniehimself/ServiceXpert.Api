@@ -1,6 +1,7 @@
 ﻿using ServiceXpert.Domain.Entities.Security;
 
 namespace ServiceXpert.Domain.Entities.Issues;
+
 public class Issue : EntityBase<int>
 {
     public string Name { get; set; } = string.Empty;
