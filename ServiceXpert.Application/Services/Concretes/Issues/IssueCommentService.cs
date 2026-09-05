@@ -13,11 +13,11 @@ namespace ServiceXpert.Application.Services.Concretes.Issues;
 
 internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommentDataObject>, IIssueCommentService
 {
-    private readonly IIssueCommentRepository issueCommentRepository;
+    private readonly IIssueCommentRepository commentRepository;
 
-    public IssueCommentService(IMapper mapper, IIssueCommentRepository issueCommentRepository) : base(mapper, issueCommentRepository)
+    public IssueCommentService(IMapper mapper, IIssueCommentRepository commentRepository) : base(mapper, commentRepository)
     {
-        this.issueCommentRepository = issueCommentRepository;
+        this.commentRepository = commentRepository;
     }
 
     public async Task<ServiceResult<IEnumerable<IssueCommentDataObject>>> GetAllByIssueKeyAsync(string issueKey, CancellationToken cancellationToken = default)
@@ -28,7 +28,7 @@ internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommen
             c => c.CreatedByUser!.SecurityProfile!
         };
 
-        var comments = await this.issueCommentRepository.GetAllAsync(
+        var comments = await this.commentRepository.GetAllAsync(
             new FilterOption<IssueComment>(c => c.IssueId == IssueUtil.GetIdFromKey(issueKey)),
             new IncludeOption<IssueComment>(includeExpressions),
             cancellationToken);

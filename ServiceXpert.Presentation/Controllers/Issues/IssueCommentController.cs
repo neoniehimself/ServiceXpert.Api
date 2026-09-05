@@ -11,12 +11,12 @@ namespace ServiceXpert.Presentation.Controllers.Issues;
 public class IssueCommentController : SxpController
 {
     private readonly IIssueService issueService;
-    private readonly IIssueCommentService issueCommentService;
+    private readonly IIssueCommentService commentService;
 
     public IssueCommentController(IIssueService issueService, IIssueCommentService commentService)
     {
         this.issueService = issueService;
-        this.issueCommentService = commentService;
+        this.commentService = commentService;
     }
 
     [NonAction]
@@ -50,7 +50,7 @@ public class IssueCommentController : SxpController
             return result;
         }
 
-        var resultOnCreate = await this.issueCommentService.CreateAsync(createObj, cancellationToken);
+        var resultOnCreate = await this.commentService.CreateAsync(createObj, cancellationToken);
         return ApiResponse(resultOnCreate);
     }
 
@@ -63,7 +63,7 @@ public class IssueCommentController : SxpController
             return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
         }
 
-        var resultOnGet = await this.issueCommentService.GetAllByIssueKeyAsync(issueKey, cancellationToken);
+        var resultOnGet = await this.commentService.GetAllByIssueKeyAsync(issueKey, cancellationToken);
         return ApiResponse(resultOnGet);
     }
 
@@ -76,7 +76,7 @@ public class IssueCommentController : SxpController
             return result;
         }
 
-        var resultOnUpdate = await this.issueCommentService.UpdateByIdAsync(updateObj.Id, updateObj, cancellationToken);
+        var resultOnUpdate = await this.commentService.UpdateByIdAsync(updateObj.Id, updateObj, cancellationToken);
         return ApiResponse(resultOnUpdate);
     }
 
@@ -89,7 +89,7 @@ public class IssueCommentController : SxpController
             return result;
         }
 
-        var resultOnDelete = await this.issueCommentService.DeleteByIdAsync(commentId, cancellationToken);
+        var resultOnDelete = await this.commentService.DeleteByIdAsync(commentId, cancellationToken);
         return ApiResponse(resultOnDelete);
     }
 }
