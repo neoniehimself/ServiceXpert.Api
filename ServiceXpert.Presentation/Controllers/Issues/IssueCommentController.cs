@@ -13,16 +13,16 @@ public class IssueCommentController : SxpController
     private readonly IIssueService issueService;
     private readonly IIssueCommentService issueCommentService;
 
-    public IssueCommentController(IIssueService issueService, IIssueCommentService issueCommentService)
+    public IssueCommentController(IIssueService issueService, IIssueCommentService commentService)
     {
         this.issueService = issueService;
-        this.issueCommentService = issueCommentService;
+        this.issueCommentService = commentService;
     }
 
     [NonAction]
-    private async Task<(bool IsSuccess, IActionResult Result)> ValidateIssueKey(string issueKey, string dataObjectIssueKey, CancellationToken cancellationToken = default)
+    private async Task<(bool IsSuccess, IActionResult Result)> ValidateIssueKey(string issueKey, string dataObjIssueKey, CancellationToken cancellationToken = default)
     {
-        if (!string.Equals(issueKey, dataObjectIssueKey))
+        if (!string.Equals(issueKey, dataObjIssueKey))
         {
             return (false, BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"])));
         }
@@ -42,15 +42,15 @@ public class IssueCommentController : SxpController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(string issueKey, CreateIssueCommentDataObject createIssueComment, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateAsync(string issueKey, CreateIssueCommentDataObject createObj, CancellationToken cancellationToken = default)
     {
-        var validationResult = await ValidateIssueKey(issueKey, createIssueComment.IssueKey, cancellationToken);
-        if (!validationResult.IsSuccess)
+        var (isSuccess, result) = await ValidateIssueKey(issueKey, createObj.IssueKey, cancellationToken);
+        if (!isSuccess)
         {
-            return validationResult.Result;
+            return result;
         }
 
-        var resultOnCreate = await this.issueCommentService.CreateAsync(createIssueComment, cancellationToken);
+        var resultOnCreate = await this.issueCommentService.CreateAsync(createObj, cancellationToken);
         return ApiResponse(resultOnCreate);
     }
 
@@ -58,7 +58,6 @@ public class IssueCommentController : SxpController
     public async Task<IActionResult> GetAllByIssueKeyAsync(string issueKey, CancellationToken cancellationToken = default)
     {
         var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
-
         if (!resultOnExists.IsSuccess)
         {
             return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
@@ -69,28 +68,28 @@ public class IssueCommentController : SxpController
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueCommentDataObject updateIssueComment, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueCommentDataObject updateObj, CancellationToken cancellationToken = default)
     {
-        var validationResult = await ValidateIssueKey(issueKey, updateIssueComment.IssueKey, cancellationToken);
-        if (!validationResult.IsSuccess)
+        var (isSuccess, result) = await ValidateIssueKey(issueKey, updateObj.IssueKey, cancellationToken);
+        if (!isSuccess)
         {
-            return validationResult.Result;
+            return result;
         }
 
-        var resultOnUpdate = await this.issueCommentService.UpdateByIdAsync(updateIssueComment.Id, updateIssueComment, cancellationToken);
+        var resultOnUpdate = await this.issueCommentService.UpdateByIdAsync(updateObj.Id, updateObj, cancellationToken);
         return ApiResponse(resultOnUpdate);
     }
 
-    [HttpDelete("{issueCommentId}")]
-    public async Task<IActionResult> DeleteByIdAsync(string issueKey, Guid issueCommentId, CancellationToken cancellationToken = default)
+    [HttpDelete("{commentId}")]
+    public async Task<IActionResult> DeleteByIdAsync(string issueKey, Guid commentId, CancellationToken cancellationToken = default)
     {
-        var validationResult = await ValidateIssueKey(issueKey, issueKey, cancellationToken);
-        if (!validationResult.IsSuccess)
+        var (isSuccess, result) = await ValidateIssueKey(issueKey, issueKey, cancellationToken);
+        if (!isSuccess)
         {
-            return validationResult.Result;
+            return result;
         }
 
-        var resultOnDelete = await this.issueCommentService.DeleteByIdAsync(issueCommentId, cancellationToken);
+        var resultOnDelete = await this.issueCommentService.DeleteByIdAsync(commentId, cancellationToken);
         return ApiResponse(resultOnDelete);
     }
 }

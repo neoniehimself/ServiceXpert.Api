@@ -19,36 +19,35 @@ public class IssueController : SxpController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(CreateIssueDataObject createIssue, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateAsync(CreateIssueDataObject createObj, CancellationToken cancellationToken = default)
     {
         if (!this.ModelState.IsValid)
         {
             return BadRequestInvalidModelState();
         }
 
-        var resultOnCreate = await this.issueService.CreateAsync(createIssue, cancellationToken);
+        var resultOnCreate = await this.issueService.CreateAsync(createObj, cancellationToken);
         return ApiResponse(resultOnCreate);
     }
 
     [HttpGet("{issueKey}")]
     public async Task<IActionResult> GetByIssueKeyAsync(string issueKey, CancellationToken cancellationToken = default)
     {
-        var resultOnGet = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken: cancellationToken);
+        var resultOnGet = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
         return ApiResponse(resultOnGet);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetPagedIssuesAsync([FromQuery] GetPagedIssuesQueryOption queryOption, CancellationToken cancellationToken = default)
     {
-        var resultOnGet = await this.issueService.GetPagedIssuesAsync(queryOption, cancellationToken: cancellationToken);
+        var resultOnGet = await this.issueService.GetPagedIssuesAsync(queryOption, cancellationToken);
         return ApiResponse(resultOnGet);
     }
 
     [HttpPut("{issueKey}")]
-    public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueDataObject updateIssue, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueDataObject updateObj, CancellationToken cancellationToken = default)
     {
         var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
-
         if (!resultOnExists.IsSuccess)
         {
             return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
@@ -59,7 +58,7 @@ public class IssueController : SxpController
             return BadRequestInvalidModelState();
         }
 
-        var resultOnUpdate = await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromKey(issueKey), updateIssue, cancellationToken);
+        var resultOnUpdate = await this.issueService.UpdateByIdAsync(IssueUtil.GetIdFromKey(issueKey), updateObj, cancellationToken);
         return ApiResponse(resultOnUpdate);
     }
 }

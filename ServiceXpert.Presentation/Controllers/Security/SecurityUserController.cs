@@ -29,7 +29,7 @@ public class SecurityUserController : SxpController
     [HttpGet]
     public async Task<IActionResult> GetPagedUsersAsync([FromQuery] GetPagedUsersQueryOption queryOption, CancellationToken cancellationToken = default)
     {
-        var resultOnGet = await this.securityUserService.GetPagedUsersAsync(queryOption, cancellationToken: cancellationToken);
+        var resultOnGet = await this.securityUserService.GetPagedUsersAsync(queryOption, cancellationToken);
         return ApiResponse(resultOnGet);
     }
 }

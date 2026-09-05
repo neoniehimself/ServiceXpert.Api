@@ -24,7 +24,9 @@ internal class SecurityProfileService : ServiceBase<Guid, SecurityProfile, Secur
     {
         if (createDataObject is not CreateSecurityProfileDataObject)
         {
-            return ServiceResult<Guid>.Fail(ServiceResultStatus.ValidationError, ["The data object must be of type " + nameof(CreateSecurityProfileDataObject)]);
+            return ServiceResult<Guid>.Fail(
+                ServiceResultStatus.ValidationError,
+                ["The data object must be of type " + nameof(CreateSecurityProfileDataObject)]);
         }
 
         var userProfile = this.mapper.Map<SecurityProfile>(createDataObject);
@@ -39,7 +41,6 @@ internal class SecurityProfileService : ServiceBase<Guid, SecurityProfile, Secur
     {
         var profiles = await this.userProfileRepository.SearchProfileByName(name, cancellationToken);
         var profilesToReturn = profiles.Adapt<IEnumerable<SecurityProfileDataObject>>();
-
         return ServiceResult<IEnumerable<SecurityProfileDataObject>>.Ok(profilesToReturn);
     }
 }

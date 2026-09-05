@@ -6,11 +6,11 @@ namespace ServiceXpert.Infrastructure.Extensions;
 
 internal static class QueryableExtensions
 {
-    internal static IQueryable<T> ApplyIncludeOptions<T>(this IQueryable<T> query, IncludeOption<T>? includeOptions = null) where T : class, IEntityBase
+    internal static IQueryable<T> ApplyIncludeOption<T>(this IQueryable<T> query, IncludeOption<T> includeOption) where T : class, IEntityBase
     {
-        if (includeOptions?.Includes is { Count: > 0 })
+        if (includeOption.Includes is { Count: > 0 })
         {
-            foreach (var include in includeOptions.Includes)
+            foreach (var include in includeOption.Includes)
             {
                 query = query.Include(include);
             }

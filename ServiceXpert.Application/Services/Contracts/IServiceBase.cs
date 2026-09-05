@@ -14,11 +14,17 @@ public interface IServiceBase<TId, TEntity, TDataObject>
 
     Task<ServiceResult> DeleteByIdAsync(TId id, CancellationToken cancellationToken = default);
 
-    Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(CancellationToken cancellationToken = default);
 
-    Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<ServiceResult<IEnumerable<TDataObject>>> GetAllAsync(IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default);
 
-    Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOption<TEntity>? includeOptions = null, CancellationToken cancellationToken = default);
+    Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
+
+    Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default);
+
+    Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+
+    Task<ServiceResult<PaginationResult<TDataObject>>> GetPagedAllAsync(int pageNumber, int pageSize, IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default);
 
     Task<ServiceResult> IsExistsByIdAsync(TId id, CancellationToken cancellationToken = default);
 

@@ -23,7 +23,7 @@ public class SecurityProfileController : SxpController
     [HttpGet("{profileId:guid}")]
     public async Task<IActionResult> GetProfileByIdAsync(Guid profileId, CancellationToken cancellationToken = default)
     {
-        var resultOnGet = await this.securityProfileService.GetByIdAsync(profileId, cancellationToken: cancellationToken);
+        var resultOnGet = await this.securityProfileService.GetByIdAsync(profileId, cancellationToken);
         return ApiResponse(resultOnGet);
     }
 }

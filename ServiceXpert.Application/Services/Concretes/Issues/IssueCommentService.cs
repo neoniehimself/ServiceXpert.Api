@@ -34,7 +34,6 @@ internal class IssueCommentService : ServiceBase<Guid, IssueComment, IssueCommen
             cancellationToken);
 
         var commentsToReturn = comments.Adapt<ICollection<IssueCommentDataObject>>();
-
         return ServiceResult<IEnumerable<IssueCommentDataObject>>.Ok(commentsToReturn);
     }
 }

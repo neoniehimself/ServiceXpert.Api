@@ -51,18 +51,21 @@ public static class ServiceContainer
                 ValidateAudience = false,
                 ValidIssuer = configuration["Jwt:Issuer"],
                 ClockSkew = TimeSpan.Zero,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection(
-                        nameof(SxpConfiguration)).Get<SxpConfiguration>()!.JwtSecretKey)
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(configuration.GetSection(nameof(SxpConfiguration))
+                    .Get<SxpConfiguration>()!.JwtSecretKey)
                 )
             };
         });
 
         var authBuilder = services.AddAuthorizationBuilder();
 
-        authBuilder.AddPolicy(nameof(Domain.Enums.Security.SecurityPolicy.AdminOnly),
+        authBuilder.AddPolicy(
+            nameof(Domain.Enums.Security.SecurityPolicy.AdminOnly),
             policy => policy.RequireRole(nameof(Domain.Enums.Security.SecurityRole.Admin)));
 
-        authBuilder.AddPolicy(nameof(Domain.Enums.Security.SecurityPolicy.UserOnly),
+        authBuilder.AddPolicy(
+            nameof(Domain.Enums.Security.SecurityPolicy.UserOnly),
             policy => policy.RequireRole(nameof(Domain.Enums.Security.SecurityRole.User)));
         #endregion
 

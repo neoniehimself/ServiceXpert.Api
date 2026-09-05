@@ -46,11 +46,9 @@ internal class SecurityUserService : ISecurityUserService
     public async Task<ServiceResult<string>> LoginAsync(LoginUser loginUser)
     {
         var securityUser = await this.userManager.FindByNameAsync(loginUser.UserName);
-
         if (securityUser != null && await this.userManager.CheckPasswordAsync(securityUser, loginUser.Password))
         {
             var securityUserRoles = await this.userManager.GetRolesAsync(securityUser);
-
             if (!securityUserRoles.Any())
             {
                 return ServiceResult<string>.Fail(ServiceResultStatus.Unauthorized, ["No roles assigned!"]);
@@ -85,12 +83,13 @@ internal class SecurityUserService : ISecurityUserService
 
     public async Task<ServiceResult<Guid>> RegisterAsync(RegisterUser registerUser, CancellationToken cancellationToken = default)
     {
-        var result = await this.userManager.CreateAsync(new SecurityUser()
-        {
-            UserName = registerUser.UserName,
-            Email = registerUser.Email,
-            IsActive = true
-        }, registerUser.Password);
+        var result = await this.userManager.CreateAsync(
+            new SecurityUser()
+            {
+                UserName = registerUser.UserName,
+                Email = registerUser.Email,
+                IsActive = true
+            }, registerUser.Password);
 
         if (!result.Succeeded)
         {
@@ -113,7 +112,6 @@ internal class SecurityUserService : ISecurityUserService
     public async Task<ServiceResult> AssignRoleAsync(UserRole userRole)
     {
         var securityUser = await this.userManager.FindByNameAsync(userRole.UserName);
-
         if (securityUser == null)
         {
             return ServiceResult.Fail(ServiceResultStatus.NotFound, ["User not found!"]);
@@ -136,7 +134,72 @@ internal class SecurityUserService : ISecurityUserService
             : ServiceResult.Fail(ServiceResultStatus.InternalError, result.Errors.Select(e => e.Description));
     }
 
-    private static ExpressionStarter<SecurityUser> ConfigureGetPagedUsersQueryOptionFilters(GetPagedUsersQueryOption queryOption)
+    public async Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, CancellationToken cancellationToken = default)
+    {
+        int pageSize = (int)queryOption.PageSize!;
+        int pageNumber = (int)queryOption.PageNumber!;
+        var filters = GetFiltersFromGetPagedUsersQueryOption(queryOption);
+
+        var selectQuery = this.userManager.Users
+            .TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.selectQuery");
+
+        var totalCountQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.totalCountQuery");
+
+        // Check if any filters are applied
+        if (filters.IsStarted)
+        {
+            selectQuery = selectQuery.Where(filters);
+            totalCountQuery = totalCountQuery.Where(filters);
+        }
+
+        var securityUsers = await selectQuery
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        var pagination = new Pagination(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber);
+
+        var paginationResult = new PaginationResult<SecurityUserDataObject>(
+            securityUsers.Adapt<ICollection<SecurityUserDataObject>>(),
+            pagination);
+
+        return ServiceResult<PaginationResult<SecurityUserDataObject>>.Ok(paginationResult);
+    }
+
+    public async Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOption<SecurityUser> includeOption, CancellationToken cancellationToken = default)
+    {
+        int pageSize = (int)queryOption.PageSize!;
+        int pageNumber = (int)queryOption.PageNumber!;
+        var filters = GetFiltersFromGetPagedUsersQueryOption(queryOption);
+
+        var selectQuery = this.userManager.Users
+            .TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.selectQuery")
+            .ApplyIncludeOption(includeOption);
+
+        var totalCountQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.totalCountQuery");
+
+        // Check if any filters are applied
+        if (filters.IsStarted)
+        {
+            selectQuery = selectQuery.Where(filters);
+            totalCountQuery = totalCountQuery.Where(filters);
+        }
+
+        var securityUsers = await selectQuery
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        var pagination = new Pagination(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber);
+
+        var paginationResult = new PaginationResult<SecurityUserDataObject>(
+            securityUsers.Adapt<ICollection<SecurityUserDataObject>>(),
+            pagination);
+
+        return ServiceResult<PaginationResult<SecurityUserDataObject>>.Ok(paginationResult);
+    }
+
+    private static ExpressionStarter<SecurityUser> GetFiltersFromGetPagedUsersQueryOption(GetPagedUsersQueryOption queryOption)
     {
         var filters = PredicateBuilder.New<SecurityUser>(true);
 
@@ -156,34 +219,5 @@ internal class SecurityUserService : ISecurityUserService
         }
 
         return filters;
-    }
-
-    public async Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOption<SecurityUser>? includeOptions = null, CancellationToken cancellationToken = default)
-    {
-        int pageSize = (int)queryOption.PageSize!;
-        int pageNumber = (int)queryOption.PageNumber!;
-        var filters = ConfigureGetPagedUsersQueryOptionFilters(queryOption);
-
-        var selectQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.selectQuery").ApplyIncludeOptions(includeOptions);
-        var totalCountQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.totalCountQuery");
-
-        // Check if any filters are applied
-        if (filters.IsStarted)
-        {
-            selectQuery = selectQuery.Where(filters);
-            totalCountQuery = totalCountQuery.Where(filters);
-        }
-
-        var securityUsers = await selectQuery
-            .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
-
-        var paginationResult = new PaginationResult<SecurityUserDataObject>(
-            securityUsers.Adapt<ICollection<SecurityUserDataObject>>(),
-            new Pagination(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber)
-        );
-
-        return ServiceResult<PaginationResult<SecurityUserDataObject>>.Ok(paginationResult);
     }
 }
