@@ -33,7 +33,7 @@ public class IssueController : SxpController
     [HttpGet("{issueKey}")]
     public async Task<IActionResult> GetByIssueKeyAsync(string issueKey, CancellationToken cancellationToken = default)
     {
-        var resultOnGet = await this.issueService.GetByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
+        var resultOnGet = await this.issueService.GetByKeyAsync(issueKey, cancellationToken);
         return ApiResponse(resultOnGet);
     }
 
@@ -47,7 +47,7 @@ public class IssueController : SxpController
     [HttpPut("{issueKey}")]
     public async Task<IActionResult> UpdateAsync(string issueKey, UpdateIssueDataObject updateObj, CancellationToken cancellationToken = default)
     {
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
+        var resultOnExists = await this.issueService.IsExistsByKeyAsync(issueKey, cancellationToken);
         if (!resultOnExists.IsSuccess)
         {
             return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));

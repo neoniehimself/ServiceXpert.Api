@@ -37,11 +37,6 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
         ];
     }
 
-    public override Task<ServiceResult<IssueDataObject>> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-    {
-        return base.GetByIdAsync(id, new IncludeOption<Issue>(GetRequiredNavigations()), cancellationToken);
-    }
-
     private static ExpressionStarter<Issue> GetFiltersFromGetPagedIssuesQueryOptionFilters(GetPagedIssuesQueryOption queryOption)
     {
         var filters = PredicateBuilder.New<Issue>(true);
@@ -121,5 +116,15 @@ internal class IssueService : ServiceBase<int, Issue, IssueDataObject>, IIssueSe
         {
             return ServiceResult<PaginationResult<IssueDataObject>>.Fail(ServiceResultStatus.InternalError, [e.Message]);
         }
+    }
+
+    public async Task<ServiceResult<IssueDataObject>> GetByKeyAsync(string issueKey, CancellationToken cancellationToken = default)
+    {
+        return await base.GetByIdAsync(IssueUtil.GetIdFromKey(issueKey), new IncludeOption<Issue>(GetRequiredNavigations()), cancellationToken);
+    }
+
+    public async Task<ServiceResult> IsExistsByKeyAsync(string issueKey, CancellationToken cancellationToken = default)
+    {
+        return await base.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
     }
 }

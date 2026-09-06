@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.DataObjects.Issues;
 using ServiceXpert.Application.Services.Contracts.Issues;
-using ServiceXpert.Application.Utils;
 using System.Net;
 
 namespace ServiceXpert.Presentation.Controllers.Issues;
@@ -27,7 +26,7 @@ public class IssueCommentController : SxpController
             return (false, BadRequest(Models.ApiResponse.Fail(HttpStatusCode.BadRequest, ["URL's issue key and comment's issue key does not match"])));
         }
 
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
+        var resultOnExists = await this.issueService.IsExistsByKeyAsync(issueKey, cancellationToken);
         if (!resultOnExists.IsSuccess)
         {
             return (false, NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors)));
@@ -57,7 +56,7 @@ public class IssueCommentController : SxpController
     [HttpGet]
     public async Task<IActionResult> GetAllByIssueKeyAsync(string issueKey, CancellationToken cancellationToken = default)
     {
-        var resultOnExists = await this.issueService.IsExistsByIdAsync(IssueUtil.GetIdFromKey(issueKey), cancellationToken);
+        var resultOnExists = await this.issueService.IsExistsByKeyAsync(issueKey, cancellationToken);
         if (!resultOnExists.IsSuccess)
         {
             return NotFound(Models.ApiResponse.Fail(HttpStatusCode.NotFound, resultOnExists.Errors));
