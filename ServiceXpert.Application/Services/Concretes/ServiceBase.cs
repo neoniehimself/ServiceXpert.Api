@@ -43,7 +43,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
     public virtual async Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
         TEntity? entity = await this.repositoryBase.GetByIdAsync(id, cancellationToken);
-        return entity != null
+        return entity is not null
             ? ServiceResult<TDataObject>.Ok(entity.Adapt<TDataObject>())
             : ServiceResult<TDataObject>.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity).Name} not found. Id: {id}"]);
     }
@@ -51,7 +51,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
     public virtual async Task<ServiceResult<TDataObject>> GetByIdAsync(TId id, IncludeOption<TEntity> includeOption, CancellationToken cancellationToken = default)
     {
         TEntity? entity = await this.repositoryBase.GetByIdAsync(id, includeOption, cancellationToken);
-        return entity != null
+        return entity is not null
             ? ServiceResult<TDataObject>.Ok(entity.Adapt<TDataObject>())
             : ServiceResult<TDataObject>.Fail(ServiceResultStatus.NotFound, [$"{typeof(TEntity).Name} not found. Id: {id}"]);
     }
@@ -66,7 +66,7 @@ internal abstract class ServiceBase<TId, TEntity, TDataObject> : IServiceBase<TI
     public virtual async Task<ServiceResult> UpdateByIdAsync<TUpdateDataObject>(TId id, TUpdateDataObject updateDataObject, CancellationToken cancellationToken = default) where TUpdateDataObject : UpdateDataObjectBase
     {
         TEntity? entityToUpdate = await this.repositoryBase.GetByIdAsync(id, cancellationToken);
-        if (entityToUpdate != null)
+        if (entityToUpdate is not null)
         {
             /* Attach the entity to the change tracker before updating or mapping data
              * to ensure that only modified values are persisted. */

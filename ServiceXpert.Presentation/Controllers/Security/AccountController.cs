@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceXpert.Application.Models.Auth;
 using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Enums.Security;
+using System.Security.Claims;
 
 namespace ServiceXpert.Presentation.Controllers.Security;
 
@@ -41,5 +42,13 @@ public class AccountController : SxpController
 
         var result = await this.securityUserService.LoginAsync(loginUser);
         return ApiResponse(result);
+    }
+
+    [HttpPost("UpdatePasswordByUserName")]
+    public async Task<IActionResult> UpdatePasswordByUserNameAsync(PasswordUpdate passwordUpdate, CancellationToken cancellationToken = default)
+    {
+        var userName = this.User.FindFirstValue(ClaimTypes.Name);
+        var resultOnUpdate = await this.securityUserService.UpdatePasswordByUserNameAsync(userName, passwordUpdate, cancellationToken);
+        return ApiResponse(resultOnUpdate);
     }
 }

@@ -2,8 +2,6 @@
 using ServiceXpert.Application.Models;
 using ServiceXpert.Application.Models.Auth;
 using ServiceXpert.Application.Models.Security.QueryOptions;
-using ServiceXpert.Domain.Entities.Security;
-using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.ValueObjects.Pagination;
 
 namespace ServiceXpert.Application.Services.Contracts.Security;
@@ -18,5 +16,5 @@ public interface ISecurityUserService
 
     Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, CancellationToken cancellationToken = default);
 
-    Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOption<SecurityUser> includeOption, CancellationToken cancellationToken = default);
+    Task<ServiceResult> UpdatePasswordByUserNameAsync(string? userName, PasswordUpdate passwordUpdate, CancellationToken cancellationToken = default);
 }

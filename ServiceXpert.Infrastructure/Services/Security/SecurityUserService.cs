@@ -12,9 +12,7 @@ using ServiceXpert.Application.Models.Auth;
 using ServiceXpert.Application.Models.Security.QueryOptions;
 using ServiceXpert.Application.Services.Contracts.Security;
 using ServiceXpert.Domain.Entities.Security;
-using ServiceXpert.Domain.Helpers.Persistence.Includes;
 using ServiceXpert.Domain.ValueObjects.Pagination;
-using ServiceXpert.Infrastructure.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -46,7 +44,7 @@ internal class SecurityUserService : ISecurityUserService
     public async Task<ServiceResult<string>> LoginAsync(LoginUser loginUser)
     {
         var securityUser = await this.userManager.FindByNameAsync(loginUser.UserName);
-        if (securityUser != null && await this.userManager.CheckPasswordAsync(securityUser, loginUser.Password))
+        if (securityUser is not null && await this.userManager.CheckPasswordAsync(securityUser, loginUser.Password))
         {
             var securityUserRoles = await this.userManager.GetRolesAsync(securityUser);
             if (!securityUserRoles.Any())
@@ -56,8 +54,8 @@ internal class SecurityUserService : ISecurityUserService
 
             var claims = new List<Claim>
             {
-                new(JwtRegisteredClaimNames.Sub, securityUser.Id.ToString()), // Equivalent of  ClaimTypes.NameIdentifier
-                new(JwtRegisteredClaimNames.UniqueName, securityUser.UserName!),
+                new(JwtRegisteredClaimNames.Sub, securityUser.Id.ToString()), // ClaimTypes.NameIdentifier
+                new(JwtRegisteredClaimNames.UniqueName, securityUser.UserName!), // ClaimTypes.Name
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
@@ -112,7 +110,7 @@ internal class SecurityUserService : ISecurityUserService
     public async Task<ServiceResult> AssignRoleAsync(UserRole userRole)
     {
         var securityUser = await this.userManager.FindByNameAsync(userRole.UserName);
-        if (securityUser == null)
+        if (securityUser is null)
         {
             return ServiceResult.Fail(ServiceResultStatus.NotFound, ["User not found!"]);
         }
@@ -140,42 +138,7 @@ internal class SecurityUserService : ISecurityUserService
         int pageNumber = (int)queryOption.PageNumber!;
         var filters = GetFiltersFromGetPagedUsersQueryOption(queryOption);
 
-        var selectQuery = this.userManager.Users
-            .TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.selectQuery");
-
-        var totalCountQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.totalCountQuery");
-
-        // Check if any filters are applied
-        if (filters.IsStarted)
-        {
-            selectQuery = selectQuery.Where(filters);
-            totalCountQuery = totalCountQuery.Where(filters);
-        }
-
-        var securityUsers = await selectQuery
-            .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
-
-        var pagination = new Pagination(await totalCountQuery.CountAsync(cancellationToken), pageSize, pageNumber);
-
-        var paginationResult = new PaginationResult<SecurityUserDataObject>(
-            securityUsers.Adapt<ICollection<SecurityUserDataObject>>(),
-            pagination);
-
-        return ServiceResult<PaginationResult<SecurityUserDataObject>>.Ok(paginationResult);
-    }
-
-    public async Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, IncludeOption<SecurityUser> includeOption, CancellationToken cancellationToken = default)
-    {
-        int pageSize = (int)queryOption.PageSize!;
-        int pageNumber = (int)queryOption.PageNumber!;
-        var filters = GetFiltersFromGetPagedUsersQueryOption(queryOption);
-
-        var selectQuery = this.userManager.Users
-            .TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.selectQuery")
-            .ApplyIncludeOption(includeOption);
-
+        var selectQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.selectQuery");
         var totalCountQuery = this.userManager.Users.TagWith($"{nameof(SecurityUserService)}.{nameof(GetPagedUsersAsync)}.totalCountQuery");
 
         // Check if any filters are applied
@@ -219,5 +182,27 @@ internal class SecurityUserService : ISecurityUserService
         }
 
         return filters;
+    }
+
+    public async Task<ServiceResult> UpdatePasswordByUserNameAsync(string? userName, PasswordUpdate passwordUpdate, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            return ServiceResult.Fail(ServiceResultStatus.Unauthorized, ["Invalid UserName!"]);
+        }
+
+        var user = await this.userManager.FindByNameAsync(userName);
+        if (user is null)
+        {
+            return ServiceResult.Fail(ServiceResultStatus.NotFound, ["User not found!"]);
+        }
+
+        var result = await this.userManager.ChangePasswordAsync(user, passwordUpdate.CurrentPassword, passwordUpdate.NewPassword);
+        if (!result.Succeeded)
+        {
+            return ServiceResult.Fail(ServiceResultStatus.ValidationError, result.Errors.Select(e => e.Description));
+        }
+
+        return ServiceResult.Ok();
     }
 }

@@ -3,6 +3,7 @@
 
 ### Kestrel
 @Presentation_HostAddress = https://localhost:7090
+### @BearerToken =
 
 ### Endpoint: Login
 
@@ -12,7 +13,7 @@ Accept: application/json
 
 {
   "username": "admin",
-  "password": "admin"
+  "password": "P@ssw0rd123!"
 }
 
 ### Endpoint: Register
@@ -28,6 +29,18 @@ Authorization: Bearer {{BearerToken}}
   "email": "j.doe@noemail.com",
   "firstName": "John",
   "lastName": "Doe"
+}
+
+###
+
+POST {{Presentation_HostAddress}}/Security/Accounts/UpdatePasswordByUserName
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "currentPassword": "admin",
+  "newPassword": "P@ssw0rd123!"
 }
 
 ###
