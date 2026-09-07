@@ -52,36 +52,42 @@ internal class SecurityUserService : ISecurityUserService
                 return ServiceResult<string>.Fail(ServiceResultStatus.Unauthorized, ["No roles assigned!"]);
             }
 
-            var claims = new List<Claim>
-            {
-                new(JwtRegisteredClaimNames.Sub, securityUser.Id.ToString()), // ClaimTypes.NameIdentifier
-                new(JwtRegisteredClaimNames.UniqueName, securityUser.UserName!), // ClaimTypes.Name
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-
-            claims.AddRange(securityUserRoles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.sxpConfiguration.JwtSecretKey));
-            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var securityToken = new JwtSecurityToken
-            (
-                issuer: this.configuration["Jwt:Issuer"],
-                audience: this.configuration["Jwt:Audience"],
-                signingCredentials: signingCredentials,
-                claims: claims,
-                expires: DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt16(this.configuration["Jwt:ExpiresInMinutes"])).UtcDateTime
-            );
-
-            return ServiceResult<string>.Ok(new JwtSecurityTokenHandler().WriteToken(securityToken));
+            return ServiceResult<string>.Ok(new JwtSecurityTokenHandler().WriteToken(GetJwtSecurityToken(securityUser, securityUserRoles)));
         }
 
         return ServiceResult<string>.Fail(ServiceResultStatus.Unauthorized, ["Invalid username or password!"]);
     }
 
+    private JwtSecurityToken GetJwtSecurityToken(SecurityUser securityUser, IList<string> securityUserRoles)
+    {
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.sxpConfiguration.JwtSecretKey));
+        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        return new JwtSecurityToken
+        (
+            issuer: this.configuration["Jwt:Issuer"],
+            audience: this.configuration["Jwt:Audience"],
+            signingCredentials: signingCredentials,
+            claims: GetTokenClaims(securityUser, securityUserRoles),
+            expires: DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt16(this.configuration["Jwt:ExpiresInMinutes"])).UtcDateTime
+        );
+    }
+
+    private static List<Claim> GetTokenClaims(SecurityUser securityUser, IList<string> securityUserRoles)
+    {
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, securityUser.Id.ToString()), // ClaimTypes.NameIdentifier
+            new(JwtRegisteredClaimNames.UniqueName, securityUser.UserName!), // ClaimTypes.Name
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        claims.AddRange(securityUserRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+        return claims;
+    }
+
     public async Task<ServiceResult<Guid>> RegisterAsync(RegisterUser registerUser, CancellationToken cancellationToken = default)
     {
-        var result = await this.userManager.CreateAsync(
+        var identityResult = await this.userManager.CreateAsync(
             new SecurityUser()
             {
                 UserName = registerUser.UserName,
@@ -89,11 +95,17 @@ internal class SecurityUserService : ISecurityUserService
                 IsActive = true
             }, registerUser.Password);
 
-        if (!result.Succeeded)
+        if (!identityResult.Succeeded)
         {
-            return ServiceResult<Guid>.Fail(ServiceResultStatus.ValidationError, result.Errors.Select(e => e.Description));
+            return ServiceResult<Guid>.Fail(ServiceResultStatus.ValidationError, identityResult.Errors.Select(e => e.Description));
         }
 
+        var userId = await CreateSecurityProfile(registerUser, cancellationToken);
+        return ServiceResult<Guid>.Ok(userId);
+    }
+
+    private async Task<Guid> CreateSecurityProfile(RegisterUser registerUser, CancellationToken cancellationToken = default)
+    {
         var securityUser = await this.userManager.FindByNameAsync(registerUser.UserName);
 
         var config = new TypeAdapterConfig();
@@ -103,8 +115,7 @@ internal class SecurityUserService : ISecurityUserService
 
         var securityProfile = registerUser.Adapt<CreateSecurityProfileDataObject>(config);
         await this.securityProfileService.CreateAsync(securityProfile, cancellationToken);
-
-        return ServiceResult<Guid>.Ok(securityUser!.Id);
+        return securityUser!.Id;
     }
 
     public async Task<ServiceResult> AssignRoleAsync(UserRole userRole)

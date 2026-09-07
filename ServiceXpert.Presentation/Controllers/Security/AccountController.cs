@@ -18,19 +18,6 @@ public class AccountController : SxpController
         this.securityUserService = securityUserService;
     }
 
-    [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
-    [HttpPost("Register")]
-    public async Task<IActionResult> RegisterAsync(RegisterUser registerUser, CancellationToken cancellationToken = default)
-    {
-        if (!this.ModelState.IsValid)
-        {
-            return BadRequestInvalidModelState();
-        }
-
-        var result = await this.securityUserService.RegisterAsync(registerUser, cancellationToken);
-        return ApiResponse(result);
-    }
-
     [AllowAnonymous]
     [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync(LoginUser loginUser)
@@ -41,6 +28,19 @@ public class AccountController : SxpController
         }
 
         var result = await this.securityUserService.LoginAsync(loginUser);
+        return ApiResponse(result);
+    }
+
+    [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
+    [HttpPost("Register")]
+    public async Task<IActionResult> RegisterAsync(RegisterUser registerUser, CancellationToken cancellationToken = default)
+    {
+        if (!this.ModelState.IsValid)
+        {
+            return BadRequestInvalidModelState();
+        }
+
+        var result = await this.securityUserService.RegisterAsync(registerUser, cancellationToken);
         return ApiResponse(result);
     }
 
