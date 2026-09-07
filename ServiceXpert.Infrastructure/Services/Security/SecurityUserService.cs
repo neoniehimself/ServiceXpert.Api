@@ -216,4 +216,29 @@ internal class SecurityUserService : ISecurityUserService
 
         return ServiceResult.Ok();
     }
+
+    public async Task<ServiceResult> RemoveRoleAsync(UserRole userRole)
+    {
+        var securityUser = await this.userManager.FindByNameAsync(userRole.UserName);
+        if (securityUser is null)
+        {
+            return ServiceResult.Fail(ServiceResultStatus.NotFound, ["User not found!"]);
+        }
+
+        if (!await this.roleManager.RoleExistsAsync(userRole.RoleName))
+        {
+            return ServiceResult.Fail(ServiceResultStatus.NotFound, ["Role not found!"]);
+        }
+
+        if (!await this.userManager.IsInRoleAsync(securityUser, userRole.RoleName))
+        {
+            var errorMsg = $"User {userRole.UserName} is not assigned with role: {userRole.RoleName}";
+            return ServiceResult.Fail(ServiceResultStatus.ValidationError, [errorMsg]);
+        }
+
+        var result = await this.userManager.RemoveFromRoleAsync(securityUser, userRole.RoleName);
+        return result.Succeeded
+            ? ServiceResult.Ok()
+            : ServiceResult.Fail(ServiceResultStatus.InternalError, result.Errors.Select(e => e.Description));
+    }
 }

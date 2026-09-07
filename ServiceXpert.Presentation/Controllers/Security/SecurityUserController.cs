@@ -20,10 +20,18 @@ public class SecurityUserController : SxpController
 
     [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
     [HttpPost("AssignRoleToUser")]
-    public async Task<IActionResult> AssignRoleToSecurityUserAsync(UserRole userRole)
+    public async Task<IActionResult> AssignRoleToUserAsync(UserRole userRole)
     {
         var resultOnAssign = await this.securityUserService.AssignRoleAsync(userRole);
         return ApiResponse(resultOnAssign);
+    }
+
+    [Authorize(Policy = nameof(SecurityPolicy.AdminOnly))]
+    [HttpPost("RemoveRoleToUser")]
+    public async Task<IActionResult> RemoveRoleToUserAsync(UserRole userRole)
+    {
+        var resultOnRemove = await this.securityUserService.RemoveRoleAsync(userRole);
+        return ApiResponse(resultOnRemove);
     }
 
     [HttpGet]

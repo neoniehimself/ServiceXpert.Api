@@ -5,9 +5,21 @@
 @Presentation_HostAddress = https://localhost:7090
 ### @BearerToken =
 
-### Endpoint: AssignRoleToSecurityUser
+### Endpoint: AssignRoleToUser
 
 POST {{Presentation_HostAddress}}/Security/Users/AssignRoleToUser
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "username": "jdoe",
+  "roleName": "User"
+}
+
+### Endpoint: RemoveRoleToUser
+
+POST {{Presentation_HostAddress}}/Security/Users/RemoveRoleToUser
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{BearerToken}}

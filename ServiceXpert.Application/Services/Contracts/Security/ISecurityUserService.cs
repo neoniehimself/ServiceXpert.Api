@@ -14,6 +14,8 @@ public interface ISecurityUserService
 
     Task<ServiceResult> AssignRoleAsync(UserRole userRole);
 
+    Task<ServiceResult> RemoveRoleAsync(UserRole userRole);
+
     Task<ServiceResult<PaginationResult<SecurityUserDataObject>>> GetPagedUsersAsync(GetPagedUsersQueryOption queryOption, CancellationToken cancellationToken = default);
 
     Task<ServiceResult> UpdatePasswordByUserNameAsync(string? userName, PasswordUpdate passwordUpdate, CancellationToken cancellationToken = default);
