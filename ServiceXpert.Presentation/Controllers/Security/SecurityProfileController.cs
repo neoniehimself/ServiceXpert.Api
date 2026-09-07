@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ServiceXpert.Application.DataObjects.Security;
 using ServiceXpert.Application.Services.Contracts.Security;
 
 namespace ServiceXpert.Presentation.Controllers.Security;
@@ -14,16 +15,23 @@ public class SecurityProfileController : SxpController
         this.securityProfileService = securityProfileService;
     }
 
-    [HttpGet("SearchProfileByName")]
-    public async Task<IActionResult> SearchProfileByNameAsync(string name, CancellationToken cancellationToken = default)
+    [HttpGet("GetMatchingProfilesByName")]
+    public async Task<IActionResult> GetMatchingProfilesByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return ApiResponse(await this.securityProfileService.SearchProfileByName(name, cancellationToken));
+        return ApiResponse(await this.securityProfileService.GetMatchingProfilesByNameAsync(name, cancellationToken));
     }
 
     [HttpGet("{profileId:guid}")]
-    public async Task<IActionResult> GetProfileByIdAsync(Guid profileId, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetByIdAsync(Guid profileId, CancellationToken cancellationToken = default)
     {
         var resultOnGet = await this.securityProfileService.GetByIdAsync(profileId, cancellationToken);
         return ApiResponse(resultOnGet);
+    }
+
+    [HttpPut("{profileId:guid}")]
+    public async Task<IActionResult> UpdateAsync(Guid profileId, UpdateSecurityProfileDataObject updateObj, CancellationToken cancellationToken = default)
+    {
+        var resultOnUpdate = await this.securityProfileService.UpdateByIdAsync(profileId, updateObj, cancellationToken);
+        return ApiResponse(resultOnUpdate);
     }
 }

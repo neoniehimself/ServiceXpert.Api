@@ -1,0 +1,27 @@
+### IIS 
+### @Presentation_HostAddress = http://localhost:8081
+
+### Kestrel
+@Presentation_HostAddress = https://localhost:7090
+### @BearerToken =
+
+### Endpoint: AssignRoleToSecurityUser
+
+POST {{Presentation_HostAddress}}/Security/Users/AssignRoleToUser
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "username": "jdoe",
+  "roleName": "User"
+}
+
+### Endpoint: GetPagedUsersAsync
+
+GET {{Presentation_HostAddress}}/Security/Users
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{BearerToken}}
+
+###

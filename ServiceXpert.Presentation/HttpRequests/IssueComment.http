@@ -1,0 +1,46 @@
+### IIS 
+### @Presentation_HostAddress = http://localhost:8081
+
+### Kestrel
+@Presentation_HostAddress = https://localhost:7090
+### @BearerToken =
+
+### Endpoint: CreateAsync
+
+POST {{Presentation_HostAddress}}/Issues/SXP-1/Comments
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "content": "This is a comment",
+  "issueKey": "SXP-1"
+}
+
+### Endpoint: GetAllByIssueKeyAsync
+
+GET {{Presentation_HostAddress}}/Issues/SXP-1/Comments
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+### Endpoint: UpdateAsync
+
+PUT {{Presentation_HostAddress}}/Issues/SXP-1/Comments
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "id": "{{id}}",
+  "content": "This is a comment - Updated",
+  "issueKey": "SXP-1"
+}
+
+### Endpoint: DeleteByIdAsync
+
+DELETE {{Presentation_HostAddress}}/Issues/SXP-1/Comments/{{Id}}
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+###

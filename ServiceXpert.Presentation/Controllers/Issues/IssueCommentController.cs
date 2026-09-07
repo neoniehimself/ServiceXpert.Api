@@ -79,7 +79,7 @@ public class IssueCommentController : SxpController
         return ApiResponse(resultOnUpdate);
     }
 
-    [HttpDelete("{commentId}")]
+    [HttpDelete("{commentId:guid}")]
     public async Task<IActionResult> DeleteByIdAsync(string issueKey, Guid commentId, CancellationToken cancellationToken = default)
     {
         var (isSuccess, result) = await ValidateIssueKey(issueKey, issueKey, cancellationToken);

@@ -1,0 +1,33 @@
+### IIS 
+### @Presentation_HostAddress = http://localhost:8081
+
+### Kestrel
+@Presentation_HostAddress = https://localhost:7090
+
+### Endpoint: Login
+
+POST {{Presentation_HostAddress}}/Security/Accounts/Login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+### Endpoint: Register
+
+POST {{Presentation_HostAddress}}/Security/Accounts/Register
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "username": "jdoe",
+  "password": "P@ssw0rd123!",
+  "email": "j.doe@noemail.com",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+
+###

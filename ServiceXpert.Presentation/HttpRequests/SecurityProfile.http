@@ -1,0 +1,31 @@
+### IIS 
+### @Presentation_HostAddress = http://localhost:8081
+
+### Kestrel
+@Presentation_HostAddress = https://localhost:7090
+### @BearerToken =
+
+### Endpoint: GetMatchingProfilesByName
+
+GET {{Presentation_HostAddress}}/Security/Users/Profiles/GetMatchingProfilesByName?Name=N
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+### Endpoint: GetByIdAsync
+
+GET {{Presentation_HostAddress}}/Security/Users/Profiles/e45acefa-74b0-4f28-b81f-fbc02d9778b5
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+### Endpoint: UpdateAsync
+
+PUT {{Presentation_HostAddress}}/Security/Users/Profiles/e45acefa-74b0-4f28-b81f-fbc02d9778b5
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "firstName": "Admin",
+  "lastName": "Admin - Updated"
+}
+
+###

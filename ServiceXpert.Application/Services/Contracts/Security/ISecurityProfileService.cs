@@ -6,5 +6,5 @@ namespace ServiceXpert.Application.Services.Contracts.Security;
 
 public interface ISecurityProfileService : IServiceBase<Guid, SecurityProfile, SecurityProfileDataObject>
 {
-    Task<ServiceResult<IEnumerable<SecurityProfileDataObject>>> SearchProfileByName(string name, CancellationToken cancellationToken = default);
+    Task<ServiceResult<IEnumerable<SecurityProfileDataObject>>> GetMatchingProfilesByNameAsync(string name, CancellationToken cancellationToken = default);
 }

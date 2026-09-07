@@ -1,0 +1,46 @@
+### IIS 
+### @Presentation_HostAddress = http://localhost:8081
+
+### Kestrel
+@Presentation_HostAddress = https://localhost:7090
+### @BearerToken =
+
+### Endpoint: CreateAsync
+
+POST {{Presentation_HostAddress}}/Issues
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "name": "Request timed out",
+  "reporterid": "E45ACEFA-74B0-4F28-B81F-FBC02D9778B5"
+}
+
+### Endpoint: GetByIssueKeyAsync
+
+GET {{Presentation_HostAddress}}/Issues/SXP-1
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+### Endpoint: GetPagedIssuesAsync
+
+GET {{Presentation_HostAddress}}/Issues
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+### Endpoint: UpdateAsync
+
+PUT {{Presentation_HostAddress}}/Issues/SXP-1
+Content-Type: application/json
+Application-Json: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "name": "Request timed out - Updated",
+  "issuestatusid": "1",
+  "issuepriorityid": "3",
+  "reporterid": "E45ACEFA-74B0-4F28-B81F-FBC02D9778B5"
+}
+
+###

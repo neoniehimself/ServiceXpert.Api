@@ -37,9 +37,9 @@ internal class SecurityProfileService : ServiceBase<Guid, SecurityProfile, Secur
         return ServiceResult<Guid>.Ok(userProfile.Id);
     }
 
-    public async Task<ServiceResult<IEnumerable<SecurityProfileDataObject>>> SearchProfileByName(string name, CancellationToken cancellationToken = default)
+    public async Task<ServiceResult<IEnumerable<SecurityProfileDataObject>>> GetMatchingProfilesByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        var profiles = await this.userProfileRepository.SearchProfileByName(name, cancellationToken);
+        var profiles = await this.userProfileRepository.GetMatchingProfilesByNameAsync(name, cancellationToken);
         var profilesToReturn = profiles.Adapt<IEnumerable<SecurityProfileDataObject>>();
         return ServiceResult<IEnumerable<SecurityProfileDataObject>>.Ok(profilesToReturn);
     }
